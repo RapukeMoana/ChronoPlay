@@ -18,4 +18,21 @@ public class PlayerMovement : MonoBehaviour {
         Vector3 movement = new Vector3(moveHorizontal, 0, moveVertical);
         rb.AddForce(movement * speed);
     }
+
+    void OnCollisionEnter(Collision other) {
+        switch (other.transform.tag)
+        {
+            case "BlueCheckPoint":
+                print("Blue Chosen");
+                break;
+            case "RedCheckPoint":
+                print("Red Chosen");
+                break;
+            case "GreenCheckPoint":
+                print("Green Chosen");
+                break;
+            default:
+                break;
+        }      
+    }
 }
