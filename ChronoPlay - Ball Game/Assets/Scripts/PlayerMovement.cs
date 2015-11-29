@@ -1,13 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class PlayerMovement : MonoBehaviour {
     public float speed;
+    public float plateDistance;
     private Rigidbody rb;
+    private int level;
+    
 
 	// Use this for initialization
 	void Start () {
         rb = GetComponent<Rigidbody>();
+        plateDistance = 20f;
+        level = 0;
 	}
 	
 	// Update is called once per frame
@@ -24,6 +30,14 @@ public class PlayerMovement : MonoBehaviour {
         {
             case "BlueCheckPoint":
                 print("Blue Chosen");
+
+                createNewPlate();
+                GameObject go = GameObject.FindGameObjectWithTag("BlueCheckPoint");
+                GameObject a = GameObject.FindGameObjectWithTag("Finish");
+
+                Destroy(go);
+
+                //(a.GetComponent(typeof(Collider)) as Collider).isTrigger = true;
                 break;
             case "RedCheckPoint":
                 print("Red Chosen");
@@ -34,5 +48,13 @@ public class PlayerMovement : MonoBehaviour {
             default:
                 break;
         }      
+    }
+
+    private void createNewPlate()
+    {
+        GameObject nextPlate = (GameObject)Instantiate(Resources.Load("plate"));
+        level++;
+        Vector3 platePosition = GameObject.Find("plate").transform.position;
+        nextPlate.transform.position = new Vector3(platePosition.x, platePosition.y - level*plateDistance, platePosition.z);
     }
 }
