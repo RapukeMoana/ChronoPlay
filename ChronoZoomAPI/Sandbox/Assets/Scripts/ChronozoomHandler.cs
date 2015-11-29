@@ -1,91 +1,274 @@
-﻿//using Newtonsoft.Json;
+﻿using Pathfinding.Serialization.JsonFx;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using UnityEngine;
-using Pathfinding.Serialization.JsonFx;
-using System.Reflection;
-//using System.Threading.Tasks;
 
-public class ChronozoomHandler
+public class Timeline
 {
-	public static Collection RetrieveTimeline()
-	{
-		string result;
-
-        HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://www.chronozoom.com/api/gettimelines?supercollection=chronoplaytesting&collection=Archean");
-        request.Method = "GET";
-		request.ContentType = "application/x-www-form-urlencoded";
-		using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-		using (StreamReader reader = new StreamReader(response.GetResponseStream()))
-		{
-			result = reader.ReadToEnd();
-		}
-
-        Collection collection = JsonReader.Deserialize<Collection>(result);
-
-        //List<Exhibit> exhibitList = new List<Exhibit>();
-
-        //foreach (Exhibit exhibit in obj.exhibits)
-        //{
-        //    Exhibit exhibitInstance = new Exhibit();
-        //    exhibitInstance.title = exhibit.title;
-        //    List<ContentItem> contentItemsList = new List<ContentItem>();
-
-        //    foreach (object item in exhibit.contentItems)
-        //    {
-        //        ContentItem contentItem = new ContentItem();
-
-        //        contentItem.title = item.title;
-        //        contentItem.description = item.description;
-        //        contentItem.order = item.order;
-        //        contentItem.year = item.Year;
-        //        contentItem.imageURI = item.uri;
-
-        //        contentItemsList.Add(contentItem);
-        //    }
-
-        //    exhibitInstance.contentItems = contentItemsList;
-        //    exhibitList.Add(exhibitInstance);
-        //}
-
-        return collection;
-	}
-}
-
-public class Collection
-{
-    //public string __type { get; set; }
-    //public bool FromIsCirca { get; set; }
-    //public string Height { get; set; }
+    public string __type { get; set; }
+    public bool FromIsCirca { get; set; }
+    public string Height { get; set; }
     public string Regime { get; set; }
-    //public bool ToIsCirca { get; set; }
-    //public int? aspectRatio { get; set; }
-    //public string backgroundUrl { get; set; }
-    //public string end { get; set; }
+    public bool ToIsCirca { get; set; }
+    public int? aspectRatio { get; set; }
+    public string backgroundUrl { get; set; }
+    public string end { get; set; }
     public Exhibit[] exhibits { get; set; }
-    //public string id { get; set; }
-    //public string offsetY { get; set; }
-    //public string start { get; set; }
-    //public object[] timelines { get; set; }
+    public string id { get; set; }
+    public string offsetY { get; set; }
+    public string start { get; set; }
+    public Timeline[] timelines { get; set; }
     public string title { get; set; }
 } 
 
 public class Exhibit
 {
-	public string title { get; set; }
-	public List<ContentItem> contentItems { get; set; }
+    public string __type { get; set; }
+    public bool IsCirca { get; set; }
+    public string UpdatedBy { get; set; }
+    public string UpdatedTime { get; set; }
+    public List<ContentItem> contentItems { get; set; }
+    public string id { get; set; }
+    public string offsetY { get; set; }
+    public Int64 time { get; set; }
+    public string title { get; set; }
+    public string ParentTimeLineId { get; set; }
 }
 
 public class ContentItem
 {
+    public string __type { get; set; }
+    public int year { get; set; }
+    public string attribution { get; set; }
     public string description { get; set; }
+    public string id { get; set; }
+    public string mediaSource { get; set; }
+    public string mediaType { get; set; }
+    public int order { get; set; }
     public string title { get; set; }
     public string uri { get; set; }
-    public int order { get; set; }
-    public int year { get; set; }
+    public string ParentExhibitId { get; set; }
+    public Int64 ParentExhibitTime { get; set; }
 }
+
+public class GameStage
+{
+    public Exhibit stageEvent { get; set; }
+    public ContentItem correctWormhole { get; set; }
+    public List<ContentItem> incorrectWormholes { get; set; }
+}
+
+public class ChronozoomHandler
+{
+    //__PRIVATE VARIABLES__
+
+    private static List<ContentItem> contentItemList = new List<ContentItem>();
+    private static List<Exhibit> exhibitList = new List<Exhibit>();
+    private static bool onlyPictures = false;
+
+    //__PUBLIC FUNCTIONS__
+    
+        //Retrieves and serializes the Chronozoom data into an object structure using the included classes
+    public static Timeline RetrieveTimeline(string superCollectionName, string collectionName)
+	{
+		string result;
+        Timeline timeline = new Timeline();
+        string requestTemplate = "http://www.chronozoom.com/api/gettimelines?supercollection={0}&collection={1}";
+        string requestUrl = String.Format(requestTemplate, superCollectionName, collectionName);
+
+        try
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUrl);
+            request.Method = "GET";
+            request.ContentType = "application/x-www-form-urlencoded";
+
+            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            {
+                using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+                {
+                    result = reader.ReadToEnd();
+                }
+            }
+
+            timeline = JsonReader.Deserialize<Timeline>(result);
+
+            return timeline;
+        }
+        catch(Exception)
+        {
+            Debug.Log("Error retrieving data from chronozoom.");
+            return timeline;
+        }
+    }
+
+    //Sets up the contentItem and Exhibit Lists based on the timeline retrieved from Chronozoom
+    public static void GenerateLists(Timeline timeline, bool limitToImages)
+    {
+        onlyPictures = limitToImages;
+        GetSubTimelinesInTimeline(timeline);
+        SortContentItemList();
+        SortExhibitList();
+    }
+
+    //Sets up the game which is a list of game 'stages' described by the gameStage class 
+    public static List<GameStage> SetUpGame(int numWormholes, int numPlatforms)
+    {
+        return GenerateGame(numWormholes, numPlatforms);
+    }
+
+    //__PRIVATE FUNCTIONS__
+
+    //Sort function for content Item
+    private static void SortContentItemList()
+    {
+        contentItemList.Sort((x, y) => x.ParentExhibitTime.CompareTo(y.ParentExhibitTime));
+    }
+    
+    //Sort function for exhibits
+    private static void SortExhibitList()
+    {
+        exhibitList.Sort((x, y) => x.time.CompareTo(y.time));
+    }
+
+    //Function to drill down recursively on timelines and generate the exhibit item and content item lists
+    private static void GetSubTimelinesInTimeline(Timeline timeline)
+    {
+        //if there are sub timelines in the given timeline drill down and call getExhibits at each level
+        if (timeline.timelines != null)
+        {
+            foreach (Timeline subTimeline in timeline.timelines)
+            {
+                //recursive function call to drill down
+                GetSubTimelinesInTimeline(subTimeline);
+                GetExhibitsInTimeline(subTimeline);
+            }
+        }
+        else //if not just get Exhibits
+        {
+            GetExhibitsInTimeline(timeline);
+        }
+    }
+
+    //Function to drill down into exhibits to get content items
+    private static void GetExhibitsInTimeline(Timeline timeline)
+    {
+        foreach (Exhibit exhibit in timeline.exhibits)
+        {
+            //In the chronozoom suppercollection there are duplicate exhibits so this just checks for any duplicates before adding - won't not be needed for custom data sets
+            bool alreadyExists = exhibitList.Any(item => item.id == exhibit.id);
+            if (!alreadyExists)
+            {
+                exhibitList.Add(exhibit);
+            }
+
+            GetContentItemsInExhibit(exhibit);
+        }
+    }
+    
+    //Function to extract content items from exhibits
+    private static void GetContentItemsInExhibit(Exhibit exhibit)
+    {
+        foreach (ContentItem contentItem in exhibit.contentItems)
+        {
+            //Once again due to duplicate exhibits there are duplicate content items so just checking for duplicates
+            bool alreadyExists = contentItemList.Any(item => item.id == contentItem.id);
+            if (!alreadyExists)
+            {
+                contentItem.ParentExhibitTime = exhibit.time;
+
+                //Types in Chronozoom include: picture, image, photosynth and video however there is no naming conventions in place when it comes to defining the media source
+                //Based on the setting 'onlyPictures' it either returns all content items or filters to only images
+                if (onlyPictures && (contentItem.mediaType.ToUpper() == "PICTURE" || contentItem.mediaType.ToUpper() == "IMAGE"))
+                {
+                    contentItemList.Add(contentItem);
+                }
+                else if (!onlyPictures)
+                {
+                    contentItemList.Add(contentItem);
+                }
+            }
+        }
+    }
+
+    private static List<ContentItem> GetIncorrectWormholes(Int64 eventDate, bool getHistoric, int numItems)
+    {
+        List<ContentItem> incorrectWormholes = new List<ContentItem>();
+
+        if (getHistoric)
+        {
+            int upperLimitIndex = 0;
+            foreach (ContentItem contentItem in contentItemList)
+            {
+                if (contentItem.ParentExhibitTime > eventDate)
+                {
+                    break;
+                }
+                upperLimitIndex++;
+            }
+
+            List<int> indexList = GenerateIndexList(numItems, 0, upperLimitIndex);
+            foreach (int index in indexList)
+            {
+                incorrectWormholes.Add(contentItemList.ElementAt(index));
+            }
+        }
+
+        return incorrectWormholes;
+    }
+
+    private static List<GameStage> GenerateGame(int numWormholes, int numEvents)
+    {
+        List<GameStage> game = new List<GameStage>();
+        List<int> indexList = GenerateIndexList(numEvents, 1, exhibitList.Count);
+
+        for (int i = 0; i < indexList.Count; i++)
+        {
+            GameStage gameStage = new GameStage();
+            System.Random rand = new System.Random();
+
+            gameStage.stageEvent = exhibitList.ElementAt(indexList.ElementAt(i));
+            if (i + 1 < indexList.Count)
+            {
+                Exhibit nextEvent = exhibitList.ElementAt(indexList.ElementAt(i + 1));
+                int countNextEventItems = nextEvent.contentItems.Count;
+                gameStage.correctWormhole = nextEvent.contentItems.ElementAt(rand.Next(0, countNextEventItems));
+            }
+
+            gameStage.incorrectWormholes = GetIncorrectWormholes(gameStage.stageEvent.time, true, numWormholes - 1);
+
+            game.Add(gameStage);
+        }
+
+        string gameJSON = JsonWriter.Serialize(game);
+        return game;
+    }
+
+    private static List<int> GenerateIndexList (int length, int minValue, int maxValue)
+    {
+        List<int> indexList = new List<int>();
+        System.Random rand = new System.Random();
+        int i = 0;
+        while (i < length)
+        {
+            //min value of 1 insures that there is always historic content items
+            int index = rand.Next(minValue, maxValue);
+            //checks that all index items are unique
+            bool alreadyExists = indexList.Any(item => item == index); 
+
+            if (!alreadyExists)
+            {
+                indexList.Add(index);
+                i++;
+            }
+        }
+
+        indexList.Sort((x, y) => x.CompareTo(y));
+
+        return indexList;
+    }
+}
+
 

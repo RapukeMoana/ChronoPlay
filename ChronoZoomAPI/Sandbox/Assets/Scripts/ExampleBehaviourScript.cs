@@ -3,28 +3,46 @@ using UnityEditor;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 public class ExampleBehaviourScript : MonoBehaviour {
-    private Collection collection = new Collection();
+    //Private variables
+    private bool timelineRetrieved = false;
     private float xDist = 1;
     private float yDist = 0.5f;
     private bool cPressed = false;
 
+    //__PRIVATE VARIABLES__
+    private Timeline timeline = new Timeline();
+    //__PUBLIC VARIABLES__
+    public string superCollectionName = "chronozoom"; //chronozoom nobelprize
+    public string collectionName = "cosmos"; //cosmos nobel
+    public int wormholesPerPlatform = 3;
+    public int platformsPerGames = 10;
+    public bool limitContentToImages = true;
+
     // Use this for initialization
     void Start () {
-        collection = ChronozoomHandler.RetrieveTimeline();
-        gameObject.GetComponent<Renderer>().material.color = Color.black;
+        timeline = ChronozoomHandler.RetrieveTimeline(superCollectionName, collectionName);
+        if (!String.IsNullOrEmpty(timeline.__type))
+        {
+            timelineRetrieved = true;
+            ChronozoomHandler.GenerateLists(timeline, limitContentToImages);
+            List<GameStage> game = ChronozoomHandler.SetUpGame(wormholesPerPlatform, platformsPerGames);
+        }
     }
-	
+
+
+	//  gameObject.GetComponent<Renderer>().material.color = Color.black;
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetKeyDown(KeyCode.C) && !cPressed)
+        if (Input.GetKeyDown(KeyCode.C) && !cPressed && timelineRetrieved)
         {
-            if (!String.IsNullOrEmpty(collection.title))
+            if (!String.IsNullOrEmpty(timeline.title))
             {
                 Material material = (Material)Resources.Load("Material/Light Yellow");
 
-                foreach (Exhibit exhibititem in collection.exhibits)
+                foreach (Exhibit exhibititem in timeline.exhibits)
                 {
                     GameObject exhibit = createGameObject(exhibititem.title, material);
                     SetPrefabText(exhibit, exhibititem.title);    
