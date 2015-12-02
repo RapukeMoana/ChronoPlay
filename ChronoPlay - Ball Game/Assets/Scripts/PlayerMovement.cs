@@ -26,16 +26,17 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     void OnCollisionEnter(Collision other) {
+        //Checks to see which wormhole ball enters 
         switch (other.transform.tag)
         {
             case "BlueCheckPoint":
                 print("Blue Chosen");
 
-                createNewPlate();
-                GameObject go = GameObject.FindGameObjectWithTag("BlueCheckPoint");
-                GameObject a = GameObject.FindGameObjectWithTag("Finish");
+                //createNewPlate();
+                //GameObject go = GameObject.FindGameObjectWithTag("BlueCheckPoint");
+                //GameObject a = GameObject.FindGameObjectWithTag("Finish");
 
-                Destroy(go);
+                //Destroy(go);
 
                 //(a.GetComponent(typeof(Collider)) as Collider).isTrigger = true;
                 break;
@@ -50,11 +51,12 @@ public class PlayerMovement : MonoBehaviour {
         }      
     }
 
+    //Dynamically creates new plates
     private void createNewPlate()
     {
-        GameObject nextPlate = (GameObject)Instantiate(Resources.Load("plate"));
+        GameObject nextPlate = (GameObject)Instantiate(Resources.Load("Plate"));
         level++;
-        Vector3 platePosition = GameObject.Find("plate").transform.position;
+        Vector3 platePosition = GameObject.Find("Plate").transform.position;
         nextPlate.transform.position = new Vector3(platePosition.x, platePosition.y - level*plateDistance, platePosition.z);
     }
 }
