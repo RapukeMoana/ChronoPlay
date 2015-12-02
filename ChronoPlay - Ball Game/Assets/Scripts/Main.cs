@@ -67,6 +67,7 @@ public class Main : MonoBehaviour {
 
     private void setupHole(string platformName, GameStage stage, bool isCorrect, int holeNumber)
     {
+        //Get random positions to choose hole location
         int row = UnityEngine.Random.Range(0, 8);
         int col = UnityEngine.Random.Range(0, 8);
         print("HoleCover-" + row + "-" + col);
@@ -78,16 +79,19 @@ public class Main : MonoBehaviour {
             col = UnityEngine.Random.Range(0, 8);
             holePosition = GameObject.Find(platformName + "HoleCover-" + row + "-" + col);
         }
-            Vector3 holeCoordinates = holePosition.transform.position; 
-            Destroy(holePosition);
 
-            StartCoroutine(createItemImage(holeCoordinates, isCorrect, stage, holeNumber));
+        Vector3 holeCoordinates = holePosition.transform.position; 
+        Destroy(holePosition);
+
+        //Create image which will be shown above the hole
+        StartCoroutine(createItemImage(holeCoordinates, isCorrect, stage, holeNumber));
     }
 
     IEnumerator createItemImage(Vector3 holeCoordinate, bool isCorrect, GameStage stage, int holeNumber)
     {
-        print(holeCoordinate);
         Texture2D texture = new Texture2D(1, 1);
+
+        //Get uri of image
         string uri;
         if (isCorrect)
         {
