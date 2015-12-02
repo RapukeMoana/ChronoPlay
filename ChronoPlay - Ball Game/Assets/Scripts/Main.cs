@@ -21,26 +21,24 @@ public class Main : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        //timeline = ChronozoomHandler.RetrieveTimeline(superCollectionName, collectionName);
-        //if (!String.IsNullOrEmpty(timeline.__type))
-        //{
-        //    timelineRetrieved = true;
-        //    ChronozoomHandler.GenerateLists(timeline, limitContentToImages);
-        //    List<GameStage> game = ChronozoomHandler.SetUpGame(wormholesPerPlatform, platformsPerGames);
-        //    print(game[0].correctWormhole.year);
-        //    print(game[0].correctWormhole.id);
-        //    print(game[0].correctWormhole.description);
-        //    print(game[0].correctWormhole.title);
-        //    print(game[0].correctWormhole.uri);
-        //    print(game[0].incorrectWormholes.Count);
-        //    GameObject correctWormHoleImage = GameObject.Find("BlueItem");
+        timeline = ChronozoomHandler.RetrieveTimeline(superCollectionName, collectionName);
+        if (!String.IsNullOrEmpty(timeline.__type))
+        {
+            timelineRetrieved = true;
+            ChronozoomHandler.GenerateLists(timeline, limitContentToImages);
+            List<GameStage> game = ChronozoomHandler.SetUpGame(wormholesPerPlatform, platformsPerGames);
+            //print(game[0].correctWormhole.year);
+            //print(game[0].correctWormhole.id);
+            //print(game[0].correctWormhole.description);
+            //print(game[0].correctWormhole.title);
+            //print(game[0].correctWormhole.uri);
+            //print(game[0].incorrectWormholes.Count);
 
-        //}
-
-        setupGame();
+            setupGame(game);
+        }   
     }
 
-    private void setupGame()
+    private void setupGame(List<GameStage> game)
     {
         //Loops through and creates a level per loop
         for (int i = 0; i < platformsPerGames; i++) {
@@ -54,16 +52,20 @@ public class Main : MonoBehaviour {
             Vector3 platformPosition = new Vector3(0f, -(i*plateDistance), 0f);
             platform.transform.position = platformPosition;
 
-            //Create wormholes 
-            for (int j = 0; j < wormholesPerPlatform; j++) {
+            //Correct wormhole
+            setupHole(platform.name, game[i],true, 0);
+
+            //Incorrect wormhole(s)
+            for (int j = 0; j < wormholesPerPlatform-1; j++)
+            {
                 //Create ItemImages from URL 
-                setupHole(platform.name);
+                setupHole(platform.name, game[i],false,j);
             }
         }
         
     }
 
-    private void setupHole(string platformName)
+    private void setupHole(string platformName, GameStage stage, bool isCorrect, int holeNumber)
     {
         int row = UnityEngine.Random.Range(0, 8);
         int col = UnityEngine.Random.Range(0, 8);
@@ -79,16 +81,24 @@ public class Main : MonoBehaviour {
             Vector3 holeCoordinates = holePosition.transform.position; 
             Destroy(holePosition);
 
-            StartCoroutine(createItemImage(holeCoordinates));
+            StartCoroutine(createItemImage(holeCoordinates, isCorrect, stage, holeNumber));
     }
 
-    IEnumerator createItemImage(Vector3 holeCoordinate)
+    IEnumerator createItemImage(Vector3 holeCoordinate, bool isCorrect, GameStage stage, int holeNumber)
     {
         print(holeCoordinate);
         Texture2D texture = new Texture2D(1, 1);
-
+        string uri;
+        if (isCorrect)
+        {
+            uri = stage.correctWormhole.uri;
+        }
+        else
+        {
+            uri = stage.incorrectWormholes[holeNumber].uri;
+        }
         // Start a download of the given URL
-        WWW www = new WWW("http://cdni.condenast.co.uk/642x390/g_j/Interstellar-01-GQ-30Oct14_pr_b_642x390.jpg");
+        WWW www = new WWW(uri);
 
         // Wait for download to complete
         yield return www;
