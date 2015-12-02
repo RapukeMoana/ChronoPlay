@@ -21,7 +21,6 @@ public class Main : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        //print("Started");
         //timeline = ChronozoomHandler.RetrieveTimeline(superCollectionName, collectionName);
         //if (!String.IsNullOrEmpty(timeline.__type))
         //{
@@ -49,24 +48,43 @@ public class Main : MonoBehaviour {
             GameObject platform = (GameObject)Instantiate(Resources.Load("Plate"));
 
             //Add name to platform (e.g. platform-0 is first platform)
-            platform.name = "platform-" + i;
+            platform.name = "Platform-" + i;
 
             //Position plate below the previous 
-            Vector3 platePosition = new Vector3(0f, -(i*plateDistance), 0f);
-            platform.transform.position = platePosition;
+            Vector3 platformPosition = new Vector3(0f, -(i*plateDistance), 0f);
+            platform.transform.position = platformPosition;
 
             //Create wormholes 
             for (int j = 0; j < wormholesPerPlatform; j++) {
                 //Create ItemImages from URL 
-                StartCoroutine(createItemImage(platePosition, j));
+                setupHole(platform.name);
             }
         }
         
     }
 
-    IEnumerator createItemImage(Vector3 platePosition, int j)
+    private void setupHole(string platformName)
     {
-        print("Jello");
+        int row = UnityEngine.Random.Range(0, 8);
+        int col = UnityEngine.Random.Range(0, 8);
+        print("HoleCover-" + row + "-" + col);
+        GameObject holePosition = GameObject.Find(platformName+"HoleCover-"+row+"-"+col);
+        while(holePosition == null)
+        {
+            print("null called");
+            row = UnityEngine.Random.Range(0, 8);
+            col = UnityEngine.Random.Range(0, 8);
+            holePosition = GameObject.Find(platformName + "HoleCover-" + row + "-" + col);
+        }
+            Vector3 holeCoordinates = holePosition.transform.position; 
+            Destroy(holePosition);
+
+            StartCoroutine(createItemImage(holeCoordinates));
+    }
+
+    IEnumerator createItemImage(Vector3 holeCoordinate)
+    {
+        print(holeCoordinate);
         Texture2D texture = new Texture2D(1, 1);
 
         // Start a download of the given URL
@@ -75,15 +93,19 @@ public class Main : MonoBehaviour {
         // Wait for download to complete
         yield return www;
 
-        www.LoadImageIntoTexture(texture);
         // assign texture
+        www.LoadImageIntoTexture(texture);
+
 
         //Creates item image object
         GameObject itemImage = (GameObject)Instantiate(Resources.Load("ItemImage"));
-        itemImage.transform.position = new Vector3(platePosition.x + (j * 10), platePosition.y + 5, platePosition.z);
-        itemImage.GetComponent<Renderer>().material.mainTexture = texture;
-    }
 
+        //Place image on top of the current wormhole
+        itemImage.transform.position = new Vector3(holeCoordinate.x, holeCoordinate.y+3, holeCoordinate.z+2);
+        itemImage.GetComponent<Renderer>().material.mainTexture = texture;
+
+
+    }
     // Update is called once per frame
     void Update () {
 	
