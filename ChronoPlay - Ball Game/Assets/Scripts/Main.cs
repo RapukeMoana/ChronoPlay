@@ -116,6 +116,12 @@ public class Main : MonoBehaviour {
         //Create sensor
         GameObject itemImageSensor = (GameObject)Instantiate(Resources.Load("ItemImageSensor"));
 
+        //Add correct/incorrect tags
+        if(isCorrect)
+            itemImageSensor.tag = "Correct";
+        else
+            itemImageSensor.tag = "Incorrect";
+
         //Place image on top of the current wormhole
         itemImage.transform.position = new Vector3(holeCoordinate.x, holeCoordinate.y+3, holeCoordinate.z+2);
         itemImage.GetComponent<Renderer>().material.mainTexture = texture;

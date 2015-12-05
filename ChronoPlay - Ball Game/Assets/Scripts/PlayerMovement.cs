@@ -29,34 +29,16 @@ public class PlayerMovement : MonoBehaviour {
         //Checks to see which wormhole ball enters 
         switch (other.transform.tag)
         {
-            case "BlueCheckPoint":
-                print("Blue Chosen");
+            case "Correct":
+                print("Correct");
                 Destroy(other.gameObject);
-                //createNewPlate();
-                //GameObject go = GameObject.FindGameObjectWithTag("BlueCheckPoint");
-                //GameObject a = GameObject.FindGameObjectWithTag("Finish");
-
-                //Destroy(go);
-
-                //(a.GetComponent(typeof(Collider)) as Collider).isTrigger = true;
                 break;
-            case "RedCheckPoint":
-                print("Red Chosen");
-                break;
-            case "GreenCheckPoint":
-                print("Green Chosen");
+            case "Incorrect":
+                print("Incorrect");
+                Destroy(other.gameObject);
                 break;
             default:
                 break;
         }      
-    }
-
-    //Dynamically creates new plates
-    private void createNewPlate()
-    {
-        GameObject nextPlate = (GameObject)Instantiate(Resources.Load("Plate"));
-        level++;
-        Vector3 platePosition = GameObject.Find("Plate").transform.position;
-        nextPlate.transform.position = new Vector3(platePosition.x, platePosition.y - level*plateDistance, platePosition.z);
     }
 }
