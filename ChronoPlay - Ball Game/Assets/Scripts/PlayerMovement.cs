@@ -11,6 +11,7 @@ public class PlayerMovement : MonoBehaviour {
     private float speedsmooth = 0.8f;
     private float myAlpha = 1.0f;
     private bool resultFade = true;
+    private int numCorrect = 0, numIncorrect = 0;
 
     // Use this for initialization
     void Start () {
@@ -38,7 +39,8 @@ public class PlayerMovement : MonoBehaviour {
             //If correct hole, update score and show result
             case "Correct":
                 Destroy(other.gameObject);
-                scoreText.text = "";
+                numCorrect++;
+                scoreText.text = "SCORE: Correct = " + numCorrect+ "  Incorrect = "+numIncorrect;
                 result = (GameObject)Instantiate(Resources.Load("Result"));
                 GameObject.Find("Result").GetComponent<Text>().text = "CORRECT";
                 myAlpha = 1.0f;
@@ -46,7 +48,8 @@ public class PlayerMovement : MonoBehaviour {
                 break;
             case "Incorrect":
                 Destroy(other.gameObject);
-                scoreText.text = "";
+                numIncorrect++;
+                scoreText.text = "SCORE: Correct = " + numCorrect + "  Incorrect = " + numIncorrect;
                 result = (GameObject)Instantiate(Resources.Load("Result"));
                 GameObject.Find("Result").GetComponent<Text>().text = "INCORRECT";
                 myAlpha = 1.0f;
