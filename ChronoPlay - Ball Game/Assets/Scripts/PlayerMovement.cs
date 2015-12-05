@@ -31,7 +31,7 @@ public class PlayerMovement : MonoBehaviour {
         {
             case "BlueCheckPoint":
                 print("Blue Chosen");
-
+                Destroy(other.gameObject);
                 //createNewPlate();
                 //GameObject go = GameObject.FindGameObjectWithTag("BlueCheckPoint");
                 //GameObject a = GameObject.FindGameObjectWithTag("Finish");

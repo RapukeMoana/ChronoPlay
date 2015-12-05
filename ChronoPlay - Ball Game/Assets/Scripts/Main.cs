@@ -82,7 +82,6 @@ public class Main : MonoBehaviour {
 
         Vector3 holeCoordinates = holePosition.transform.position; 
         Destroy(holePosition);
-
         //Create image which will be shown above the hole
         StartCoroutine(createItemImage(holeCoordinates, isCorrect, stage, holeNumber));
     }
@@ -114,9 +113,15 @@ public class Main : MonoBehaviour {
         //Creates item image object
         GameObject itemImage = (GameObject)Instantiate(Resources.Load("ItemImage"));
 
+        //Create sensor
+        GameObject itemImageSensor = (GameObject)Instantiate(Resources.Load("ItemImageSensor"));
+
         //Place image on top of the current wormhole
         itemImage.transform.position = new Vector3(holeCoordinate.x, holeCoordinate.y+3, holeCoordinate.z+2);
         itemImage.GetComponent<Renderer>().material.mainTexture = texture;
+
+        itemImageSensor.transform.position = new Vector3(holeCoordinate.x, holeCoordinate.y, holeCoordinate.z);
+        itemImageSensor.GetComponent<Renderer>().material.mainTexture = texture;
 
 
     }
