@@ -28,6 +28,25 @@ public class PlayerMovement : MonoBehaviour {
 
         Vector3 movement = new Vector3(moveHorizontal, 0, moveVertical);
         rb.AddForce(movement * speed);
+        print(transform.position.z);
+
+        //x axis boundary
+        if(transform.position.x > 10.0f)
+        {
+            transform.position = new Vector3(10.0f, transform.position.y, transform.position.z);
+        } else if (transform.position.x < -10.0f)
+        {
+            transform.position = new Vector3(-10.0f, transform.position.y, transform.position.z);
+        }
+
+        //z axis boundary
+        if (transform.position.z > 10.0f)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y, 10.0f);
+        } else if (transform.position.z < -10.0f)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y, -10.0f);
+        }
     }
 
     void OnCollisionEnter(Collision other) {
@@ -67,7 +86,6 @@ public class PlayerMovement : MonoBehaviour {
         {
             Text result = GameObject.Find("Result").GetComponent<Text>();
             myAlpha = myAlpha - speedsmooth * Time.deltaTime;
-            print(myAlpha);
             if (myAlpha > 0)
             { 
                 result.color = new Color(1.0f, 1.0f, 1.0f, myAlpha);

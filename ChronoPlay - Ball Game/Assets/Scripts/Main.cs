@@ -70,11 +70,9 @@ public class Main : MonoBehaviour {
         //Get random positions to choose hole location
         int row = UnityEngine.Random.Range(0, 8);
         int col = UnityEngine.Random.Range(0, 8);
-        print("HoleCover-" + row + "-" + col);
         GameObject holePosition = GameObject.Find(platformName+"HoleCover-"+row+"-"+col);
         while(holePosition == null)
         {
-            print("null called");
             row = UnityEngine.Random.Range(0, 8);
             col = UnityEngine.Random.Range(0, 8);
             holePosition = GameObject.Find(platformName + "HoleCover-" + row + "-" + col);
@@ -126,7 +124,8 @@ public class Main : MonoBehaviour {
         itemImage.transform.position = new Vector3(holeCoordinate.x, holeCoordinate.y+3, holeCoordinate.z+2);
         itemImage.GetComponent<Renderer>().material.mainTexture = texture;
 
-        itemImageSensor.transform.position = new Vector3(holeCoordinate.x, holeCoordinate.y, holeCoordinate.z);
+        //Place image on sensor (hole)
+        itemImageSensor.transform.position = new Vector3(holeCoordinate.x, holeCoordinate.y-0.2f, holeCoordinate.z);
         itemImageSensor.GetComponent<Renderer>().material.mainTexture = texture;
 
 
