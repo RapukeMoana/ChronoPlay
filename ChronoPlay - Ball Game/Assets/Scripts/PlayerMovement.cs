@@ -153,7 +153,7 @@ public class PlayerMovement : MonoBehaviour {
             Vector3 cameraPosition = mainCamera.transform.position;
 
             //Place image behind the scene
-            itemImageLarge.transform.GetChild(0).position = new Vector3(z * 100f, cameraPosition.y, 100f);
+            itemImageLarge.transform.GetChild(0).position = new Vector3(z * 100f, cameraPosition.y-20f, 100f);
             itemImageLarge.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.mainTexture = texture;
         }
     }
