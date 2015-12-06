@@ -2,23 +2,27 @@
 using System.Collections;
 using System;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 public class PlayerMovement : MonoBehaviour {
     public float speed;
-    public float plateDistance;
+    public float plateDistance = 20f;
 
     private Rigidbody rb;
     private float speedsmooth = 0.8f;
     private float myAlpha = 1.0f;
     private bool resultFade = true;
-    private int numCorrect = 0, numIncorrect = 0;
+    private int numCorrect = 0, numIncorrect = 0, level = 0;
+
 
     // Use this for initialization
     void Start () {
         rb = GetComponent<Rigidbody>();
-        plateDistance = 20f;
 
         myAlpha = 1.0f; // maybe you need other value
+
+        StartCoroutine(setupStageEvent());
     }
 	
 	// Update is called once per frame
@@ -28,7 +32,6 @@ public class PlayerMovement : MonoBehaviour {
 
         Vector3 movement = new Vector3(moveHorizontal, 0, moveVertical);
         rb.AddForce(movement * speed);
-        print(transform.position.z);
 
         //x axis boundary
         if(transform.position.x > 10.0f)
@@ -64,6 +67,8 @@ public class PlayerMovement : MonoBehaviour {
                 GameObject.Find("Result").GetComponent<Text>().text = "CORRECT";
                 myAlpha = 1.0f;
                 resultFade = true;
+                level++;
+                StartCoroutine(setupStageEvent());
                 break;
             case "Incorrect":
                 Destroy(other.gameObject);
@@ -73,6 +78,8 @@ public class PlayerMovement : MonoBehaviour {
                 GameObject.Find("Result").GetComponent<Text>().text = "INCORRECT";
                 myAlpha = 1.0f;
                 resultFade = true;
+                level++;
+                StartCoroutine(setupStageEvent());
                 break;
             default:
                 break;
@@ -92,8 +99,62 @@ public class PlayerMovement : MonoBehaviour {
             }
             else {
                 resultFade = false;
+                result.color = new Color(1.0f, 1.0f, 1.0f, 0);
             }
         }
         
+    }
+
+    //Creates background stageevent images
+    IEnumerator setupStageEvent()
+    {
+        print(level);
+        if (level > 0)
+        {
+            GameObject[] previousImage = GameObject.FindGameObjectsWithTag("ItemImageLarge");
+            for(int i = 0; i < previousImage.Length; i++)
+            {
+                Destroy(previousImage[i]);
+            }
+        }
+        List<ContentItem> contentItems = GameObject.Find("Main Camera").GetComponent<Main>().getStageEventContent(level);
+
+        for (int z = 0; z < contentItems.Count; z++)
+        {
+            Texture2D texture = new Texture2D(1, 1);
+
+            string stageEventUri = contentItems[z].uri;
+
+            //Replace spaces in url with %20 - prevents 400 error
+            Regex.Replace(stageEventUri, @"\s+", "%20");
+            print(stageEventUri);
+
+            // Start a download of the given URL
+            WWW www = new WWW(stageEventUri);
+
+            
+
+
+            // Wait for download to complete
+            yield return www;
+
+            // assign texture
+            www.LoadImageIntoTexture(texture);
+
+            //Creates item image object
+            GameObject itemImageLarge = (GameObject)Instantiate(Resources.Load("ItemImageLargeWrapper"));
+            itemImageLarge.tag = "ItemImageLarge";
+
+            //Makes the image object a child of the camera
+            GameObject mainCamera = GameObject.Find("Main Camera");
+            itemImageLarge.transform.parent = mainCamera.transform;
+
+            //Get position of current platform
+            Vector3 cameraPosition = mainCamera.transform.position;
+
+            //Place image behind the scene
+            itemImageLarge.transform.GetChild(0).position = new Vector3(z * 100f, cameraPosition.y, 100f);
+            itemImageLarge.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.mainTexture = texture;
+        }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 public class Main : MonoBehaviour {
 
@@ -9,14 +10,15 @@ public class Main : MonoBehaviour {
     private bool timelineRetrieved = false;
 
     //__PRIVATE VARIABLES__
-    private Timeline timeline = new Timeline();
+    public Timeline timeline = new Timeline();
     //__PUBLIC VARIABLES__
     public string superCollectionName = "chronozoom"; //chronozoom nobelprize
     public string collectionName = "cosmos"; //cosmos nobel
     public int wormholesPerPlatform = 3;
     public int platformsPerGames = 10;
     public bool limitContentToImages = true;
-    public float plateDistance = 20f; 
+    public float plateDistance = 20f;
+    private List<GameStage> game;
 
     // Use this for initialization
     void Start()
@@ -26,7 +28,7 @@ public class Main : MonoBehaviour {
         {
             timelineRetrieved = true;
             ChronozoomHandler.GenerateLists(timeline, limitContentToImages);
-            List<GameStage> game = ChronozoomHandler.SetUpGame(wormholesPerPlatform, platformsPerGames);
+            game = ChronozoomHandler.SetUpGame(wormholesPerPlatform, platformsPerGames);
             //print(game[0].correctWormhole.year);
             //print(game[0].correctWormhole.id);
             //print(game[0].correctWormhole.description);
@@ -34,7 +36,8 @@ public class Main : MonoBehaviour {
             //print(game[0].correctWormhole.uri);
             //print(game[0].incorrectWormholes.Count);
 
-            setupGame(game);
+            if(timelineRetrieved)
+                setupGame(game);
         }   
     }
 
@@ -64,6 +67,8 @@ public class Main : MonoBehaviour {
         }
         
     }
+
+
 
     private void setupHole(string platformName, GameStage stage, bool isCorrect, int holeNumber)
     {
@@ -98,6 +103,10 @@ public class Main : MonoBehaviour {
         {
             uri = stage.incorrectWormholes[holeNumber].uri;
         }
+
+        //Replace spaces in url with %20 - prevents 400 error
+        Regex.Replace(uri, @"\s+", "%20");
+
         // Start a download of the given URL
         WWW www = new WWW(uri);
 
@@ -134,4 +143,9 @@ public class Main : MonoBehaviour {
     void Update () {
 	
 	}
+
+    public List<ContentItem> getStageEventContent(int level)
+    {
+        return game[level].stageEvent.contentItems;
+    }
 }
