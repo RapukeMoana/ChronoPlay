@@ -112,9 +112,11 @@ public class PlayerMovement : MonoBehaviour {
         if (level > 0)
         {
             GameObject[] previousImage = GameObject.FindGameObjectsWithTag("ItemImageLarge");
-            for(int i = 0; i < previousImage.Length; i++)
+            GameObject[] previousText = GameObject.FindGameObjectsWithTag("ItemImageDescription"); 
+            for (int i = 0; i < previousImage.Length; i++)
             {
                 Destroy(previousImage[i]);
+                Destroy(previousText[i]);
             }
         }
         List<ContentItem> contentItems = GameObject.Find("Main Camera").GetComponent<Main>().getStageEventContent(level);
@@ -132,9 +134,7 @@ public class PlayerMovement : MonoBehaviour {
             // Start a download of the given URL
             WWW www = new WWW(stageEventUri);
 
-            
-
-
+           
             // Wait for download to complete
             yield return www;
 
@@ -152,9 +152,19 @@ public class PlayerMovement : MonoBehaviour {
             //Get position of current platform
             Vector3 cameraPosition = mainCamera.transform.position;
 
-            //Place image behind the scene
-            itemImageLarge.transform.GetChild(0).position = new Vector3(z * 100f, cameraPosition.y-20f, 100f);
+            //Place image behind the scene and centres
+            itemImageLarge.transform.GetChild(0).position = new Vector3(z * 100f - (30f* (contentItems.Count-1f)), cameraPosition.y-20f, 100f);
             itemImageLarge.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.mainTexture = texture;
+
+            //Create description 3d text
+            GameObject itemImageDescription = (GameObject)Instantiate(Resources.Load("ItemDescription"));
+            itemImageDescription.tag = "ItemImageDescription";
+
+            Vector3 tempPosition = itemImageLarge.transform.GetChild(0).position;
+            itemImageDescription.GetComponent<TextMesh>().text = contentItems[z].title;
+            itemImageDescription.transform.position = new Vector3(tempPosition.x - 40f, tempPosition.y-20f, tempPosition.z-20f);
+            itemImageDescription.transform.parent = mainCamera.transform;
+
         }
     }
 }
