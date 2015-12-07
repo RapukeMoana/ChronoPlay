@@ -83,15 +83,16 @@ public class Main : MonoBehaviour {
             holePosition = GameObject.Find(platformName + "HoleCover-" + row + "-" + col);
         }
 
-        Vector3 holeCoordinates = holePosition.transform.position; 
-        Destroy(holePosition);
+         
+
         //Create image which will be shown above the hole
-        StartCoroutine(createItemImage(holeCoordinates, isCorrect, stage, holeNumber));
+        StartCoroutine(createItemImage(isCorrect, stage, holeNumber, holePosition));
     }
 
-    IEnumerator createItemImage(Vector3 holeCoordinate, bool isCorrect, GameStage stage, int holeNumber)
+    IEnumerator createItemImage(bool isCorrect, GameStage stage, int holeNumber, GameObject holePosition)
     {
         Texture2D texture = new Texture2D(1, 1);
+        Vector3 holeCoordinate = holePosition.transform.position;
 
         //Get uri of image
         string uri;
@@ -123,8 +124,11 @@ public class Main : MonoBehaviour {
         //Create sensor
         GameObject itemImageSensor = (GameObject)Instantiate(Resources.Load("ItemImageSensor"));
 
+        //Create hole on platform
+        Destroy(holePosition);
+
         //Add correct/incorrect tags
-        if(isCorrect)
+        if (isCorrect)
             itemImageSensor.tag = "Correct";
         else
             itemImageSensor.tag = "Incorrect";
