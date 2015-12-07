@@ -153,13 +153,13 @@ public class PlayerMovement : MonoBehaviour {
             itemImageLarge.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.mainTexture = texture;
 
             //Create description 3d text
-            GameObject itemImageDescription = (GameObject)Instantiate(Resources.Load("ItemDescription"));
-            itemImageDescription.tag = "ItemImageDescription";
+            GameObject itemImageLargeDescription = (GameObject)Instantiate(Resources.Load("ItemDescription"));
+            itemImageLargeDescription.tag = "ItemImageDescription";
 
             Vector3 tempPosition = itemImageLarge.transform.GetChild(0).position;
-            itemImageDescription.GetComponent<TextMesh>().text = contentItems[z].title;
-            itemImageDescription.transform.position = new Vector3(tempPosition.x - 40f, tempPosition.y-20f, tempPosition.z-20f);
-            itemImageDescription.transform.parent = mainCamera.transform;
+            itemImageLargeDescription.GetComponent<TextMesh>().text = contentItems[z].title;
+            itemImageLargeDescription.transform.position = new Vector3(tempPosition.x - 40f, tempPosition.y-20f, tempPosition.z-20f);
+            itemImageLargeDescription.transform.parent = mainCamera.transform;
 
         }
     }

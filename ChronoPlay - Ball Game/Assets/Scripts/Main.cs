@@ -91,14 +91,16 @@ public class Main : MonoBehaviour {
         Vector3 holeCoordinate = holePosition.transform.position;
 
         //Get uri of image
-        string uri;
+        string uri, title;
         if (isCorrect)
         {
             uri = stage.correctWormhole.uri;
+            title = stage.correctWormhole.title;
         }
         else
         {
             uri = stage.incorrectWormholes[holeNumber].uri;
+            title = stage.incorrectWormholes[holeNumber].title;
         }
 
         // Start a download of the given URL
@@ -129,6 +131,15 @@ public class Main : MonoBehaviour {
         //Place image on top of the current wormhole
         itemImage.transform.position = new Vector3(holeCoordinate.x, holeCoordinate.y+3, holeCoordinate.z+2);
         itemImage.GetComponent<Renderer>().material.mainTexture = texture;
+
+        //Place description on item image
+        GameObject itemImageDescription = (GameObject)Instantiate(Resources.Load("ItemDescription"));
+
+        Vector3 tempPosition = itemImage.transform.position;
+        itemImageDescription.GetComponent<TextMesh>().text = title;
+        itemImageDescription.GetComponent<TextMesh>().fontSize = 10;
+        itemImageDescription.transform.position = new Vector3(tempPosition.x, tempPosition.y, tempPosition.z);
+
 
         //Place image on sensor (hole)
         itemImageSensor.transform.position = new Vector3(holeCoordinate.x, holeCoordinate.y-0.2f, holeCoordinate.z);
