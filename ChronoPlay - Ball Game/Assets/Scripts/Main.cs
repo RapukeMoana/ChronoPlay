@@ -29,12 +29,6 @@ public class Main : MonoBehaviour {
             timelineRetrieved = true;
             ChronozoomHandler.GenerateLists(timeline, limitContentToImages);
             game = ChronozoomHandler.SetUpGame(wormholesPerPlatform, platformsPerGames);
-            //print(game[0].correctWormhole.year);
-            //print(game[0].correctWormhole.id);
-            //print(game[0].correctWormhole.description);
-            //print(game[0].correctWormhole.title);
-            //print(game[0].correctWormhole.uri);
-            //print(game[0].incorrectWormholes.Count);
 
             if(timelineRetrieved)
                 setupGame(game);
@@ -75,15 +69,17 @@ public class Main : MonoBehaviour {
         //Get random positions to choose hole location
         int row = UnityEngine.Random.Range(0, 8);
         int col = UnityEngine.Random.Range(0, 8);
+
         GameObject holePosition = GameObject.Find(platformName+"HoleCover-"+row+"-"+col);
-        while(holePosition == null)
+
+        while (holePosition == null)
         {
             row = UnityEngine.Random.Range(0, 8);
             col = UnityEngine.Random.Range(0, 8);
             holePosition = GameObject.Find(platformName + "HoleCover-" + row + "-" + col);
         }
 
-         
+
 
         //Create image which will be shown above the hole
         StartCoroutine(createItemImage(isCorrect, stage, holeNumber, holePosition));
@@ -105,11 +101,8 @@ public class Main : MonoBehaviour {
             uri = stage.incorrectWormholes[holeNumber].uri;
         }
 
-        //Replace spaces in url with %20 - prevents 400 error
-        Regex.Replace(uri, @"\s+", "%20");
-
         // Start a download of the given URL
-        WWW www = new WWW(uri);
+        WWW www = new WWW(Uri.EscapeUriString(uri));
 
         // Wait for download to complete
         yield return www;

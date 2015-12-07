@@ -108,7 +108,6 @@ public class PlayerMovement : MonoBehaviour {
     //Creates background stageevent images
     IEnumerator setupStageEvent()
     {
-        print(level);
         if (level > 0)
         {
             GameObject[] previousImage = GameObject.FindGameObjectsWithTag("ItemImageLarge");
@@ -127,14 +126,11 @@ public class PlayerMovement : MonoBehaviour {
 
             string stageEventUri = contentItems[z].uri;
 
-            //Replace spaces in url with %20 - prevents 400 error
-            Regex.Replace(stageEventUri, @"\s+", "%20");
-            print(stageEventUri);
-
             // Start a download of the given URL
-            WWW www = new WWW(stageEventUri);
+            WWW www = new WWW(Uri.EscapeUriString(stageEventUri));
 
-           
+
+
             // Wait for download to complete
             yield return www;
 
