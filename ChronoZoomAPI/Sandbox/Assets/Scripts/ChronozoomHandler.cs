@@ -1,4 +1,8 @@
-﻿using Pathfinding.Serialization.JsonFx;
+﻿
+//VERSION 0.0.1
+//--Added 
+
+using Pathfinding.Serialization.JsonFx;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -56,6 +60,8 @@ public class ContentItem
 
 public class GameStage
 {
+    public string GameID { get; set; }
+    public string GameStageID { get; set; }
     public Exhibit stageEvent { get; set; }
     public ContentItem correctWormhole { get; set; }
     public List<ContentItem> incorrectWormholes { get; set; }
@@ -76,7 +82,7 @@ public class ChronozoomHandler
 	{
 		string result;
         Timeline timeline = new Timeline();
-        string requestTemplate = "http://www.chronozoom.com/api/gettimelines?supercollection={0}&collection={1}";
+        string requestTemplate = "http://www.chronozoom.com/api/gettimelines?supercollection={0}&colection={1}";
         string requestUrl = String.Format(requestTemplate, superCollectionName, collectionName);
 
         try
@@ -223,11 +229,13 @@ public class ChronozoomHandler
     {
         List<GameStage> game = new List<GameStage>();
         List<int> indexList = GenerateIndexList(numEvents, 1, exhibitList.Count);
+        Guid GameGuid = Guid.NewGuid();
 
         for (int i = 0; i < indexList.Count; i++)
         {
             GameStage gameStage = new GameStage();
             System.Random rand = new System.Random();
+            Guid GameStageGuid = Guid.NewGuid();
 
             gameStage.stageEvent = exhibitList.ElementAt(indexList.ElementAt(i));
             if (i + 1 < indexList.Count)
@@ -239,6 +247,8 @@ public class ChronozoomHandler
 
             gameStage.incorrectWormholes = GetIncorrectWormholes(gameStage.stageEvent.time, true, numWormholes - 1);
 
+            gameStage.GameID = GameGuid.ToString();
+            gameStage.GameStageID = GameStageGuid.ToString();
             game.Add(gameStage);
         }
 

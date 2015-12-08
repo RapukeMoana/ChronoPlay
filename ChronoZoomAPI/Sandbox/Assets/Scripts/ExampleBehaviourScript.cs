@@ -30,27 +30,34 @@ public class ExampleBehaviourScript : MonoBehaviour {
             ChronozoomHandler.GenerateLists(timeline, limitContentToImages);
             List<GameStage> game = ChronozoomHandler.SetUpGame(wormholesPerPlatform, platformsPerGames);
         }
+        //AzureMobileService.init();
+        //AzureMobileService.DoLogin();
+        //AzureMobileService.ReadItems();
+
+        //Logger.GetLog();
+        //Logger.Log("{\"EVENT\":\"JSON\"}", "TestingAPI", "GAMEID", "COLLECTIONID", "TIMELINEID", "CONTENTITEMID");
     }
 
 
-	//  gameObject.GetComponent<Renderer>().material.color = Color.black;
-	// Update is called once per frame
-	void Update () {
+    //  gameObject.GetComponent<Renderer>().material.color = Color.black;
+    // Update is called once per frame
+    void Update () {
         if (Input.GetKeyDown(KeyCode.C) && !cPressed && timelineRetrieved)
         {
-            if (!String.IsNullOrEmpty(timeline.title))
-            {
-                Material material = (Material)Resources.Load("Material/Light Yellow");
+            //if (!String.IsNullOrEmpty(timeline.title))
+            //{
+            //    Material material = (Material)Resources.Load("Material/Light Yellow");
 
-                foreach (Exhibit exhibititem in timeline.exhibits)
-                {
-                    GameObject exhibit = createGameObject(exhibititem.title, material);
-                    SetPrefabText(exhibit, exhibititem.title);    
-                    GenerateContentItems(exhibititem.contentItems);
-                    yDist ++;
-                }
-            }
-            cPressed = true;
+            //    foreach (Exhibit exhibititem in timeline.exhibits)
+            //    {
+            //        GameObject exhibit = createGameObject(exhibititem.title, material);
+            //        SetPrefabText(exhibit, exhibititem.title);    
+            //        GenerateContentItems(exhibititem.contentItems);
+            //        yDist ++;
+            //    }
+            //}
+            //cPressed = true;
+
         }
     }
 
