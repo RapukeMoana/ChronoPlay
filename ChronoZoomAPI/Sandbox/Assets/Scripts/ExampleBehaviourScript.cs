@@ -6,6 +6,11 @@ using System;
 using System.Linq;
 
 public class ExampleBehaviourScript : MonoBehaviour {
+    //CONST Globals
+    private const string _ScriptFileName = "ExampleBehaviourScript";
+    private const string _ProjectName = "Sandbox";
+
+
     //Private variables
     private bool timelineRetrieved = false;
     private float xDist = 1;
@@ -23,19 +28,23 @@ public class ExampleBehaviourScript : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        timeline = ChronozoomHandler.RetrieveTimeline(superCollectionName, collectionName);
-        if (!String.IsNullOrEmpty(timeline.__type))
-        {
-            timelineRetrieved = true;
-            ChronozoomHandler.GenerateLists(timeline, limitContentToImages);
-            List<GameStage> game = ChronozoomHandler.SetUpGame(wormholesPerPlatform, platformsPerGames);
-        }
+        //timeline = ChronozoomHandler.RetrieveTimeline(superCollectionName, collectionName);
+        //if (!String.IsNullOrEmpty(timeline.__type))
+        //{
+        //    timelineRetrieved = true;
+        //    ChronozoomHandler.GenerateLists(timeline, limitContentToImages);
+        //    List<GameStage> game = ChronozoomHandler.SetUpGame(wormholesPerPlatform, platformsPerGames);
+        //}
         //AzureMobileService.init();
         //AzureMobileService.DoLogin();
         //AzureMobileService.ReadItems();
 
-        //Logger.GetLog();
-        //Logger.Log("{\"EVENT\":\"JSON\"}", "TestingAPI", "GAMEID", "COLLECTIONID", "TIMELINEID", "CONTENTITEMID");
+        //Logger.GetPlayEventLog();
+        
+        //Logger.LogPlayEvent("{\"EVENT\":\"JSON\"}", "TestingAPI", "GAMEID", "COLLECTIONID", "TIMELINEID", "CONTENTITEMID");
+        //Logger.LogException(_ProjectName, _ScriptFileName, "Start", "Testing Logging class");
+        Logger.GetExceptionLog();
+
     }
 
 
