@@ -73,6 +73,10 @@ public class GameStage
 
 public class ChronozoomHandler
 {
+    //CONST GLOBALS
+    private const string _ProjectName = "ChronoPlay - Ball Game";
+    private const string _ScriptFileName = "ChronozoomHandler.cs";
+
     //__PRIVATE VARIABLES__
 
     private static List<ContentItem> contentItemList = new List<ContentItem>();
@@ -109,7 +113,7 @@ public class ChronozoomHandler
         }
         catch (Exception)
         {
-            Debug.Log("Error retrieving data from chronozoom.");
+            Logger.LogException(_ProjectName, _ScriptFileName, "RetrieveTimeline", "Error retrieving data from chronozoom");
             return timeline;
         }
     }
@@ -117,16 +121,31 @@ public class ChronozoomHandler
     //Sets up the contentItem and Exhibit Lists based on the timeline retrieved from Chronozoom
     public static void GenerateLists(Timeline timeline, bool limitToImages)
     {
-        onlyPictures = limitToImages;
-        GetSubTimelinesInTimeline(timeline);
-        SortContentItemList();
-        SortExhibitList();
+        try
+        {
+            onlyPictures = limitToImages;
+            GetSubTimelinesInTimeline(timeline);
+            SortContentItemList();
+            SortExhibitList();
+        }
+        catch(Exception)
+        {
+            Logger.LogException(_ProjectName, _ScriptFileName, "GenerateLists", "Error generating Lists");
+        }
     }
 
     //Sets up the game which is a list of game 'stages' described by the gameStage class 
     public static List<GameStage> SetUpGame(int numWormholes, int numPlatforms)
     {
-        return GenerateGame(numWormholes, numPlatforms);
+        try
+        {
+            return GenerateGame(numWormholes, numPlatforms);
+        }
+        catch(Exception)
+        {
+            Logger.LogException(_ProjectName, _ScriptFileName, "SetUpGame", "Error setting up game");
+            return null;
+        }
     }
 
     //__PRIVATE FUNCTIONS__
