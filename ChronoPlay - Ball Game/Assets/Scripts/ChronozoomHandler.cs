@@ -1,4 +1,12 @@
-﻿using Pathfinding.Serialization.JsonFx;
+﻿//Chronoplay UOA
+#region VERSION DETAILS
+//VERSION 0.0.1
+//--Added Logging
+//--Bug fixes when displaying videos and gifs
+//--Added GameID and GameStageID's for use in logging
+#endregion
+
+using Pathfinding.Serialization.JsonFx;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -56,6 +64,8 @@ public class ContentItem
 
 public class GameStage
 {
+    public string GameID { get; set; }
+    public string GameStageID { get; set; }
     public Exhibit stageEvent { get; set; }
     public ContentItem correctWormhole { get; set; }
     public List<ContentItem> incorrectWormholes { get; set; }
@@ -76,7 +86,7 @@ public class ChronozoomHandler
     {
         string result;
         Timeline timeline = new Timeline();
-        string requestTemplate = "http://www.chronozoom.com/api/gettimelines?supercollection={0}&collection={1}";
+        string requestTemplate = "http://www.chronozoom.com/api/gettimelines?supercollection={0}&colection={1}";
         string requestUrl = String.Format(requestTemplate, superCollectionName, collectionName);
 
         try
@@ -181,7 +191,8 @@ public class ChronozoomHandler
 
                 //Types in Chronozoom include: picture, image, photosynth and video however there is no naming conventions in place when it comes to defining the media source
                 //Based on the setting 'onlyPictures' it either returns all content items or filters to only images
-                if (onlyPictures && (contentItem.mediaType.ToUpper() == "PICTURE" || contentItem.mediaType.ToUpper() == "IMAGE"))
+                bool isValid = ValidateMediaSource(contentItem.mediaSource);
+                if (onlyPictures && (contentItem.mediaType.ToUpper() == "PICTURE" || contentItem.mediaType.ToUpper() == "IMAGE") && isValid)
                 {
                     contentItemList.Add(contentItem);
                 }
@@ -193,7 +204,30 @@ public class ChronozoomHandler
         }
     }
 
-    private static List<ContentItem> GetIncorrectWormholes(Int64 eventDate, bool getHistoric, int numItems)
+    private static ContentItem GenerateCorrectWormhole(List<ContentItem> eventContentItems)
+    {
+        ContentItem correctWormhole = new ContentItem();
+        List<ContentItem> potentialWormholes = new List<ContentItem>();
+        System.Random rand = new System.Random();
+
+        foreach (ContentItem ci in eventContentItems)
+        {
+            if (onlyPictures && (ci.mediaType.ToUpper() == "PICTURE" || ci.mediaType.ToUpper() == "IMAGE") && ValidateMediaSource(ci.mediaSource))
+            {
+                potentialWormholes.Add(ci);
+            }
+            else if (!onlyPictures)
+            {
+                potentialWormholes.Add(ci);
+            }
+        }
+        int countPotentialEventItems = eventContentItems.Count;
+        correctWormhole = eventContentItems.ElementAt(rand.Next(0, countPotentialEventItems));
+
+        return correctWormhole;
+    }
+
+    private static List<ContentItem> GenerateIncorrectWormholes(Int64 eventDate, bool getHistoric, int numItems)
     {
         List<ContentItem> incorrectWormholes = new List<ContentItem>();
 
@@ -223,22 +257,32 @@ public class ChronozoomHandler
     {
         List<GameStage> game = new List<GameStage>();
         List<int> indexList = GenerateIndexList(numEvents, 1, exhibitList.Count);
+        Guid GameGuid = Guid.NewGuid();
 
         for (int i = 0; i < indexList.Count; i++)
         {
             GameStage gameStage = new GameStage();
             System.Random rand = new System.Random();
+            Guid GameStageGuid = Guid.NewGuid();
 
             gameStage.stageEvent = exhibitList.ElementAt(indexList.ElementAt(i));
             if (i + 1 < indexList.Count)
             {
                 Exhibit nextEvent = exhibitList.ElementAt(indexList.ElementAt(i + 1));
-                int countNextEventItems = nextEvent.contentItems.Count;
-                gameStage.correctWormhole = nextEvent.contentItems.ElementAt(rand.Next(0, countNextEventItems));
+                if (nextEvent != null)
+                {
+                    gameStage.correctWormhole = GenerateCorrectWormhole(nextEvent.contentItems);
+                }
+                else
+                {
+                    gameStage.correctWormhole = null;
+                }
             }
 
-            gameStage.incorrectWormholes = GetIncorrectWormholes(gameStage.stageEvent.time, true, numWormholes - 1);
+            gameStage.incorrectWormholes = GenerateIncorrectWormholes(gameStage.stageEvent.time, true, numWormholes - 1);
 
+            gameStage.GameID = GameGuid.ToString();
+            gameStage.GameStageID = GameStageGuid.ToString();
             game.Add(gameStage);
         }
 
@@ -269,6 +313,30 @@ public class ChronozoomHandler
 
         return indexList;
     }
+
+    private static bool ValidateMediaSource(string str)
+    {
+        if (String.IsNullOrEmpty(str))
+        {
+            return false;
+        }
+        else
+        {
+            if (4 >= str.Length)
+            {
+                return false;
+            }
+            else if (str.Substring(str.Length - 4).ToUpper() == ".GIF")
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+    }
 }
+
 
 
