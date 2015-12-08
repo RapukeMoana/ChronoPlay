@@ -137,8 +137,8 @@ public class Main : MonoBehaviour {
 
         Vector3 tempPosition = itemImage.transform.position;
         itemImageDescription.GetComponent<TextMesh>().text = title;
-        itemImageDescription.GetComponent<TextMesh>().fontSize = 10;
-        itemImageDescription.transform.position = new Vector3(tempPosition.x, tempPosition.y, tempPosition.z);
+        itemImageDescription.GetComponent<TextMesh>().transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+        itemImageDescription.transform.position = new Vector3(tempPosition.x-3.5f, tempPosition.y- 1.35f, tempPosition.z-1.2f);
 
 
         //Place image on sensor (hole)
