@@ -3,6 +3,7 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using UnityEngine.UI;
 
 public class Main : MonoBehaviour {
 
@@ -34,7 +35,11 @@ public class Main : MonoBehaviour {
 
             if(timelineRetrieved)
                 setupGame(game);
-        }   
+        }
+        string startDate = Convert.ToString(game[0].stageEvent.time);
+        string endDate = Convert.ToString(game[game.Count - 1].stageEvent.time);
+        RenderTimeline(startDate, endDate);
+
     }
 
     private void setupGame(List<GameStage> game)
@@ -66,8 +71,6 @@ public class Main : MonoBehaviour {
         }
         
     }
-
-
 
     private void setupHole(string platformName, GameStage stage, bool isCorrect, int holeNumber)
     {
@@ -177,6 +180,7 @@ public class Main : MonoBehaviour {
 
     public List<ContentItem> getStageEventContent(int level)
     {
+        UpdateSlider(Convert.ToString(game[level].stageEvent.time));
         return game[level].stageEvent.contentItems;
     }
 
@@ -207,5 +211,53 @@ public class Main : MonoBehaviour {
             default:
                 return null;
         }
+    }
+
+    private void RenderTimeline(string startDate, string endDate)
+    {
+        GameObject gameObject = (GameObject)Instantiate(Resources.Load("TimelineCanvas"));
+        GameObject temp = GameObject.Find("TimelineSlider");
+        Slider timelineSlider = temp.GetComponent<Slider>();
+        timelineSlider.minValue = Convert.ToInt64(startDate);
+        timelineSlider.maxValue = Convert.ToInt64(endDate);
+        SetSliderValue(startDate);
+
+        SetStartTimeLabel(startDate);
+        SetSliderLabel(startDate);
+        SetEndTimeLabel(endDate);
+    }
+
+    private void SetStartTimeLabel(string startDate)
+    {
+        GameObject temp = GameObject.Find("StartTime");
+        Text startTime = temp.GetComponent<Text>();
+        startTime.text = startDate;
+    }
+
+    private void SetEndTimeLabel(string endDate)
+    {
+        GameObject temp = GameObject.Find("EndTime");
+        Text endTime = temp.GetComponent<Text>();
+        endTime.text = endDate;
+    }
+
+    private void SetSliderLabel(string time)
+    {
+        GameObject temp = GameObject.Find("CurrentTime");
+        Text currentTime = temp.GetComponent<Text>();
+        currentTime.text = time;
+    }
+
+    private void SetSliderValue(string value)
+    {
+        GameObject temp = GameObject.Find("TimelineSlider");
+        Slider timelineSlider = temp.GetComponent<Slider>();
+        timelineSlider.value = Convert.ToInt64(value);
+    }
+
+    private void UpdateSlider(string value)
+    {
+        SetSliderValue(value);
+        SetSliderLabel(value);
     }
 }
