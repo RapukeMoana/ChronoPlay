@@ -34,7 +34,8 @@ public class Main : MonoBehaviour {
 
             if(timelineRetrieved)
                 setupGame(game);
-        }   
+        }
+        print("HELLO WORLD");
     }
 
     private void setupGame(List<GameStage> game)
