@@ -76,7 +76,7 @@ public class PlayerMovement : MonoBehaviour {
         switch (other.transform.tag)
         {
             //If correct hole, update score and show result
-            case "Correct":
+            case "Correct-Hole":
                 Destroy(other.gameObject);
                 numCorrect++;
                 scoreText.text = "SCORE: Correct = " + numCorrect+ "  Incorrect = "+numIncorrect;
@@ -87,7 +87,7 @@ public class PlayerMovement : MonoBehaviour {
                 level++;
                 StartCoroutine(setupStageEvent());
                 break;
-            case "Incorrect":
+            case "Incorrect-Hole":
                 Destroy(other.gameObject);
                 numIncorrect++;
                 scoreText.text = "SCORE: Correct = " + numCorrect + "  Incorrect = " + numIncorrect;
@@ -120,17 +120,32 @@ public class PlayerMovement : MonoBehaviour {
             }
         }
 
+        //Finds the object clicked
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
-            if (Physics.Raycast(ray, out hit, 10f))
-                Debug.DrawRay(ray.origin, hit.point);
+            if (Physics.Raycast(ray, out hit, 100f))
+                showDescription(GameObject.Find(hit.collider.gameObject.name));
 
-            print(GameObject.Find(hit.collider.gameObject.name));
+
         }
 
+    }
+
+    //Show description of selected item
+    private void showDescription(GameObject selectedItem)
+    {
+        ContentItem selected = GameObject.Find("Main Camera").GetComponent<Main>().getContentItemById(level, selectedItem.name, selectedItem.tag == "Correct");
+        if(selected != null)
+        {
+            Text descriptionText = GameObject.Find("Description").GetComponent<Text>();
+            Text descriptionTitleText = GameObject.Find("DescriptionTitle").GetComponent<Text>();
+            descriptionText.text = selected.description;
+            descriptionTitleText.text = selected.title;
+        }
+        
     }
 
     //Creates background stageevent images

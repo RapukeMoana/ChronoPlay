@@ -91,16 +91,18 @@ public class Main : MonoBehaviour {
         Vector3 holeCoordinate = holePosition.transform.position;
 
         //Get uri of image
-        string uri, title;
+        string uri, title, id;
         if (isCorrect)
         {
             uri = stage.correctWormhole.uri;
             title = stage.correctWormhole.title;
+            id = stage.correctWormhole.id;
         }
         else
         {
             uri = stage.incorrectWormholes[holeNumber].uri;
             title = stage.incorrectWormholes[holeNumber].title;
+            id = stage.incorrectWormholes[holeNumber].id;
         }
 
         // Start a download of the given URL
@@ -115,18 +117,27 @@ public class Main : MonoBehaviour {
 
         //Creates item image object
         GameObject itemImage = (GameObject)Instantiate(Resources.Load("ItemImage"));
+        itemImage.name = id;
 
         //Create sensor
         GameObject itemImageSensor = (GameObject)Instantiate(Resources.Load("ItemImageSensor"));
+        itemImageSensor.name = id+"-sensor";
 
         //Create hole on platform
         Destroy(holePosition);
 
         //Add correct/incorrect tags
         if (isCorrect)
-            itemImageSensor.tag = "Correct";
+        {
+            itemImageSensor.tag = "Correct-Hole";
+            itemImage.tag = "Correct";
+        }
         else
-            itemImageSensor.tag = "Incorrect";
+        {
+            itemImageSensor.tag = "Incorrect-Hole";
+            itemImage.tag = "Incorrect";
+        }
+            
 
         //Place image on top of the current wormhole
         itemImage.transform.position = new Vector3(holeCoordinate.x, holeCoordinate.y+3, holeCoordinate.z+2);
@@ -149,18 +160,6 @@ public class Main : MonoBehaviour {
     }
     // Update is called once per frame
     void Update () {
-        ////this if check for the mouse left click
-        //if (Input.GetButtonDown("0"))
-        //{
-        //    var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        //    RaycastHit hit;
-        //    //this if checks, a detection of hit in an GameObject with the mouse on screen
-        //    if (Physics.Raycast(ray, hit))
-        //    {
-        //        //GameObject.Find("Nameofyourobject") search your gameobject on the hierarchy with the desired name and allows you to use it
-        //        Destroy(GameObject.Find(hit.name));
-        //    }
-        //}
 
 
     }
@@ -168,5 +167,24 @@ public class Main : MonoBehaviour {
     public List<ContentItem> getStageEventContent(int level)
     {
         return game[level].stageEvent.contentItems;
+    }
+
+    public ContentItem getContentItemById(int level,string Id, bool isCorrect)
+    {
+        if (isCorrect)
+        {
+            return game[level].correctWormhole;
+        }
+        else
+        {
+            for(int i = 0; i < game[level].incorrectWormholes.Count; i++)
+            {
+                if(game[level].incorrectWormholes[i].id == Id)
+                {
+                    return game[level].incorrectWormholes[i];
+                }
+            }
+        }
+        return null;
     }
 }
