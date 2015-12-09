@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour {
     public float speed;
     public float plateDistance = 20f;
     public bool isKeyBoard;
+    public int zoom;
 
     private Rigidbody rb;
     private float speedsmooth = 0.8f;
@@ -22,7 +23,6 @@ public class PlayerMovement : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
 
         myAlpha = 1.0f; // maybe you need other value
-        print("called");
         StartCoroutine(setupStageEvent());
     }
 	
@@ -65,6 +65,16 @@ public class PlayerMovement : MonoBehaviour {
         } else if (transform.position.z < -10.0f)
         {
             transform.position = new Vector3(transform.position.x, transform.position.y, -10.0f);
+        }
+
+        //Temporary Zoom 
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            GameObject.Find("Main Camera").GetComponent<Camera>().fieldOfView += zoom;
+        }
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            GameObject.Find("Main Camera").GetComponent<Camera>().fieldOfView -= zoom;
         }
     }
 
@@ -150,7 +160,8 @@ public class PlayerMovement : MonoBehaviour {
     //Creates background stageevent images
     IEnumerator setupStageEvent()
     {
-        print(level);
+        
+
         if (level > 0)
         {
             GameObject[] previousImage = GameObject.FindGameObjectsWithTag("ItemImageLarge");
@@ -161,12 +172,14 @@ public class PlayerMovement : MonoBehaviour {
                 Destroy(previousText[i]);
             }
         }
+        print("Level:"+level);
         List<ContentItem> contentItems = GameObject.Find("Main Camera").GetComponent<Main>().getStageEventContent(level);
-
+        print(contentItems.Count);
+        int localLevel = level;
         for (int z = 0; z < contentItems.Count; z++)
         {
             Texture2D texture = new Texture2D(1, 1);
-
+            string stageEventid = contentItems[z].id;
             string stageEventUri = contentItems[z].uri;
             //print(stageEventUri);
             //print(contentItems[z].mediaType);
@@ -178,34 +191,41 @@ public class PlayerMovement : MonoBehaviour {
 
             // Wait for download to complete
             yield return www;
+            
+            //Checks to see if the image is returned but the user is in a different level
+            if(localLevel == level)
+            {
+                // assign texture
+                www.LoadImageIntoTexture(texture);
 
-            // assign texture
-            www.LoadImageIntoTexture(texture);
+                //Creates item image object
+                GameObject itemImageLarge = (GameObject)Instantiate(Resources.Load("ItemImageLarge"));
+                itemImageLarge.tag = "ItemImageLarge";
+                itemImageLarge.name = stageEventid;
+                print("Local Level:" + localLevel + "," + level);
 
-            //Creates item image object
-            GameObject itemImageLarge = (GameObject)Instantiate(Resources.Load("ItemImageLargeWrapper"));
-            itemImageLarge.transform.GetChild(0).tag = "ItemImageLarge";
-            itemImageLarge.transform.GetChild(0).name = contentItems[z].id;
+                //Makes the image object a child of the camera
+                GameObject mainCamera = GameObject.Find("Main Camera");
+                itemImageLarge.transform.parent = mainCamera.transform;
 
-            //Makes the image object a child of the camera
-            GameObject mainCamera = GameObject.Find("Main Camera");
-            itemImageLarge.transform.parent = mainCamera.transform;
+                //Get position of current platform
+                Vector3 cameraPosition = mainCamera.transform.position;
 
-            //Get position of current platform
-            Vector3 cameraPosition = mainCamera.transform.position;
+                //Place image behind the scene and centres
+                itemImageLarge.transform.position = new Vector3(z * 100f - (30f * (contentItems.Count - 1f)), cameraPosition.y - 20f, 100f);
+                itemImageLarge.gameObject.GetComponent<Renderer>().material.mainTexture = texture;
 
-            //Place image behind the scene and centres
-            itemImageLarge.transform.GetChild(0).position = new Vector3(z * 100f - (30f* (contentItems.Count-1f)), cameraPosition.y-20f, 100f);
-            itemImageLarge.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.mainTexture = texture;
+                //Create description 3d text
+                GameObject itemImageLargeDescription = (GameObject)Instantiate(Resources.Load("ItemDescription"));
+                itemImageLargeDescription.tag = "ItemImageDescription";
 
-            //Create description 3d text
-            GameObject itemImageLargeDescription = (GameObject)Instantiate(Resources.Load("ItemDescription"));
-            itemImageLargeDescription.tag = "ItemImageDescription";
+                Vector3 tempPosition = itemImageLarge.transform.position;
+                itemImageLargeDescription.GetComponent<TextMesh>().text = contentItems[z].title;
+                itemImageLargeDescription.transform.position = new Vector3(tempPosition.x - 40f, tempPosition.y - 20f, tempPosition.z - 20f);
+                itemImageLargeDescription.transform.parent = mainCamera.transform;
+            }
 
-            Vector3 tempPosition = itemImageLarge.transform.GetChild(0).position;
-            itemImageLargeDescription.GetComponent<TextMesh>().text = contentItems[z].title;
-            itemImageLargeDescription.transform.position = new Vector3(tempPosition.x - 40f, tempPosition.y-20f, tempPosition.z-20f);
-            itemImageLargeDescription.transform.parent = mainCamera.transform;
+            
 
         }
     }
