@@ -8,8 +8,9 @@ public class Main : MonoBehaviour {
 
     //Private variables
     private bool timelineRetrieved = false;
+    private List<GameStage> game;
+    private bool[] holeRow;
 
-    //__PRIVATE VARIABLES__
     public Timeline timeline = new Timeline();
     //__PUBLIC VARIABLES__
     public string superCollectionName = "chronozoom"; //chronozoom nobelprize
@@ -18,7 +19,8 @@ public class Main : MonoBehaviour {
     public int platformsPerGames = 10;
     public bool limitContentToImages = true;
     public float plateDistance = 20f;
-    private List<GameStage> game;
+
+
 
     // Use this for initialization
     void Start()
@@ -41,6 +43,9 @@ public class Main : MonoBehaviour {
         for (int i = 0; i < platformsPerGames; i++) {
             //Creates platforms
             GameObject platform = (GameObject)Instantiate(Resources.Load("Plate"));
+
+            //Reset one hole per row rule
+            holeRow = new bool[7];
 
             //Add name to platform (e.g. platform-0 is first platform)
             platform.name = "Platform-" + i;
@@ -66,9 +71,15 @@ public class Main : MonoBehaviour {
 
     private void setupHole(string platformName, GameStage stage, bool isCorrect, int holeNumber)
     {
+        
         //Get random positions to choose hole location
-        int row = UnityEngine.Random.Range(0, 8);
-        int col = UnityEngine.Random.Range(0, 8);
+        int row = UnityEngine.Random.Range(0, 6);
+        int col = UnityEngine.Random.Range(0, 6);
+
+        while (holeRow[row])
+        {
+            row = UnityEngine.Random.Range(0, 6);
+        }
 
         GameObject holePosition = GameObject.Find(platformName+"HoleCover-"+row+"-"+col);
 
@@ -79,7 +90,7 @@ public class Main : MonoBehaviour {
             holePosition = GameObject.Find(platformName + "HoleCover-" + row + "-" + col);
         }
 
-
+        holeRow[row] = true;
 
         //Create image which will be shown above the hole
         StartCoroutine(createItemImage(isCorrect, stage, holeNumber, holePosition));
