@@ -119,7 +119,18 @@ public class PlayerMovement : MonoBehaviour {
                 result.color = new Color(1.0f, 1.0f, 1.0f, 0);
             }
         }
-        
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, 10f))
+                Debug.DrawRay(ray.origin, hit.point);
+
+            print(GameObject.Find(hit.collider.gameObject.name));
+        }
+
     }
 
     //Creates background stageevent images
@@ -143,7 +154,6 @@ public class PlayerMovement : MonoBehaviour {
 
             string stageEventUri = contentItems[z].uri;
             print(stageEventUri);
-            print(contentItems[z].mediaSource);
             print(contentItems[z].mediaType);
 
             // Start a download of the given URL

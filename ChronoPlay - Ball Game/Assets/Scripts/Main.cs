@@ -149,8 +149,21 @@ public class Main : MonoBehaviour {
     }
     // Update is called once per frame
     void Update () {
-	
-	}
+        ////this if check for the mouse left click
+        //if (Input.GetButtonDown("0"))
+        //{
+        //    var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        //    RaycastHit hit;
+        //    //this if checks, a detection of hit in an GameObject with the mouse on screen
+        //    if (Physics.Raycast(ray, hit))
+        //    {
+        //        //GameObject.Find("Nameofyourobject") search your gameobject on the hierarchy with the desired name and allows you to use it
+        //        Destroy(GameObject.Find(hit.name));
+        //    }
+        //}
+
+
+    }
 
     public List<ContentItem> getStageEventContent(int level)
     {
