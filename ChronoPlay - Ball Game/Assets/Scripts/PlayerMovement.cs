@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour {
     private Rigidbody rb;
     private float speedsmooth = 0.8f;
     private float myAlpha = 1.0f;
-    private bool resultFade = true;
+    private bool resultFade = true, sideDescriptionVisible = false;
     private int numCorrect = 0, numIncorrect = 0, level = 0;
 
 
@@ -144,15 +144,27 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     //Show description of selected item
+    //TODO:
     private void showDescription(GameObject selectedItem)
     {
         ContentItem selected = GameObject.Find("Main Camera").GetComponent<Main>().getContentItemById(level, selectedItem.name, selectedItem.tag);
-        if(selected != null)
-        {
-            Text descriptionText = GameObject.Find("Description").GetComponent<Text>();
-            Text descriptionTitleText = GameObject.Find("DescriptionTitle").GetComponent<Text>();
+        Text descriptionText = GameObject.Find("Description").GetComponent<Text>();
+        Text descriptionTitleText = GameObject.Find("DescriptionTitle").GetComponent<Text>();
+        GameObject blackBackground = GameObject.Find("BlackBackground");
+
+        if (selected != null)
+        {          
             descriptionText.text = selected.description;
             descriptionTitleText.text = selected.title;
+            blackBackground.GetComponent<RawImage>().enabled = true;
+            sideDescriptionVisible = true;
+        }
+        else if(sideDescriptionVisible)
+        {
+            descriptionText.text = "";
+            descriptionTitleText.text = "";
+            blackBackground.GetComponent<RawImage>().enabled = false;
+            sideDescriptionVisible = false;
         }
         
     }
