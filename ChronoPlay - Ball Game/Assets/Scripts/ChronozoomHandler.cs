@@ -154,7 +154,7 @@ public class ChronozoomHandler
     {
         for (int i = 0; i <stageEvent.contentItems.Count; i++)
         {
-            bool sourceIsValid = ValidateMediaSource(stageEvent.contentItems[i].mediaSource);
+            bool sourceIsValid = ValidateMediaSource(stageEvent.contentItems[i].uri);
             if (!sourceIsValid || !(stageEvent.contentItems[i].mediaType.ToUpper() == "PICTURE" || stageEvent.contentItems[i].mediaType.ToUpper() == "IMAGE"))
             {
                 stageEvent.contentItems.RemoveAt(i);
@@ -222,7 +222,7 @@ public class ChronozoomHandler
 
                 //Types in Chronozoom include: picture, image, photosynth and video however there is no naming conventions in place when it comes to defining the media source
                 //Based on the setting 'onlyPictures' it either returns all content items or filters to only images
-                bool isValid = ValidateMediaSource(contentItem.mediaSource);
+                bool isValid = ValidateMediaSource(contentItem.uri);
                 if (onlyPictures && (contentItem.mediaType.ToUpper() == "PICTURE" || contentItem.mediaType.ToUpper() == "IMAGE") && isValid)
                 {
                     contentItemList.Add(contentItem);
@@ -243,7 +243,7 @@ public class ChronozoomHandler
 
         foreach (ContentItem ci in eventContentItems)
         {
-            if (onlyPictures && (ci.mediaType.ToUpper() == "PICTURE" || ci.mediaType.ToUpper() == "IMAGE") && ValidateMediaSource(ci.mediaSource))
+            if (onlyPictures && (ci.mediaType.ToUpper() == "PICTURE" || ci.mediaType.ToUpper() == "IMAGE") && ValidateMediaSource(ci.uri))
             {
                 potentialWormholes.Add(ci);
             }
@@ -295,8 +295,7 @@ public class ChronozoomHandler
             GameStage gameStage = new GameStage();
             System.Random rand = new System.Random();
             Guid GameStageGuid = Guid.NewGuid();
-            Exhibit stageEvent = exhibitList.ElementAt(indexList.ElementAt(i));
-            gameStage.stageEvent = CleanStageEvent(stageEvent);
+            gameStage.stageEvent = exhibitList.ElementAt(indexList.ElementAt(i));
 
             if (i + 1 < indexList.Count)
             {
