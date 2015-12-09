@@ -150,6 +150,18 @@ public class ChronozoomHandler
 
     //__PRIVATE FUNCTIONS__
 
+    private static Exhibit CleanStageEvent(Exhibit stageEvent)
+    {
+        for (int i = 0; i <stageEvent.contentItems.Count; i++)
+        {
+            bool sourceIsValid = ValidateMediaSource(stageEvent.contentItems[i].mediaSource);
+            if (!sourceIsValid || !(stageEvent.contentItems[i].mediaType.ToUpper() == "PICTURE" || stageEvent.contentItems[i].mediaType.ToUpper() == "IMAGE"))
+            {
+                stageEvent.contentItems.RemoveAt(i);
+            }
+        }
+        return stageEvent;
+    }
     //Sort function for content Item
     private static void SortContentItemList()
     {
@@ -240,8 +252,8 @@ public class ChronozoomHandler
                 potentialWormholes.Add(ci);
             }
         }
-        int countPotentialEventItems = eventContentItems.Count;
-        correctWormhole = eventContentItems.ElementAt(rand.Next(0, countPotentialEventItems));
+        int countPotentialEventItems = potentialWormholes.Count;
+        correctWormhole = potentialWormholes.ElementAt(rand.Next(0, countPotentialEventItems));
 
         return correctWormhole;
     }
@@ -283,8 +295,9 @@ public class ChronozoomHandler
             GameStage gameStage = new GameStage();
             System.Random rand = new System.Random();
             Guid GameStageGuid = Guid.NewGuid();
+            Exhibit stageEvent = exhibitList.ElementAt(indexList.ElementAt(i));
+            gameStage.stageEvent = CleanStageEvent(stageEvent);
 
-            gameStage.stageEvent = exhibitList.ElementAt(indexList.ElementAt(i));
             if (i + 1 < indexList.Count)
             {
                 Exhibit nextEvent = exhibitList.ElementAt(indexList.ElementAt(i + 1));
@@ -346,6 +359,10 @@ public class ChronozoomHandler
                 return false;
             }
             else if (str.Substring(str.Length - 4).ToUpper() == ".GIF")
+            {
+                return false;
+            }
+            else if (str.ToUpper().IndexOf("PHOTOSYNTH") > -1)
             {
                 return false;
             }
