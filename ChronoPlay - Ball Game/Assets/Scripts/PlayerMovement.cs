@@ -22,7 +22,7 @@ public class PlayerMovement : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
 
         myAlpha = 1.0f; // maybe you need other value
-
+        print("called");
         StartCoroutine(setupStageEvent());
     }
 	
@@ -42,7 +42,6 @@ public class PlayerMovement : MonoBehaviour {
         {
             float moveHorizontal = Input.acceleration.x;
             float moveVertical = Input.acceleration.z;
-            print(moveVertical +" "+ moveVertical);
             Vector3 movement = new Vector3(moveHorizontal, 0, -moveVertical);
             if (movement.sqrMagnitude > 1)
                 movement.Normalize();
@@ -126,7 +125,7 @@ public class PlayerMovement : MonoBehaviour {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
-            if (Physics.Raycast(ray, out hit, 100f))
+            if (Physics.Raycast(ray, out hit, 200f))
                 showDescription(GameObject.Find(hit.collider.gameObject.name));
 
 
@@ -137,7 +136,7 @@ public class PlayerMovement : MonoBehaviour {
     //Show description of selected item
     private void showDescription(GameObject selectedItem)
     {
-        ContentItem selected = GameObject.Find("Main Camera").GetComponent<Main>().getContentItemById(level, selectedItem.name, selectedItem.tag == "Correct");
+        ContentItem selected = GameObject.Find("Main Camera").GetComponent<Main>().getContentItemById(level, selectedItem.name, selectedItem.tag);
         if(selected != null)
         {
             Text descriptionText = GameObject.Find("Description").GetComponent<Text>();
@@ -151,6 +150,7 @@ public class PlayerMovement : MonoBehaviour {
     //Creates background stageevent images
     IEnumerator setupStageEvent()
     {
+        print(level);
         if (level > 0)
         {
             GameObject[] previousImage = GameObject.FindGameObjectsWithTag("ItemImageLarge");
@@ -168,8 +168,8 @@ public class PlayerMovement : MonoBehaviour {
             Texture2D texture = new Texture2D(1, 1);
 
             string stageEventUri = contentItems[z].uri;
-            print(stageEventUri);
-            print(contentItems[z].mediaType);
+            //print(stageEventUri);
+            //print(contentItems[z].mediaType);
 
             // Start a download of the given URL
             WWW www = new WWW(Uri.EscapeUriString(stageEventUri));
@@ -184,7 +184,8 @@ public class PlayerMovement : MonoBehaviour {
 
             //Creates item image object
             GameObject itemImageLarge = (GameObject)Instantiate(Resources.Load("ItemImageLargeWrapper"));
-            itemImageLarge.tag = "ItemImageLarge";
+            itemImageLarge.transform.GetChild(0).tag = "ItemImageLarge";
+            itemImageLarge.transform.GetChild(0).name = contentItems[z].id;
 
             //Makes the image object a child of the camera
             GameObject mainCamera = GameObject.Find("Main Camera");

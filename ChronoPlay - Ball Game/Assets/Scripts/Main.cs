@@ -169,22 +169,32 @@ public class Main : MonoBehaviour {
         return game[level].stageEvent.contentItems;
     }
 
-    public ContentItem getContentItemById(int level,string Id, bool isCorrect)
+    public ContentItem getContentItemById(int level,string Id, string tag)
     {
-        if (isCorrect)
+        switch (tag)
         {
-            return game[level].correctWormhole;
-        }
-        else
-        {
-            for(int i = 0; i < game[level].incorrectWormholes.Count; i++)
-            {
-                if(game[level].incorrectWormholes[i].id == Id)
+            case "Correct":
+                return game[level].correctWormhole;
+            case "Incorrect":
+                for (int i = 0; i < game[level].incorrectWormholes.Count; i++)
                 {
-                    return game[level].incorrectWormholes[i];
+                    if (game[level].incorrectWormholes[i].id == Id)
+                    {
+                        return game[level].incorrectWormholes[i];
+                    }
                 }
-            }
+                return null;
+            case "ItemImageLarge":
+                for (int i = 0; i < game[level].stageEvent.contentItems.Count; i++)
+                {
+                    if (game[level].stageEvent.contentItems[i].id == Id)
+                    {
+                        return game[level].stageEvent.contentItems[i];
+                    }
+                }
+                return null;
+            default:
+                return null;
         }
-        return null;
     }
 }
