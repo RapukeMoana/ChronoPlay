@@ -144,7 +144,6 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     //Show description of selected item
-    //TODO:
     private void showDescription(GameObject selectedItem)
     {
         ContentItem selected = GameObject.Find("Main Camera").GetComponent<Main>().getContentItemById(level, selectedItem.name, selectedItem.tag);
@@ -233,7 +232,7 @@ public class PlayerMovement : MonoBehaviour {
 
                 Vector3 tempPosition = itemImageLarge.transform.position;
                 itemImageLargeDescription.GetComponent<TextMesh>().text = contentItems[z].title;
-                itemImageLargeDescription.transform.position = new Vector3(tempPosition.x - 40f, tempPosition.y - 20f, tempPosition.z - 20f);
+                itemImageLargeDescription.transform.position = new Vector3(tempPosition.x - 39f, tempPosition.y - 15f, tempPosition.z - 20f);
                 itemImageLargeDescription.transform.parent = mainCamera.transform;
             }
 
