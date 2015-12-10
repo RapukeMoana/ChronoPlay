@@ -150,22 +150,33 @@ public class PlayerMovement : MonoBehaviour {
         Text descriptionText = GameObject.Find("Description").GetComponent<Text>();
         Text descriptionTitleText = GameObject.Find("DescriptionTitle").GetComponent<Text>();
         RawImage descriptionImage = GameObject.Find("DescriptionImage").GetComponent<RawImage>();
-        string id = selected.id;
-        Texture texture = GameObject.Find(id).gameObject.GetComponent<Renderer>().material.mainTexture;
+        Image blackBackground =  GameObject.Find("SideDescription").GetComponent<Image>();
+        Image handle = GameObject.Find("Handle").GetComponent<Image>();
+
+        print(selectedItem.name);
 
 
         if (selected != null)
-        {          
+        {
+            string id = selected.id;
+            Texture texture = GameObject.Find(id).gameObject.GetComponent<Renderer>().material.mainTexture;
             descriptionText.text = selected.description;
             descriptionTitleText.text = selected.title;
+            descriptionImage.enabled = true;
+            blackBackground.enabled = true;
+            handle.enabled = true;
             descriptionImage.texture = texture;
             sideDescriptionVisible = true;
         }
         else if(sideDescriptionVisible)
         {
-            descriptionText.text = "";
-            descriptionTitleText.text = "";
-            sideDescriptionVisible = false;
+            //TODO: Disabled until fix: panel dissappears when click
+            //descriptionText.text = "";
+            //descriptionTitleText.text = "";
+            //descriptionImage.enabled = false;
+            //blackBackground.enabled = false;
+            //handle.enabled = false;
+            //sideDescriptionVisible = false;
         }
         
     }
