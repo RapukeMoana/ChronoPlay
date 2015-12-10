@@ -149,20 +149,22 @@ public class PlayerMovement : MonoBehaviour {
         ContentItem selected = GameObject.Find("Main Camera").GetComponent<Main>().getContentItemById(level, selectedItem.name, selectedItem.tag);
         Text descriptionText = GameObject.Find("Description").GetComponent<Text>();
         Text descriptionTitleText = GameObject.Find("DescriptionTitle").GetComponent<Text>();
-        GameObject blackBackground = GameObject.Find("BlackBackground");
+        RawImage descriptionImage = GameObject.Find("DescriptionImage").GetComponent<RawImage>();
+        string id = selected.id;
+        Texture texture = GameObject.Find(id).gameObject.GetComponent<Renderer>().material.mainTexture;
+
 
         if (selected != null)
         {          
             descriptionText.text = selected.description;
             descriptionTitleText.text = selected.title;
-            blackBackground.GetComponent<RawImage>().enabled = true;
+            descriptionImage.texture = texture;
             sideDescriptionVisible = true;
         }
         else if(sideDescriptionVisible)
         {
             descriptionText.text = "";
             descriptionTitleText.text = "";
-            blackBackground.GetComponent<RawImage>().enabled = false;
             sideDescriptionVisible = false;
         }
         
