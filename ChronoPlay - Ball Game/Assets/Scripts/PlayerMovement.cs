@@ -247,7 +247,7 @@ public class PlayerMovement : MonoBehaviour {
 
 
             //Place image behind the scene and centres
-            itemImageLarge.transform.position = new Vector3(z * 100f - (40f * (count - 1)), -20f*(localLevel), 100f);
+            itemImageLarge.transform.position = new Vector3(z * 100f - (40f * (count - 1)), -20f*(localLevel)-5f, 100f+((count-1)*20f));
             itemImageLarge.gameObject.GetComponent<Renderer>().material.mainTexture = texture;
 
             //Create description 3d text
