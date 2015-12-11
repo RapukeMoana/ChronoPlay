@@ -222,10 +222,11 @@ public class Main : MonoBehaviour {
 
     }
 
-    public List<ContentItem> getStageEventContent(int level)
+    public Exhibit getStageEventContent(int level)
     {
-        return game[level].stageEvent.contentItems;
+        return game[level].stageEvent;
     }
+
 
     public ContentItem getContentItemById(int level,string Id, string tag)
     {
