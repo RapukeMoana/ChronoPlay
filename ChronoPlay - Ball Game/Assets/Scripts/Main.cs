@@ -198,7 +198,7 @@ public class Main : MonoBehaviour {
             case "ItemImageLarge":
                 for (int i = 0; i < game[level].stageEvent.contentItems.Count; i++)
                 {
-                    if (game[level].stageEvent.contentItems[i].id == Id)
+                    if (game[level].stageEvent.contentItems[i].id+"-large" == Id)
                     {
                         return game[level].stageEvent.contentItems[i];
                     }

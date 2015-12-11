@@ -23,7 +23,7 @@ public class PlayerMovement : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
 
         myAlpha = 1.0f; // maybe you need other value
-        StartCoroutine(setupStageEvent());
+        setupStageEvent();
     }
 	
 	// Update is called once per frame
@@ -94,7 +94,7 @@ public class PlayerMovement : MonoBehaviour {
                 myAlpha = 1.0f;
                 resultFade = true;
                 level++;
-                StartCoroutine(setupStageEvent());
+                setupStageEvent();
                 break;
             case "Incorrect-Hole":
                 Destroy(other.gameObject);
@@ -105,12 +105,15 @@ public class PlayerMovement : MonoBehaviour {
                 myAlpha = 1.0f;
                 resultFade = true;
                 level++;
-                StartCoroutine(setupStageEvent());
+                setupStageEvent();
+                
                 break;
             default:
                 break;
         }      
     }
+
+
 
     void Update()
     {
@@ -135,8 +138,11 @@ public class PlayerMovement : MonoBehaviour {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
-            if (Physics.Raycast(ray, out hit, 200f))
+            if (Physics.Raycast(ray, out hit, 500f))
+            {
                 showDescription(GameObject.Find(hit.collider.gameObject.name));
+            }
+                
 
 
         }
@@ -147,18 +153,21 @@ public class PlayerMovement : MonoBehaviour {
     private void showDescription(GameObject selectedItem)
     {
         ContentItem selected = GameObject.Find("Main Camera").GetComponent<Main>().getContentItemById(level, selectedItem.name, selectedItem.tag);
+
         Text descriptionText = GameObject.Find("Description").GetComponent<Text>();
         Text descriptionTitleText = GameObject.Find("DescriptionTitle").GetComponent<Text>();
         RawImage descriptionImage = GameObject.Find("DescriptionImage").GetComponent<RawImage>();
         Image blackBackground =  GameObject.Find("SideDescription").GetComponent<Image>();
         Image handle = GameObject.Find("Handle").GetComponent<Image>();
 
-        print(selectedItem.name);
-
 
         if (selected != null)
         {
-            string id = selected.id;
+            string id;
+            if(selectedItem.tag == "ItemImageLarge")
+                id = selected.id + "-large";
+            else
+                id = selected.id;
             Texture texture = GameObject.Find(id).gameObject.GetComponent<Renderer>().material.mainTexture;
             descriptionText.text = selected.description;
             descriptionTitleText.text = selected.title;
@@ -181,75 +190,74 @@ public class PlayerMovement : MonoBehaviour {
         
     }
 
-    //Creates background stageevent images
-    IEnumerator setupStageEvent()
+    private void setupStageEvent()
     {
-        
-
         if (level > 0)
         {
             GameObject[] previousImage = GameObject.FindGameObjectsWithTag("ItemImageLarge");
-            GameObject[] previousText = GameObject.FindGameObjectsWithTag("ItemImageDescription"); 
+            GameObject[] previousText = GameObject.FindGameObjectsWithTag("ItemImageDescription");
             for (int i = 0; i < previousImage.Length; i++)
             {
                 Destroy(previousImage[i]);
                 Destroy(previousText[i]);
             }
         }
-        print("Level:"+level);
-        List<ContentItem> contentItems = GameObject.Find("Main Camera").GetComponent<Main>().getStageEventContent(level);
-        print(contentItems.Count);
         int localLevel = level;
+        List<ContentItem> contentItems = GameObject.Find("Main Camera").GetComponent<Main>().getStageEventContent(localLevel);
+        
         for (int z = 0; z < contentItems.Count; z++)
         {
-            Texture2D texture = new Texture2D(1, 1);
-            string stageEventid = contentItems[z].id;
-            string stageEventUri = contentItems[z].uri;
-            //print(stageEventUri);
-            //print(contentItems[z].mediaType);
-
-            // Start a download of the given URL
-            WWW www = new WWW(Uri.EscapeUriString(stageEventUri));
+            StartCoroutine(createStageEvent(contentItems[z], z, contentItems.Count, localLevel));
+        }
+    }
 
 
+    //Creates background stageevent images
+    IEnumerator createStageEvent(ContentItem contentItem, int z, int count, int localLevel)
+    {
 
-            // Wait for download to complete
-            yield return www;
-            
-            //Checks to see if the image is returned but the user is in a different level
-            if(localLevel == level)
-            {
-                // assign texture
-                www.LoadImageIntoTexture(texture);
 
-                //Creates item image object
-                GameObject itemImageLarge = (GameObject)Instantiate(Resources.Load("ItemImageLarge"));
-                itemImageLarge.tag = "ItemImageLarge";
-                itemImageLarge.name = stageEventid;
-                print("Local Level:" + localLevel + "," + level);
+        Texture2D texture = new Texture2D(1, 1);
+        string stageEventid = contentItem.id+"-large";
+        string stageEventUri = contentItem.uri;
+        string stageEventDescription = contentItem.title;
 
-                //Makes the image object a child of the camera
-                GameObject mainCamera = GameObject.Find("Main Camera");
-                itemImageLarge.transform.parent = mainCamera.transform;
+        // Start a download of the given URL
+        WWW www = new WWW(Uri.EscapeUriString(stageEventUri));
 
-                //Get position of current platform
-                Vector3 cameraPosition = mainCamera.transform.position;
+        
 
-                //Place image behind the scene and centres
-                itemImageLarge.transform.position = new Vector3(z * 100f - (30f * (contentItems.Count - 1f)), cameraPosition.y - 20f, 100f);
-                itemImageLarge.gameObject.GetComponent<Renderer>().material.mainTexture = texture;
+        // Wait for download to complete
+        yield return www;
 
-                //Create description 3d text
-                GameObject itemImageLargeDescription = (GameObject)Instantiate(Resources.Load("ItemDescription"));
-                itemImageLargeDescription.tag = "ItemImageDescription";
+        //Checks to see if the image is returned but the user is in a different level
+        if (localLevel == level)
+        {
+            // assign texture
+            www.LoadImageIntoTexture(texture);
 
-                Vector3 tempPosition = itemImageLarge.transform.position;
-                itemImageLargeDescription.GetComponent<TextMesh>().text = contentItems[z].title;
-                itemImageLargeDescription.transform.position = new Vector3(tempPosition.x - 39f, tempPosition.y - 15f, tempPosition.z - 20f);
-                itemImageLargeDescription.transform.parent = mainCamera.transform;
-            }
+            //Creates item image object
+            GameObject itemImageLarge = (GameObject)Instantiate(Resources.Load("ItemImageLarge"));
+            itemImageLarge.tag = "ItemImageLarge";
+            itemImageLarge.name = stageEventid;
 
-            
+            //Makes the image object a child of the camera
+            //GameObject mainCamera = GameObject.Find("Main Camera");
+        //itemImageLarge.transform.parent = mainCamera.transform;
+
+
+            //Place image behind the scene and centres
+            itemImageLarge.transform.position = new Vector3(z * 100f - (40f * (count - 1)), -20f*(localLevel), 100f);
+            itemImageLarge.gameObject.GetComponent<Renderer>().material.mainTexture = texture;
+
+            //Create description 3d text
+            GameObject itemImageLargeDescription = (GameObject)Instantiate(Resources.Load("ItemDescription"));
+            itemImageLargeDescription.tag = "ItemImageDescription";
+
+            Vector3 tempPosition = itemImageLarge.transform.position;
+        itemImageLargeDescription.GetComponent<TextMesh>().text = stageEventDescription;
+            itemImageLargeDescription.transform.position = new Vector3(tempPosition.x - 39f, tempPosition.y - 15f, tempPosition.z - 20f);
+            //itemImageLargeDescription.transform.parent = mainCamera.transform;
 
         }
     }
