@@ -108,6 +108,9 @@ public class PlayerMovement : MonoBehaviour {
                 setupStageEvent();
                 
                 break;
+            case "Restart-Hole":
+                Application.LoadLevel(Application.loadedLevel);
+                break;
             default:
                 break;
         }      

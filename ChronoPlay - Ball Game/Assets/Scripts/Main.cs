@@ -54,20 +54,27 @@ public class Main : MonoBehaviour {
             Vector3 platformPosition = new Vector3(0f, -(i*plateDistance), 0f);
             platform.transform.position = platformPosition;
 
-            //Correct wormhole
-            setupHole(platform.name, game[i],true, 0);
-
-            //Incorrect wormhole(s)
-            for (int j = 0; j < wormholesPerPlatform-1; j++)
+            //Last Platform
+            if(i == platformsPerGames-1)
             {
-                //Create ItemImages from URL 
-                setupHole(platform.name, game[i],false,j);
+                setupLastPlatform(platform.name);
             }
+            //Normal Platform
+            else
+            {
+                //Correct wormhole
+                setupHole(platform.name, game[i], true, 0);
+
+                //Incorrect wormhole(s)
+                for (int j = 0; j < wormholesPerPlatform - 1; j++)
+                {
+                    //Create ItemImages from URL 
+                    setupHole(platform.name, game[i], false, j);
+                }
+            } 
         }
         
     }
-
-
 
     private void setupHole(string platformName, GameStage stage, bool isCorrect, int holeNumber)
     {
@@ -169,6 +176,46 @@ public class Main : MonoBehaviour {
 
 
     }
+
+    private void setupLastPlatform(string platformName)
+    {
+        GameObject holePosition = GameObject.Find(platformName + "HoleCover-" + "1" + "-" + "5");
+        Vector3 holeCoordinate = holePosition.transform.position;
+        Texture2D texture = new Texture2D(1, 1);
+        texture = (Texture2D)Instantiate(Resources.Load("RestartImage"));
+
+        //GameObject itemImageDescription = (GameObject)Instantiate(Resources.Load("ItemDescription"));
+
+        //Creates item image object
+        GameObject itemImage = (GameObject)Instantiate(Resources.Load("ItemImage"));
+        itemImage.name = "RestartGameImage";
+
+        //Create sensor
+        GameObject itemImageSensor = (GameObject)Instantiate(Resources.Load("ItemImageSensor"));
+        itemImageSensor.name = "RestartGameImage-sensor";
+
+        //Create hole on platform
+        Destroy(holePosition);
+
+
+        //Place image on top of the current wormhole
+        itemImage.transform.position = new Vector3(holeCoordinate.x, holeCoordinate.y + 3, holeCoordinate.z + 2);
+        itemImage.GetComponent<Renderer>().material.mainTexture = texture;
+
+        //Place description on item image
+        GameObject itemImageDescription = (GameObject)Instantiate(Resources.Load("ItemDescription"));
+
+        Vector3 tempPosition = itemImage.transform.position;
+        itemImageDescription.GetComponent<TextMesh>().text = "RESTART GAME";
+        itemImageDescription.GetComponent<TextMesh>().transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+        itemImageDescription.transform.position = new Vector3(tempPosition.x - 3.5f, tempPosition.y - 1.35f, tempPosition.z - 1.2f);
+
+
+        //Place image on sensor (hole)
+        itemImageSensor.transform.position = new Vector3(holeCoordinate.x, holeCoordinate.y - 0.2f, holeCoordinate.z);
+        itemImageSensor.tag = "Restart-Hole";
+    }
+
     // Update is called once per frame
     void Update () {
 
