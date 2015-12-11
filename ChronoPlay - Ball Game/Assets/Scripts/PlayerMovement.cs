@@ -204,7 +204,8 @@ public class PlayerMovement : MonoBehaviour {
         }
         int localLevel = level;
         List<ContentItem> contentItems = GameObject.Find("Main Camera").GetComponent<Main>().getStageEventContent(localLevel);
-        
+
+        print(contentItems.Count);
         for (int z = 0; z < contentItems.Count; z++)
         {
             StartCoroutine(createStageEvent(contentItems[z], z, contentItems.Count, localLevel));
@@ -247,7 +248,7 @@ public class PlayerMovement : MonoBehaviour {
 
 
             //Place image behind the scene and centres
-            itemImageLarge.transform.position = new Vector3(z * 100f - (40f * (count - 1)), -20f*(localLevel)-5f, 100f+((count-1)*20f));
+            itemImageLarge.transform.position = new Vector3(z * 100f - (45f * (count - 1)), -20f*(localLevel)-(10f *count), 100f+((count-1)*20f));
             itemImageLarge.gameObject.GetComponent<Renderer>().material.mainTexture = texture;
 
             //Create description 3d text
