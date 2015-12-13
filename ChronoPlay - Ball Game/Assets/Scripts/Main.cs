@@ -13,10 +13,10 @@ public class Main : MonoBehaviour {
 
     public Timeline timeline = new Timeline();
     //__PUBLIC VARIABLES__
-    public string superCollectionName = "chronozoom"; //chronozoom nobelprize
-    public string collectionName = "cosmos"; //cosmos nobel
-    public int wormholesPerPlatform = 3;
-    public int platformsPerGames = 10;
+    public static string superCollectionName = "chronozoom"; //chronozoom nobelprize
+    public static string collectionName = "cosmos"; //cosmos nobel
+    public static int wormholesPerPlatform = 3;
+    public static int platformsPerGames = 10;
     public bool limitContentToImages = true;
     public float plateDistance = 20f;
 
