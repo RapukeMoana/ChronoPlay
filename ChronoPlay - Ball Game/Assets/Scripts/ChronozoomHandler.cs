@@ -483,6 +483,9 @@ public class ChronozoomHandler
     //Sets up the contentItem and Exhibit Lists based on the timeline retrieved from Chronozoom
     public static void GenerateLists(Timeline timeline, bool limitToImages)
     {
+        contentItemList.Clear();
+        exhibitList.Clear();
+
         try
         {
             onlyPictures = limitToImages;

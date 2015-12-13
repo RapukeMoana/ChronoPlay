@@ -4,15 +4,21 @@ using System.Collections;
 using System;
 
 public class MenuScript : MonoBehaviour {
+    public static bool menuEnabled = true;
     public Canvas mainMenu;
     public Canvas settingsMenu;
     public Canvas timelineSelectMenu;
+    public Canvas feedbackMenu;
     public InputField superCollection;
+    public InputField timelineSelectSuperCollection;
+    public InputField timelineSelectCollection;
     public InputField collection;
     public InputField holesPerPlatform;
     public InputField platformsPerGame;
-    public Text errorMessage;
+    public InputField loggedBy;
+    public InputField comments;
 
+    public Text errorMessage;
 
     // Use this for initialization
     void Start () {
@@ -21,7 +27,7 @@ public class MenuScript : MonoBehaviour {
         timelineSelectMenu = timelineSelectMenu.GetComponent<Canvas>();
         settingsMenu.enabled = false;
         timelineSelectMenu.enabled = false;
-
+        feedbackMenu.enabled = false;
     }
 
     // Update is called once per frame
@@ -34,19 +40,31 @@ public class MenuScript : MonoBehaviour {
         settingsMenu.enabled = true;
     }
 
+    public void ShowFeedbackMenu()
+    {
+        feedbackMenu.enabled = true;
+    }
+
     public void ShowTimelineSelectMenu()
     {
         timelineSelectMenu.enabled = true;
     }
 
+    public void HideFeedbackMenu()
+    {
+        feedbackMenu.enabled = false;
+    }
+
     public void HideSettingsMenu()
     {
         settingsMenu.enabled = false;
+        timelineSelectMenu.enabled = false;
     }
 
     public void HideTimelineSelectMenu()
     {
         timelineSelectMenu.enabled = false;
+        settingsMenu.enabled = false;
     }
 
     public void SaveSettingsMenu()
@@ -76,15 +94,54 @@ public class MenuScript : MonoBehaviour {
         }
     }
 
+    public void TimelineSelectPlay()
+    {
+        SettingsConfig settings = new SettingsConfig();
+        try
+        {
+            settings.superCollection = timelineSelectSuperCollection.text;
+            settings.collection = timelineSelectCollection.text;
+
+            if (!string.IsNullOrEmpty(settings.superCollection) || !string.IsNullOrEmpty(settings.collection))
+            {
+                settings.SetPublicVariables();
+                HideSettingsMenu();
+                QuickStart();
+            }
+            else
+            {
+               Debug.Log("Please ensure you have filled out the required fields correctly.");
+            }
+        }
+        catch (Exception)
+        {
+            Debug.Log("An exception occured. You should probably log this later on..");
+        }
+    }
+
     public void QuickStart()
     {
-        Application.LoadLevel(1);
-        mainMenu.enabled = false;
+        Application.LoadLevel(Application.loadedLevel);
+        menuEnabled = false;
     }
 
     public void Quit()
     {
         Application.Quit();
+    }
+
+    public void SubmitFeedback()
+    {
+        if (!string.IsNullOrEmpty(comments.text) || !string.IsNullOrEmpty(loggedBy.text))
+        {
+            Logger.LogFeedback(comments.text, 0, "", loggedBy.text);
+            HideFeedbackMenu();
+        }
+        else
+        {
+            Debug.Log("Insufficent details to submit feedback");
+            HideFeedbackMenu();
+        }
     }
 
     public void SetErrorMessage(string message)
@@ -123,9 +180,21 @@ public class SettingsConfig
 
     public void SetPublicVariables()
     {
-        Main.superCollectionName = superCollection;
-        Main.collectionName = collection;
-        Main.wormholesPerPlatform = numHoles;
-        Main.platformsPerGames = numPlatforms;
+        if (superCollection != null)
+        {
+            Main.superCollectionName = superCollection;
+        }
+        if (collection != null)
+        {
+            Main.collectionName = collection;
+        }
+        if (numHoles > 0)
+        {
+            Main.wormholesPerPlatform = numHoles;
+        }
+        if (numPlatforms > 0)
+        {
+            Main.platformsPerGames = numPlatforms;
+        }
     }
 }

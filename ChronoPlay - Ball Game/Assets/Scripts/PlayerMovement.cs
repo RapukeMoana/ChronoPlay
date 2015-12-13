@@ -25,7 +25,6 @@ public class PlayerMovement : MonoBehaviour {
         myAlpha = 1.0f; // maybe you need other value
         setupStageEvent();
     }
-	
 	// Update is called once per frame
 	void FixedUpdate () {
 

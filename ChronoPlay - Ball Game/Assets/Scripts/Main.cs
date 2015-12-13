@@ -7,24 +7,37 @@ using System.Text.RegularExpressions;
 public class Main : MonoBehaviour {
 
     //Private variables
-    private bool timelineRetrieved = false;
-    private List<GameStage> game;
-    private bool[] holeRow;
+    private static bool timelineRetrieved = false;
+    private static List<GameStage> game;
+    private static bool[] holeRow;
 
-    public Timeline timeline = new Timeline();
+    public static Timeline timeline = new Timeline();
     //__PUBLIC VARIABLES__
     public static string superCollectionName = "chronozoom"; //chronozoom nobelprize
     public static string collectionName = "cosmos"; //cosmos nobel
     public static int wormholesPerPlatform = 3;
     public static int platformsPerGames = 10;
-    public bool limitContentToImages = true;
-    public float plateDistance = 20f;
-
+    public static bool limitContentToImages = true;
+    public static float plateDistance = 20f;
+    public Canvas mainMenu;
+    public Canvas settingsMenu;
+    public Canvas timelineSelectMenu;
 
 
     // Use this for initialization
     void Start()
     {
+        mainMenu = mainMenu.GetComponent<Canvas>();
+        settingsMenu = settingsMenu.GetComponent<Canvas>();
+        timelineSelectMenu = timelineSelectMenu.GetComponent<Canvas>();
+
+        if (!MenuScript.menuEnabled)
+        {
+            mainMenu.enabled = false;
+            settingsMenu.enabled = false;
+            timelineSelectMenu.enabled = false;
+        }
+
         timeline = ChronozoomHandler.RetrieveTimeline(superCollectionName, collectionName);
         if (!String.IsNullOrEmpty(timeline.__type))
         {
@@ -32,9 +45,11 @@ public class Main : MonoBehaviour {
             ChronozoomHandler.GenerateLists(timeline, limitContentToImages);
             game = ChronozoomHandler.SetUpGame(wormholesPerPlatform, platformsPerGames);
 
-            if(timelineRetrieved)
+            if (timelineRetrieved)
+            {
                 setupGame(game);
-        }   
+            }
+        }
     }
 
     private void setupGame(List<GameStage> game)
