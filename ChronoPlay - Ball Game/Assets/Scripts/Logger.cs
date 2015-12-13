@@ -12,6 +12,8 @@ public class Logger
     private const string _ApiKey = "2c917dc4aaa343a0817688db82ef275d";
     private const string _PlayEventsRequestURL = "http://chronoplayapi.azurewebsites.net:80/api/PlayEvents?APIKey=";
     private const string _ExceptionRequestURL = "http://chronoplayapi.azurewebsites.net:80/api/ExceptionLogs?APIKey=";
+    private const string _FeedbackRequestURL = "http://chronoplayapi.azurewebsites.net:80/api/FeedbackLogs?APIKey=";
+
     private const string _ProjectName = "ChronoPlay - Ball Game";
     private const string _ScriptFileName = "Logger.cs";
 
@@ -73,6 +75,37 @@ public class Logger
         catch (Exception)
         {
             Logger.LogException(_ProjectName, _ScriptFileName, "GetExceptionLog", "Error connecting to API");
+            return logResponse;
+        }
+    }
+
+    public static List<Feedback> GetFeedbackLog()
+    {
+        string result;
+        List<Feedback> logResponse = new List<Feedback>();
+        string requestUrl = _FeedbackRequestURL + _ApiKey;
+
+        try
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUrl);
+            request.Method = "GET";
+            request.ContentType = "application/x-www-form-urlencoded";
+
+            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            {
+                using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+                {
+                    result = reader.ReadToEnd();
+                }
+            }
+
+            logResponse = JsonReader.Deserialize<List<Feedback>>(result);
+
+            return logResponse;
+        }
+        catch (Exception)
+        {
+            Logger.LogException(_ProjectName, _ScriptFileName, "GetFeedbackLog", "Error connecting to API");
             return logResponse;
         }
     }
@@ -188,6 +221,60 @@ public class Logger
             return false;
         }
     }
+
+    public static bool LogFeedback(string feedbackComments, int userRating, string gameID = null, string loggedBy = null)
+    {
+        Feedback feedback = new Feedback();
+        DateTime now = DateTime.Now;
+        feedback._loggedAt = now;
+        feedback.gameID = gameID;
+        feedback.feedbackComments = feedbackComments;
+        feedback.userRating = userRating;
+        feedback.loggedBy = loggedBy;
+
+        string url = _FeedbackRequestURL + _ApiKey;
+        string result = string.Empty;
+        string JSONRequestData = JsonWriter.Serialize(feedback);
+        byte[] byteArray = Encoding.UTF8.GetBytes(JSONRequestData);
+        PlayEvent RequestResponse = new PlayEvent();
+
+        try
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.ContentType = "text/json";
+            request.ContentLength = byteArray.Length;
+            using (StreamWriter streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write(JSONRequestData);
+                streamWriter.Flush();
+                streamWriter.Close();
+            }
+
+            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            {
+                using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+                {
+                    result = reader.ReadToEnd();
+                }
+            }
+
+            RequestResponse = JsonReader.Deserialize<PlayEvent>(result);
+            if (RequestResponse.ID > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        catch (Exception)
+        {
+            Logger.LogException(_ProjectName, _ScriptFileName, "LogFeedback", "Error connecting to API");
+            return false;
+        }
+    }
 }
 
 public class PlayEvent
@@ -215,5 +302,15 @@ public class ExceptionLog
     public string functionname { get; set; }
     public string message { get; set; }
     public string projectname { get; set; }
+}
+
+public class Feedback
+{
+    public int ID { get; set; }
+    public DateTime _loggedAt { get; set; }
+    public string loggedBy { get; set; }
+    public string gameID { get; set; }
+    public int userRating { get; set; }
+    public string feedbackComments { get; set; }
 }
 
