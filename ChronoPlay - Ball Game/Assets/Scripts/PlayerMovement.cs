@@ -193,28 +193,23 @@ public class PlayerMovement : MonoBehaviour {
                 Destroy(previousText[i]);
             }
             Destroy(previousTitle[0]);
-            Destroy(previousTitle[1]);
         }
         int localLevel = level;
         Exhibit exhibit = GameObject.Find("Main Camera").GetComponent<Main>().getStageEventContent(localLevel);
         List<ContentItem> contentItems= exhibit.contentItems;
         print(contentItems.Count);
-        print(exhibit.title);
 
         //Create exhibit Title and year 3d text
         GameObject exhibitTitle = (GameObject)Instantiate(Resources.Load("ExhibitTitle"));
-        GameObject exhibitYear = (GameObject)Instantiate(Resources.Load("ExhibitTitle"));
         exhibitTitle.tag = "ExhibitTitle";
-        exhibitYear.tag = "ExhibitTitle";
-        exhibitTitle.GetComponent<TextMesh>().text = exhibit.title;
+        
         long year = exhibit.time;
         if (year < 0) {
-            exhibitYear.GetComponent<TextMesh>().text = "(" + year*(-1) + " BC)";
+            exhibitTitle.GetComponent<TextMesh>().text = exhibit.title + " (" + year * (-1) + " BC)";
         } else
-            exhibitYear.GetComponent<TextMesh>().text = "(" + year + ")";
-        exhibitTitle.transform.position = new Vector3(0f, -20f * (localLevel)-30f, 80f);
-        Vector3 temp = exhibitTitle.transform.position;
-        exhibitYear.transform.position = new Vector3(temp.x, temp.y-10f, temp.z);
+            exhibitTitle.GetComponent<TextMesh>().text = exhibit.title + " (" + year + ")";
+        exhibitTitle.transform.position = new Vector3(0f, -20f * (localLevel)-0f, 100f);
+       
 
         for (int z = 0; z < contentItems.Count; z++)
         {
@@ -233,6 +228,28 @@ public class PlayerMovement : MonoBehaviour {
         string stageEventUri = contentItem.uri;
         string stageEventDescription = contentItem.title;
 
+        //Creates item image object
+        GameObject itemImageLarge = (GameObject)Instantiate(Resources.Load("ItemImageLarge"));
+        itemImageLarge.tag = "ItemImageLarge";
+        itemImageLarge.name = stageEventid;
+
+        //Makes the image object a child of the camera
+        //GameObject mainCamera = GameObject.Find("Main Camera");
+        //itemImageLarge.transform.parent = mainCamera.transform;
+
+
+        //Place image behind the scene and centres
+        itemImageLarge.transform.position = new Vector3(z * 100f - (45f * (count - 1)), -20f * (localLevel) - (10f * count) - 15f, 100f + ((count - 1) * 20f));
+        
+
+        //Create description 3d text
+        GameObject itemImageLargeDescription = (GameObject)Instantiate(Resources.Load("ExhibitItemDescription"));
+        itemImageLargeDescription.tag = "ItemImageDescription";
+
+        Vector3 tempPosition = itemImageLarge.transform.position;
+        itemImageLargeDescription.GetComponent<TextMesh>().text = stageEventDescription;
+        itemImageLargeDescription.transform.position = new Vector3(tempPosition.x, tempPosition.y - 15f, tempPosition.z - 20f);
+
         // Start a download of the given URL
         WWW www = new WWW(Uri.EscapeUriString(stageEventUri));
 
@@ -247,33 +264,9 @@ public class PlayerMovement : MonoBehaviour {
             // assign texture
             www.LoadImageIntoTexture(texture);
 
-            //Creates item image object
-            GameObject itemImageLarge = (GameObject)Instantiate(Resources.Load("ItemImageLarge"));
-            itemImageLarge.tag = "ItemImageLarge";
-            itemImageLarge.name = stageEventid;
-
-            //Makes the image object a child of the camera
-            //GameObject mainCamera = GameObject.Find("Main Camera");
-            //itemImageLarge.transform.parent = mainCamera.transform;
-
-
-            //Place image behind the scene and centres
-            itemImageLarge.transform.position = new Vector3(z * 100f - (45f * (count - 1)), -20f*(localLevel)-(10f *count), 100f+((count-1)*20f));
             itemImageLarge.gameObject.GetComponent<Renderer>().material.mainTexture = texture;
 
-            //Create description 3d text
-            GameObject itemImageLargeDescription = (GameObject)Instantiate(Resources.Load("ExhibitItemDescription"));
-            itemImageLargeDescription.tag = "ItemImageDescription";
-
-            Vector3 tempPosition = itemImageLarge.transform.position;
-            itemImageLargeDescription.GetComponent<TextMesh>().text = stageEventDescription;
-            itemImageLargeDescription.transform.position = new Vector3(tempPosition.x, tempPosition.y - 15f, tempPosition.z - 20f);
-            //itemImageLargeDescription.transform.parent = mainCamera.transform;
 
         }
-    }
-    public void closePanel()
-    {
-
     }
 }
