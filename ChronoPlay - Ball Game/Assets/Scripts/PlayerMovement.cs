@@ -274,7 +274,7 @@ public class PlayerMovement : MonoBehaviour {
             itemImageLarge.gameObject.GetComponent<Renderer>().material.mainTexture = texture;
 
             //Create description 3d text
-            GameObject itemImageLargeDescription = (GameObject)Instantiate(Resources.Load("ItemDescription"));
+            GameObject itemImageLargeDescription = (GameObject)Instantiate(Resources.Load("ExhibitItemDescription"));
             itemImageLargeDescription.tag = "ItemImageDescription";
 
             Vector3 tempPosition = itemImageLarge.transform.position;
