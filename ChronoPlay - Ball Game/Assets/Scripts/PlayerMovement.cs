@@ -212,7 +212,7 @@ public class PlayerMovement : MonoBehaviour {
             exhibitYear.GetComponent<TextMesh>().text = "(" + year*(-1) + " BC)";
         } else
             exhibitYear.GetComponent<TextMesh>().text = "(" + year + ")";
-        exhibitTitle.transform.position = new Vector3(-40f, -20f * (localLevel)-30f, 80f);
+        exhibitTitle.transform.position = new Vector3(0f, -20f * (localLevel)-30f, 80f);
         Vector3 temp = exhibitTitle.transform.position;
         exhibitYear.transform.position = new Vector3(temp.x, temp.y-10f, temp.z);
 
@@ -267,7 +267,7 @@ public class PlayerMovement : MonoBehaviour {
 
             Vector3 tempPosition = itemImageLarge.transform.position;
             itemImageLargeDescription.GetComponent<TextMesh>().text = stageEventDescription;
-            itemImageLargeDescription.transform.position = new Vector3(tempPosition.x - 39f, tempPosition.y - 15f, tempPosition.z - 20f);
+            itemImageLargeDescription.transform.position = new Vector3(tempPosition.x, tempPosition.y - 15f, tempPosition.z - 20f);
             //itemImageLargeDescription.transform.parent = mainCamera.transform;
 
         }

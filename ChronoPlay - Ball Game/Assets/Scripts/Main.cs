@@ -182,7 +182,7 @@ public class Main : MonoBehaviour {
         Vector3 tempPosition = itemImage.transform.position;
         itemImageDescription.GetComponent<TextMesh>().text = title;
         itemImageDescription.GetComponent<TextMesh>().transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-        itemImageDescription.transform.position = new Vector3(tempPosition.x-3.5f, tempPosition.y- 1.35f, tempPosition.z-1.2f);
+        itemImageDescription.transform.position = new Vector3(tempPosition.x, tempPosition.y- 1.5f, tempPosition.z-1.2f);
 
 
         //Place image on sensor (hole)
@@ -192,6 +192,7 @@ public class Main : MonoBehaviour {
 
     }
 
+    //Last platform has one hole that lets user restart game
     private void setupLastPlatform(string platformName)
     {
         GameObject holePosition = GameObject.Find(platformName + "HoleCover-" + "1" + "-" + "5");
