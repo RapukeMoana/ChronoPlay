@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour {
     public float plateDistance = 20f;
     public bool isKeyBoard;
     public int zoom;
+    public CanvasGroup gameCanvas;
 
     private Rigidbody rb;
     private float speedsmooth = 0.8f;
@@ -159,36 +160,23 @@ public class PlayerMovement : MonoBehaviour {
         Text descriptionText = GameObject.Find("Description").GetComponent<Text>();
         Text descriptionTitleText = GameObject.Find("DescriptionTitle").GetComponent<Text>();
         RawImage descriptionImage = GameObject.Find("DescriptionImage").GetComponent<RawImage>();
-        Image blackBackground =  GameObject.Find("SideDescription").GetComponent<Image>();
-        Image handle = GameObject.Find("Handle").GetComponent<Image>();
-
+        
 
         if (selected != null)
         {
             string id;
-            if(selectedItem.tag == "ItemImageLarge")
+            if (selectedItem.tag == "ItemImageLarge")
                 id = selected.id + "-large";
             else
                 id = selected.id;
             Texture texture = GameObject.Find(id).gameObject.GetComponent<Renderer>().material.mainTexture;
             descriptionText.text = selected.description;
             descriptionTitleText.text = selected.title;
-            descriptionImage.enabled = true;
-            blackBackground.enabled = true;
-            handle.enabled = true;
             descriptionImage.texture = texture;
             sideDescriptionVisible = true;
+            gameCanvas.alpha = 1;
         }
-        else if(sideDescriptionVisible)
-        {
-            //TODO: Disabled until fix: panel dissappears when click
-            //descriptionText.text = "";
-            //descriptionTitleText.text = "";
-            //descriptionImage.enabled = false;
-            //blackBackground.enabled = false;
-            //handle.enabled = false;
-            //sideDescriptionVisible = false;
-        }
+
         
     }
 
@@ -283,5 +271,9 @@ public class PlayerMovement : MonoBehaviour {
             //itemImageLargeDescription.transform.parent = mainCamera.transform;
 
         }
+    }
+    public void closePanel()
+    {
+
     }
 }
