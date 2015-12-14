@@ -190,7 +190,7 @@ public class Main : MonoBehaviour {
 
 
         //Place image on sensor (hole)
-        itemImageSensor.transform.position = new Vector3(holeCoordinate.x, holeCoordinate.y-0.2f, holeCoordinate.z);
+        itemImageSensor.transform.position = new Vector3(holeCoordinate.x+0.1f, holeCoordinate.y-0.5f, holeCoordinate.z);
         itemImageSensor.GetComponent<Renderer>().material.mainTexture = texture;
 
 
