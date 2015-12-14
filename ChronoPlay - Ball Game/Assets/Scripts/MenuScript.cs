@@ -197,4 +197,6 @@ public class SettingsConfig
             Main.platformsPerGames = numPlatforms;
         }
     }
+
+    
 }
