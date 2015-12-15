@@ -160,8 +160,9 @@ public class PlayerMovement : MonoBehaviour {
         Text descriptionText = GameObject.Find("Description").GetComponent<Text>();
         Text descriptionTitleText = GameObject.Find("DescriptionTitle").GetComponent<Text>();
         RawImage descriptionImage = GameObject.Find("DescriptionImage").GetComponent<RawImage>();
-        
+        ScrollRect scrollRect = GameObject.Find("ScrollRect").GetComponent<ScrollRect>();
 
+        //If the clicked object is a content item
         if (selected != null)
         {
             string id;
@@ -173,6 +174,9 @@ public class PlayerMovement : MonoBehaviour {
             descriptionText.text = selected.description;
             descriptionTitleText.text = selected.title;
             descriptionImage.texture = texture;
+
+            //Scroll to the top 
+            scrollRect.normalizedPosition = new Vector2(0, 5);
             sideDescriptionVisible = true;
             gameCanvas.alpha = 1;
         }
