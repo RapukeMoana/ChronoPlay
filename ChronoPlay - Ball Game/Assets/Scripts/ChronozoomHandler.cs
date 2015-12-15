@@ -452,7 +452,7 @@ public class ChronozoomHandler
     {
         string result;
         Timeline timeline = new Timeline();
-        string requestTemplate = "http://www.chronozoom.com/api/gettimelines?supercollection={0}&colection={1}";
+        string requestTemplate = "http://www.chronozoom.com/api/gettimelines?supercollection={0}&collection={1}";
         string requestUrl = String.Format(requestTemplate, superCollectionName, collectionName);
 
         try
