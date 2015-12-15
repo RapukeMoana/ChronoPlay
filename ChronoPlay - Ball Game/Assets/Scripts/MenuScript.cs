@@ -193,11 +193,24 @@ public class SettingsConfig
         }
         if (numHoles > 0)
         {
-            Main.wormholesPerPlatform = numHoles;
+            if (numHoles > 5)
+            {
+                Main.wormholesPerPlatform = 5;
+            } else
+            {
+                Main.wormholesPerPlatform = numHoles;
+            }
         }
         if (numPlatforms > 0)
         {
-            Main.platformsPerGames = numPlatforms;
+            if (numPlatforms > 15)
+            {
+                Main.platformsPerGames = 15;
+            }
+            else
+            {
+                Main.platformsPerGames = numPlatforms;
+            }
         }
     }
 

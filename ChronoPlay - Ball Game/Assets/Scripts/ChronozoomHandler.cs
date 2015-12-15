@@ -685,7 +685,6 @@ public class ChronozoomHandler
             Exhibit cleanExhibit = CleanStageEvent(exhibitList.ElementAt(indexList.ElementAt(i)));
 
             gameStage.stageEvent = cleanExhibit;
-            //gameStage.stageEvent = exhibitList.ElementAt(indexList.ElementAt(i));
 
             if (i + 1 < indexList.Count)
             {

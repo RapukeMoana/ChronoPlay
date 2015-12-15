@@ -9,7 +9,7 @@ public class Main : MonoBehaviour {
 
     //Private variables
     private static bool timelineRetrieved = false;
-    private static List<GameStage> game;
+    public static List<GameStage> game;
     private static bool[] holeRow;
 
     public static Timeline timeline = new Timeline();
@@ -29,7 +29,7 @@ public class Main : MonoBehaviour {
     void Start()
     {
         timeline = ChronozoomHandler.RetrieveTimeline(superCollectionName, collectionName);
-        if (!String.IsNullOrEmpty(timeline.__type))
+        if (timeline != null && !String.IsNullOrEmpty(timeline.__type))
         {
             timelineRetrieved = true;
             ChronozoomHandler.GenerateLists(timeline, limitContentToImages);
@@ -37,14 +37,23 @@ public class Main : MonoBehaviour {
 
             if (timelineRetrieved)
             {
-                setupGame(game);
+                if (game != null)
+                {
+                    setupGame(game);
+                }
+                else
+                {
+                    Application.LoadLevel("MainScene");
+                }
             }
             string startDate = Convert.ToString(game[0].stageEvent.time);
             string endDate = Convert.ToString(game[game.Count - 1].stageEvent.time);
             RenderTimeline(startDate, endDate);
         }
-
-        
+        else
+        {
+            Application.LoadLevel("MainScene");
+        }
     }
 
     private void setupGame(List<GameStage> game)
