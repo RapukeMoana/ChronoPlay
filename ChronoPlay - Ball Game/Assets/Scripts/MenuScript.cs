@@ -20,6 +20,8 @@ public class MenuScript : MonoBehaviour {
 
     public Text errorMessage;
 
+    public GameObject loadingImage;
+
     // Use this for initialization
     void Start () {
         mainMenu = mainMenu.GetComponent<Canvas>();
@@ -121,6 +123,7 @@ public class MenuScript : MonoBehaviour {
 
     public void QuickStart()
     {
+        loadingImage.SetActive(true);
         Application.LoadLevel(1);
         menuEnabled = false;
     }
