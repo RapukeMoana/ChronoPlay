@@ -11,6 +11,7 @@ public class PlayerMovement : MonoBehaviour {
     public bool isKeyBoard;
     public int zoom;
     public CanvasGroup gameCanvas;
+    public GameObject loadingImage;
 
     private Rigidbody rb;
     private float speedsmooth = 0.8f;
@@ -109,7 +110,8 @@ public class PlayerMovement : MonoBehaviour {
                 
                 break;
             case "Restart-Hole":
-                Application.LoadLevel(Application.loadedLevel);
+                loadingImage.SetActive(true);
+                Application.LoadLevel(1);
                 break;
             default:
                 break;

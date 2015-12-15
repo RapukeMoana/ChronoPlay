@@ -39,10 +39,12 @@ public class Main : MonoBehaviour {
             {
                 setupGame(game);
             }
+            string startDate = Convert.ToString(game[0].stageEvent.time);
+            string endDate = Convert.ToString(game[game.Count - 1].stageEvent.time);
+            RenderTimeline(startDate, endDate);
         }
-        string startDate = Convert.ToString(game[0].stageEvent.time);
-        string endDate = Convert.ToString(game[game.Count - 1].stageEvent.time);
-        RenderTimeline(startDate, endDate);
+
+        
     }
 
     private void setupGame(List<GameStage> game)
