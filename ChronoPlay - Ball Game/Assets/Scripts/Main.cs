@@ -40,6 +40,13 @@ public class Main : MonoBehaviour {
                 if (game != null)
                 {
                     setupGame(game);
+
+                    //Logger example usage
+                    //Logger.LogPlayEvent(string playEventJson, string playEventType, string gameID, string collectionID = null, string timelineID = null, string contentItemID = null)
+                    //Logger.LogPlayEvent("", "BallGame", "1", "1", "1", "1");
+                    Logger.LogPlayEvent("Hello", "Hello", "Hello", "Hello", "Hello", "Hello");
+
+                    print("Logger called");
                 }
                 else
                 {
