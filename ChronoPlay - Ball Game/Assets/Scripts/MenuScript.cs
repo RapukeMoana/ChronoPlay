@@ -121,7 +121,7 @@ public class MenuScript : MonoBehaviour {
 
     public void QuickStart()
     {
-        Application.LoadLevel(Application.loadedLevel);
+        Application.LoadLevel(1);
         menuEnabled = false;
     }
 

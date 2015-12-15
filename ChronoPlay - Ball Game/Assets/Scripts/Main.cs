@@ -28,17 +28,6 @@ public class Main : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        mainMenu = mainMenu.GetComponent<Canvas>();
-        settingsMenu = settingsMenu.GetComponent<Canvas>();
-        timelineSelectMenu = timelineSelectMenu.GetComponent<Canvas>();
-
-        if (!MenuScript.menuEnabled)
-        {
-            mainMenu.enabled = false;
-            settingsMenu.enabled = false;
-            timelineSelectMenu.enabled = false;
-        }
-
         timeline = ChronozoomHandler.RetrieveTimeline(superCollectionName, collectionName);
         if (!String.IsNullOrEmpty(timeline.__type))
         {
