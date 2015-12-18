@@ -30,6 +30,7 @@ public class PlayerMovement : MonoBehaviour {
         myAlpha = 1.0f; // maybe you need other value
         setupStageEvent();
     }
+
 	// Update is called once per frame
 	void FixedUpdate () {
 
@@ -150,10 +151,9 @@ public class PlayerMovement : MonoBehaviour {
             {
                 showDescription(GameObject.Find(hit.collider.gameObject.name));
             }
-                
-
-
         }
+        Text timerText = GameObject.Find("TimerText").GetComponent<Text>();
+        timerText.text = ("TIME: "+(Time.timeSinceLevelLoad).ToString("n1")) + " seconds";
 
     }
 
