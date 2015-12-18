@@ -147,7 +147,7 @@ public class PlayerMovement : MonoBehaviour {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
-            if (Physics.Raycast(ray, out hit, 500f))
+            if (Physics.Raycast(ray, out hit, 800f))
             {
                 showDescription(GameObject.Find(hit.collider.gameObject.name));
             }
@@ -181,7 +181,7 @@ public class PlayerMovement : MonoBehaviour {
             descriptionImage.texture = texture;
 
             //Scroll to the top 
-            scrollRect.normalizedPosition = new Vector2(0, 5);
+            scrollRect.verticalNormalizedPosition = 100f;
             sideDescriptionVisible = true;
             gameCanvas.alpha = 1;
         }
