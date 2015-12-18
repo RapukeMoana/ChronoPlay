@@ -214,9 +214,9 @@ public class PlayerMovement : MonoBehaviour {
         
         long year = exhibit.time;
         if (year < 0) {
-            exhibitTitle.GetComponent<TextMesh>().text = exhibit.title + " (" + year * (-1) + " BC)";
+            exhibitTitle.GetComponent<TextMesh>().text =  exhibit.title + (((year*-1).ToString().Length != 4) ? " (" + (year * (-1)).ToString("n0") + " BC)": " (" + year * (-1) + " BC)");
         } else
-            exhibitTitle.GetComponent<TextMesh>().text = exhibit.title + " (" + year + ")";
+            exhibitTitle.GetComponent<TextMesh>().text = exhibit.title +  ((year.ToString().Length != 4) ? " (" + year.ToString("n0") + ")" : " (" + year + ")");
         exhibitTitle.transform.position = new Vector3(0f, -20f * (localLevel)-0f, 100f);
        
 

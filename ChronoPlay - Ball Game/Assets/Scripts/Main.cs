@@ -53,9 +53,10 @@ public class Main : MonoBehaviour {
                     Application.LoadLevel("MainScene");
                 }
             }
-            string startDate = Convert.ToString(game[0].stageEvent.time);
-            string endDate = Convert.ToString(game[game.Count - 1].stageEvent.time);
-            RenderTimeline(startDate, endDate);
+            long startYear = game[0].stageEvent.time;
+            long endYear = game[game.Count - 1].stageEvent.time;
+
+            RenderTimeline(startYear.ToString(), endYear.ToString());
         }
         else
         {
@@ -302,21 +303,35 @@ public class Main : MonoBehaviour {
     {
         GameObject temp = GameObject.Find("StartTime");
         Text startTime = temp.GetComponent<Text>();
-        startTime.text = startDate;
+        long startYear = Convert.ToInt64(startDate);
+        if (startYear < 0)
+            startTime.text = ((startYear * -1).ToString().Length != 4) ? (startYear * (-1)).ToString("n0") + " BC" : (startYear * -1).ToString() + " BC";
+        else
+            startTime.text = (startYear.ToString().Length != 4) ? startYear.ToString("n0") : startYear.ToString();
+
     }
 
     private void SetEndTimeLabel(string endDate)
     {
         GameObject temp = GameObject.Find("EndTime");
         Text endTime = temp.GetComponent<Text>();
-        endTime.text = endDate;
+
+        long endYear = Convert.ToInt64(endDate);
+        if (endYear < 0)
+            endTime.text = ((endYear * -1).ToString().Length != 4) ? (endYear * (-1)).ToString("n0") + " BC" : (endYear * -1).ToString() + " BC";
+        else
+            endTime.text = (endYear.ToString().Length != 4) ? endYear.ToString("n0") : endYear.ToString();
     }
 
     private void SetSliderLabel(string time)
     {
         GameObject temp = GameObject.Find("CurrentTime");
         Text currentTime = temp.GetComponent<Text>();
-        currentTime.text = time;
+        long year = Convert.ToInt64(time);
+        if (year < 0)
+            currentTime.text = ((year * -1).ToString().Length != 4) ? (year * (-1)).ToString("n0") + " BC" : (year * -1).ToString() + " BC";
+        else
+            currentTime.text = (year.ToString().Length != 4) ? year.ToString("n0") : year.ToString();
     }
 
     private void SetSliderValue(string value)
