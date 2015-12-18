@@ -206,7 +206,6 @@ public class PlayerMovement : MonoBehaviour {
         int localLevel = level;
         Exhibit exhibit = GameObject.Find("Main Camera").GetComponent<Main>().getStageEventContent(localLevel);
         List<ContentItem> contentItems= exhibit.contentItems;
-        print(contentItems.Count);
 
         //Create exhibit Title and year 3d text
         GameObject exhibitTitle = (GameObject)Instantiate(Resources.Load("ExhibitTitle"));
@@ -284,7 +283,6 @@ public class PlayerMovement : MonoBehaviour {
     {
         feedbackMenu.enabled = true;
         Time.timeScale = 0;
-        print("HERE");
     }
 
     //Submit feedback
