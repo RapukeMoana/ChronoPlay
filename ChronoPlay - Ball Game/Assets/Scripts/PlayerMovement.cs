@@ -21,6 +21,7 @@ public class PlayerMovement : MonoBehaviour {
     private float myAlpha = 1.0f;
     private bool resultFade = true, sideDescriptionVisible = false;
     private int numCorrect = 0, numIncorrect = 0, level = 0;
+    private float timeSince = 0;
 
 
     // Use this for initialization
@@ -98,8 +99,11 @@ public class PlayerMovement : MonoBehaviour {
                 GameObject.Find("Result").GetComponent<Text>().text = "CORRECT";
                 myAlpha = 1.0f;
                 resultFade = true;
+                Logger.LogPlayEvent("Correct Hole, Time Taken: "+(Time.timeSinceLevelLoad- timeSince).ToString("n1"), "Ball Game", level.ToString(), Main.superCollectionName, Main.collectionName, other.transform.name);
+                timeSince = Time.timeSinceLevelLoad;
                 level++;
                 setupStageEvent();
+                
                 break;
             case "Incorrect-Hole":
                 Destroy(other.gameObject);
@@ -109,11 +113,14 @@ public class PlayerMovement : MonoBehaviour {
                 GameObject.Find("Result").GetComponent<Text>().text = "INCORRECT";
                 myAlpha = 1.0f;
                 resultFade = true;
+                Logger.LogPlayEvent("Incorrect Hole, Time Taken: " + (Time.timeSinceLevelLoad - timeSince).ToString("n1"), "Ball Game", level.ToString(), Main.superCollectionName, Main.collectionName, other.transform.name);
+                timeSince = Time.timeSinceLevelLoad;
                 level++;
                 setupStageEvent();
                 
                 break;
             case "Restart-Hole":
+                Logger.LogPlayEvent("Total Time:"+ Time.timeSinceLevelLoad.ToString("n1")+", Correct:"+ numCorrect+" Incorrect:"+ numIncorrect, "Ball Game", level.ToString(), Main.superCollectionName, Main.collectionName, other.transform.name);
                 loadingImage.SetActive(true);
                 Application.LoadLevel(0);
                 break;
