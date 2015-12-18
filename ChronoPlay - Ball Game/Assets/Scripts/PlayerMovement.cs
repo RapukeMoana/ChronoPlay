@@ -12,6 +12,9 @@ public class PlayerMovement : MonoBehaviour {
     public int zoom;
     public CanvasGroup gameCanvas;
     public GameObject loadingImage;
+    public Canvas feedbackMenu;
+    public InputField loggedBy;
+    public InputField comments;
 
     private Rigidbody rb;
     private float speedsmooth = 0.8f;
@@ -275,4 +278,34 @@ public class PlayerMovement : MonoBehaviour {
 
         }
     }
+
+    //Clicking on feedback button shows the menu and pauses the game
+    public void ShowFeedbackMenu()
+    {
+        feedbackMenu.enabled = true;
+        Time.timeScale = 0;
+        print("HERE");
+    }
+
+    //Submit feedback
+    public void SubmitFeedback()
+    {
+        if (!string.IsNullOrEmpty(comments.text) || !string.IsNullOrEmpty(loggedBy.text))
+        {
+            Logger.LogFeedback(comments.text, 0, "", loggedBy.text);
+            HideFeedbackMenu();
+        }
+        else
+        {
+            print("Insufficent details to submit feedback");
+            HideFeedbackMenu();
+        }
+    }
+
+    public void HideFeedbackMenu()
+    {
+        feedbackMenu.enabled = false;
+        Time.timeScale = 1;
+    }
 }
+
