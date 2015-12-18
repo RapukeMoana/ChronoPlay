@@ -111,7 +111,7 @@ public class PlayerMovement : MonoBehaviour {
                 break;
             case "Restart-Hole":
                 loadingImage.SetActive(true);
-                Application.LoadLevel(1);
+                Application.LoadLevel(0);
                 break;
             default:
                 break;

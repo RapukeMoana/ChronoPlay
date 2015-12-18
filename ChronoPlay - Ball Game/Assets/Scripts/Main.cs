@@ -44,7 +44,7 @@ public class Main : MonoBehaviour {
                     //Logger example usage
                     //Logger.LogPlayEvent(string playEventJson, string playEventType, string gameID, string collectionID = null, string timelineID = null, string contentItemID = null)
                     //Logger.LogPlayEvent("", "BallGame", "1", "1", "1", "1");
-                    Logger.LogPlayEvent("Hello", "Hello", "Hello", "Hello", "Hello", "Hello");
+                    //Logger.LogPlayEvent("Hello", "Hello", "Hello", "Hello", "Hello", "Hello");
 
                     print("Logger called");
                 }
@@ -209,7 +209,7 @@ public class Main : MonoBehaviour {
         GameObject holePosition = GameObject.Find(platformName + "HoleCover-" + "1" + "-" + "5");
         Vector3 holeCoordinate = holePosition.transform.position;
         Texture2D texture = new Texture2D(1, 1);
-        texture = (Texture2D)Instantiate(Resources.Load("RestartImage"));
+        texture = (Texture2D)Instantiate(Resources.Load("NewGameImage"));
 
         //GameObject itemImageDescription = (GameObject)Instantiate(Resources.Load("ItemDescription"));
 
@@ -233,9 +233,9 @@ public class Main : MonoBehaviour {
         GameObject itemImageDescription = (GameObject)Instantiate(Resources.Load("ItemDescription"));
 
         Vector3 tempPosition = itemImage.transform.position;
-        itemImageDescription.GetComponent<TextMesh>().text = "RESTART GAME";
+        itemImageDescription.GetComponent<TextMesh>().text = "NEW GAME";
         itemImageDescription.GetComponent<TextMesh>().transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-        itemImageDescription.transform.position = new Vector3(tempPosition.x - 3.5f, tempPosition.y - 1.35f, tempPosition.z - 1.2f);
+        itemImageDescription.transform.position = new Vector3(tempPosition.x, tempPosition.y - 1.35f, tempPosition.z - 1.2f);
 
 
         //Place image on sensor (hole)
