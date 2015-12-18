@@ -45,14 +45,17 @@ public class Main : MonoBehaviour {
                     //Logger.LogPlayEvent(string playEventJson, string playEventType, string gameID, string collectionID = null, string timelineID = null, string contentItemID = null)
                     //Logger.LogPlayEvent("", "BallGame", "1", "1", "1", "1");
                     //Logger.LogPlayEvent("Hello", "Hello", "Hello", "Hello", "Hello", "Hello");
-
-                    print("Logger called");
                 }
                 else
                 {
                     Application.LoadLevel("MainScene");
                 }
             }
+
+            //Set title to game canvas
+            Text timelineTitle = GameObject.Find("TimelineTitle").GetComponent<Text>();
+            timelineTitle.text = superCollectionName+ " ("+ collectionName +")";
+
             long startYear = game[0].stageEvent.time;
             long endYear = game[game.Count - 1].stageEvent.time;
 
@@ -210,7 +213,7 @@ public class Main : MonoBehaviour {
         GameObject holePosition = GameObject.Find(platformName + "HoleCover-" + "1" + "-" + "5");
         Vector3 holeCoordinate = holePosition.transform.position;
         Texture2D texture = new Texture2D(1, 1);
-        texture = (Texture2D)Instantiate(Resources.Load("NewGameImage"));
+        texture = (Texture2D)Resources.Load("NewGameImage");
 
         //GameObject itemImageDescription = (GameObject)Instantiate(Resources.Load("ItemDescription"));
 
