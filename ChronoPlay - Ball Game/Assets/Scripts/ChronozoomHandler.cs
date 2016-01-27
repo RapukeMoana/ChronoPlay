@@ -368,7 +368,9 @@
 //--Added GameID and GameStageID's for use in logging
 #endregion
 
-using Pathfinding.Serialization.JsonFx;
+// using Pathfinding.Serialization.JsonFx;
+// using SimpleJSON;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -411,7 +413,8 @@ public class Exhibit
 public class ContentItem
 {
     public string __type { get; set; }
-    public int year { get; set; }
+    public Int64 year { get; set; }
+//    public int year { get; set; }
     public string attribution { get; set; }
     public string description { get; set; }
     public string id { get; set; }
@@ -454,24 +457,30 @@ public class ChronozoomHandler
         Timeline timeline = new Timeline();
         string requestTemplate = "http://www.chronozoom.com/api/gettimelines?supercollection={0}&collection={1}";
         string requestUrl = String.Format(requestTemplate, superCollectionName, collectionName);
-
         try
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUrl);
             request.Method = "GET";
             request.ContentType = "application/x-www-form-urlencoded";
+            IAsyncResult asyncResult = request.BeginGetResponse(null, null);
+            while (
+                !asyncResult.AsyncWaitHandle.WaitOne(1000))
+            {
+            }
 
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(asyncResult);
+            //using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
             {
                 using (StreamReader reader = new StreamReader(response.GetResponseStream()))
                 {
                     result = reader.ReadToEnd();
                 }
             }
-
-            timeline = JsonReader.Deserialize<Timeline>(result);
-
+            //            var t =  JSON.Parse(result);
+            //            timeline = JsonReader.Deserialize<Timeline>(result);
+            timeline = JsonConvert.DeserializeObject<Timeline>(result);
             return timeline;
+            
         }
         catch (Exception)
         {
@@ -706,7 +715,7 @@ public class ChronozoomHandler
             game.Add(gameStage);
         }
 
-        string gameJSON = JsonWriter.Serialize(game);
+//        string gameJSON = JsonWriter.Serialize(game);
         return game;
     }
 

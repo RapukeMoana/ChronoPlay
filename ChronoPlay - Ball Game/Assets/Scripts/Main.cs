@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine.UI;
+using Assets.JNMTouchControls.Scripts;
 
 public class Main : MonoBehaviour {
 
@@ -29,6 +30,7 @@ public class Main : MonoBehaviour {
     void Start()
     {
         timeline = ChronozoomHandler.RetrieveTimeline(superCollectionName, collectionName);
+//        Logger.LogPlayEvent("Got Timelines: "+(Time.timeSinceLevelLoad).ToString("n1"), "Ball Game", "Main", Main.superCollectionName, Main.collectionName, "");
         if (timeline != null && !String.IsNullOrEmpty(timeline.__type))
         {
             timelineRetrieved = true;
@@ -39,7 +41,8 @@ public class Main : MonoBehaviour {
             {
                 if (game != null)
                 {
-                    setupGame(game);       
+                    setupGame(game);
+                    Logger.LogPlayEvent("GameSetup Done", "Ball Game", "Main"+"Start", Main.superCollectionName, Main.collectionName, game.ToString());
                 }
                 else
                 {
@@ -149,13 +152,30 @@ public class Main : MonoBehaviour {
         }
 
         // Start a download of the given URL
-        WWW www = new WWW(Uri.EscapeUriString(uri));
+        WWW www;
+        www = new WWW(Uri.EscapeUriString(uri));
 
         // Wait for download to complete
         yield return www;
 
+        try
+        {
         // assign texture
-        www.LoadImageIntoTexture(texture);
+        if (www.error == null)
+            {
+            www.LoadImageIntoTexture(texture);
+            }
+        else
+            {
+                Logger.LogException("CZBall", "Main", "createItemImage", www.url + " not found");
+            }
+
+        }
+        catch
+        {
+            Logger.LogException("CZBall", "Main", "createItemImage", "www.LoadImageIntoTexture(texture)");
+        }
+
 
 
         //Creates item image object
@@ -197,8 +217,17 @@ public class Main : MonoBehaviour {
 
         //Place image on sensor (hole)
         itemImageSensor.transform.position = new Vector3(holeCoordinate.x+0.1f, holeCoordinate.y-0.5f, holeCoordinate.z);
-        itemImageSensor.GetComponent<Renderer>().material.mainTexture = texture;
 
+        try
+        {
+            // assign texture
+            // Was a crash from here but can't reproduce it. Was the audio on I think
+            itemImageSensor.GetComponent<Renderer>().material.mainTexture = texture;            
+        }
+        catch
+        {
+            Logger.LogException("CZBall", "Main", "createItemImage", "itemImageSensor.GetComponent<Renderer>().material.mainTexture");
+        }
 
     }
 
@@ -250,8 +279,11 @@ public class Main : MonoBehaviour {
 
     public Exhibit getStageEventContent(int level)
     {
+        Logger.LogException("CZBALL", "Main", "getStageEventContent", "A1");
         UpdateSlider(Convert.ToString(game[level].stageEvent.time));
+        Logger.LogException("CZBALL", "Main", "getStageEventContent", "A2");
         return game[level].stageEvent;
+
     }
 
 

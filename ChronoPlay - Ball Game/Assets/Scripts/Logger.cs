@@ -1,4 +1,5 @@
-﻿using Pathfinding.Serialization.JsonFx;
+﻿// using Pathfinding.Serialization.JsonFx;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,8 +29,14 @@ public class Logger
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUrl);
             request.Method = "GET";
             request.ContentType = "application/x-www-form-urlencoded";
-
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            IAsyncResult asyncResult = request.BeginGetResponse(null, null);
+            while (
+                !asyncResult.AsyncWaitHandle.WaitOne(100))
+            {
+                //                Console.Write('.');
+            }
+            HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(asyncResult);
+            //            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
             {
                 using (StreamReader reader = new StreamReader(response.GetResponseStream()))
                 {
@@ -37,7 +44,8 @@ public class Logger
                 }
             }
 
-            logResponse = JsonReader.Deserialize<List<PlayEvent>>(result);
+//            logResponse = JsonReader.Deserialize<List<PlayEvent>>(result);
+            logResponse = JsonConvert.DeserializeObject <List<PlayEvent>>(result);
 
             return logResponse;
         }
@@ -59,8 +67,14 @@ public class Logger
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUrl);
             request.Method = "GET";
             request.ContentType = "application/x-www-form-urlencoded";
-
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            IAsyncResult asyncResult = request.BeginGetResponse(null, null);
+            while (
+                !asyncResult.AsyncWaitHandle.WaitOne(100))
+            {
+                //                Console.Write('.');
+            }
+            HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(asyncResult);
+            //            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
             {
                 using (StreamReader reader = new StreamReader(response.GetResponseStream()))
                 {
@@ -68,7 +82,7 @@ public class Logger
                 }
             }
 
-            logResponse = JsonReader.Deserialize<List<ExceptionLog>>(result);
+            logResponse = JsonConvert.DeserializeObject<List<ExceptionLog>>(result);
 
             return logResponse;
         }
@@ -90,8 +104,14 @@ public class Logger
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUrl);
             request.Method = "GET";
             request.ContentType = "application/x-www-form-urlencoded";
-
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            IAsyncResult asyncResult = request.BeginGetResponse(null, null);
+            while (
+                !asyncResult.AsyncWaitHandle.WaitOne(100))
+            {
+                //                Console.Write('.');
+            }
+            HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(asyncResult);
+            //            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
             {
                 using (StreamReader reader = new StreamReader(response.GetResponseStream()))
                 {
@@ -99,7 +119,7 @@ public class Logger
                 }
             }
 
-            logResponse = JsonReader.Deserialize<List<Feedback>>(result);
+            logResponse = JsonConvert.DeserializeObject<List<Feedback>>(result);
 
             return logResponse;
         }
@@ -126,32 +146,47 @@ public class Logger
 
         string url = _PlayEventsRequestURL + _ApiKey;
         string result = string.Empty;
-        string JSONRequestData = JsonWriter.Serialize(playEvent);
+        string JSONRequestData = JsonConvert.SerializeObject(playEvent);
         byte[] byteArray = Encoding.UTF8.GetBytes(JSONRequestData);
         PlayEvent RequestResponse = new PlayEvent();
 
         try
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            WebRequest request = (WebRequest)WebRequest.Create(url);
             request.Method = "POST";
             request.ContentType = "text/json";
-            request.ContentLength = byteArray.Length;
-            using (StreamWriter streamWriter = new StreamWriter(request.GetRequestStream()))
+            //           request.ContentLength = byteArray.Length;
+
+            IAsyncResult asyncResultA = request.BeginGetRequestStream(null, null);
+            while (
+                !asyncResultA.AsyncWaitHandle.WaitOne(100))
+            {
+                //                Console.Write('.');
+            }
+            StreamWriter streamWriter = new StreamWriter(request.EndGetRequestStream(asyncResultA));
+
+            //            using (StreamWriter streamWriter = request.GetRequestStream()))
             {
                 streamWriter.Write(JSONRequestData);
                 streamWriter.Flush();
-                streamWriter.Close();
+                streamWriter.Dispose();
             }
-
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            IAsyncResult asyncResulta = request.BeginGetResponse(null, null);
+            while (
+                !asyncResulta.AsyncWaitHandle.WaitOne(100))
             {
-                using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+                //                Console.Write('.');
+            }
+            HttpWebResponse responseA = (HttpWebResponse)request.EndGetResponse(asyncResulta);
+            //            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            {
+                using (StreamReader reader = new StreamReader(responseA.GetResponseStream()))
                 {
                     result = reader.ReadToEnd();
                 }
             }
 
-            RequestResponse = JsonReader.Deserialize<PlayEvent>(result);
+            RequestResponse = JsonConvert.DeserializeObject<PlayEvent>(result);
             if (RequestResponse.ID > 0)
             {
                 return true;
@@ -180,7 +215,7 @@ public class Logger
 
         string url = _ExceptionRequestURL + _ApiKey;
         string result = string.Empty;
-        string JSONRequestData = JsonWriter.Serialize(exception);
+        string JSONRequestData = JsonConvert.SerializeObject(exception);
         byte[] byteArray = Encoding.UTF8.GetBytes(JSONRequestData);
         PlayEvent RequestResponse = new PlayEvent();
 
@@ -189,15 +224,28 @@ public class Logger
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "POST";
             request.ContentType = "text/json";
-            request.ContentLength = byteArray.Length;
-            using (StreamWriter streamWriter = new StreamWriter(request.GetRequestStream()))
+            //            request.ContentLength = byteArray.Length;
+            IAsyncResult asyncResultA = request.BeginGetRequestStream(null, null);
+            while (
+                !asyncResultA.AsyncWaitHandle.WaitOne(100))
+            {
+                //                Console.Write('.');
+            }
+            StreamWriter streamWriter = new StreamWriter(request.EndGetRequestStream(asyncResultA));
+            //            using (StreamWriter streamWriter = new StreamWriter(request.GetRequestStream()))
             {
                 streamWriter.Write(JSONRequestData);
                 streamWriter.Flush();
-                streamWriter.Close();
+                streamWriter.Dispose();
             }
-
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            IAsyncResult asyncResult = request.BeginGetResponse(null, null);
+            while (
+                !asyncResult.AsyncWaitHandle.WaitOne(100))
+            {
+                //                Console.Write('.');
+            }
+            HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(asyncResult);
+            //            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
             {
                 using (StreamReader reader = new StreamReader(response.GetResponseStream()))
                 {
@@ -205,7 +253,7 @@ public class Logger
                 }
             }
 
-            RequestResponse = JsonReader.Deserialize<PlayEvent>(result);
+            RequestResponse = JsonConvert.DeserializeObject<PlayEvent>(result);
             if (RequestResponse.ID > 0)
             {
                 return true;
@@ -234,7 +282,7 @@ public class Logger
 
         string url = _FeedbackRequestURL + _ApiKey;
         string result = string.Empty;
-        string JSONRequestData = JsonWriter.Serialize(feedback);
+        string JSONRequestData = JsonConvert.SerializeObject(feedback);
         byte[] byteArray = Encoding.UTF8.GetBytes(JSONRequestData);
         PlayEvent RequestResponse = new PlayEvent();
 
@@ -243,15 +291,28 @@ public class Logger
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "POST";
             request.ContentType = "text/json";
-            request.ContentLength = byteArray.Length;
-            using (StreamWriter streamWriter = new StreamWriter(request.GetRequestStream()))
+            //            request.ContentLength = byteArray.Length;
+            IAsyncResult asyncResultA = request.BeginGetRequestStream(null, null);
+            while (
+                !asyncResultA.AsyncWaitHandle.WaitOne(100))
+            {
+                //                Console.Write('.');
+            }
+            StreamWriter streamWriter = new StreamWriter(request.EndGetRequestStream(asyncResultA));
+//            using (StreamWriter streamWriter = new StreamWriter(request.GetRequestStream()))
             {
                 streamWriter.Write(JSONRequestData);
                 streamWriter.Flush();
-                streamWriter.Close();
+                streamWriter.Dispose();
             }
-
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            IAsyncResult asyncResult = request.BeginGetResponse(null, null);
+            while (
+                !asyncResult.AsyncWaitHandle.WaitOne(100))
+            {
+                //                Console.Write('.');
+            }
+            HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(asyncResult);
+            //            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
             {
                 using (StreamReader reader = new StreamReader(response.GetResponseStream()))
                 {
@@ -259,7 +320,7 @@ public class Logger
                 }
             }
 
-            RequestResponse = JsonReader.Deserialize<PlayEvent>(result);
+            RequestResponse = JsonConvert.DeserializeObject<PlayEvent>(result);
             if (RequestResponse.ID > 0)
             {
                 return true;

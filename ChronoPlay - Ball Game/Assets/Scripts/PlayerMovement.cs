@@ -198,6 +198,7 @@ public class PlayerMovement : MonoBehaviour {
 
     private void setupStageEvent()
     {
+        //Logger.LogException("CZBALL", "PlayerMovement", "setupStageEvent", "Start");
         if (level > 0)
         {
             GameObject[] previousImage = GameObject.FindGameObjectsWithTag("ItemImageLarge");
@@ -210,25 +211,28 @@ public class PlayerMovement : MonoBehaviour {
             }
             Destroy(previousTitle[0]);
         }
-        int localLevel = level;
-        Exhibit exhibit = GameObject.Find("Main Camera").GetComponent<Main>().getStageEventContent(localLevel);
-        List<ContentItem> contentItems= exhibit.contentItems;
 
+//        int localLevel = level;
+
+        Exhibit exhibit = Main.game[level].stageEvent;
+//        Exhibit exhibit = GameObject.Find("Main Camera").GetComponent<Main>().getStageEventContent(localLevel);
+        List<ContentItem> contentItems= exhibit.contentItems;
         //Create exhibit Title and year 3d text
         GameObject exhibitTitle = (GameObject)Instantiate(Resources.Load("ExhibitTitle"));
         exhibitTitle.tag = "ExhibitTitle";
-        
         long year = exhibit.time;
         if (year < 0) {
             exhibitTitle.GetComponent<TextMesh>().text =  exhibit.title + (((year*-1).ToString().Length != 4) ? " (" + (year * (-1)).ToString("n0") + " BC)": " (" + year * (-1) + " BC)");
         } else
             exhibitTitle.GetComponent<TextMesh>().text = exhibit.title +  ((year.ToString().Length != 4) ? " (" + year.ToString("n0") + ")" : " (" + year + ")");
-        exhibitTitle.transform.position = new Vector3(0f, -20f * (localLevel)-0f, 100f);
-       
+        exhibitTitle.transform.position = new Vector3(0f, -20f * (level)-0f, 100f);
+//        exhibitTitle.transform.position = new Vector3(0f, -20f * (localLevel) - 0f, 100f);
 
         for (int z = 0; z < contentItems.Count; z++)
         {
-            StartCoroutine(createStageEvent(contentItems[z], z, contentItems.Count, localLevel));
+            StartCoroutine(createStageEvent(contentItems[z], z, contentItems.Count, level));
+//           StartCoroutine(createStageEvent(contentItems[z], z, contentItems.Count, localLevel));
+
         }
     }
 
@@ -277,8 +281,23 @@ public class PlayerMovement : MonoBehaviour {
         if (localLevel == level)
         {
             // assign texture
-            www.LoadImageIntoTexture(texture);
-
+            //www.LoadImageIntoTexture(texture);
+            try
+            {
+                // assign texture
+                if (www.error == null)
+                {
+                    www.LoadImageIntoTexture(texture);
+                }
+                else
+                {
+                    Logger.LogException("CZBall", "Main", "createStageEvent", www.url + " not found");
+                }
+            }
+            catch
+            {
+                Logger.LogException("CZBall", "PlayerMovemenr", "createStageEvent", "www.LoadImageIntoTexture(texture)");
+            }
             itemImageLarge.gameObject.GetComponent<Renderer>().material.mainTexture = texture;
 
 
