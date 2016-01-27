@@ -40,6 +40,8 @@ public class MenuScript : MonoBehaviour {
     public void ShowSettingsMenu()
     {
         settingsMenu.enabled = true;
+        superCollection.text = Main.superCollectionName;
+        collection.text = Main.collectionName;
     }
 
     public void ShowFeedbackMenu()
