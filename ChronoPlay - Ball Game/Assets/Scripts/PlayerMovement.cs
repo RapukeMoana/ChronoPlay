@@ -212,10 +212,10 @@ public class PlayerMovement : MonoBehaviour {
             Destroy(previousTitle[0]);
         }
 
-//        int localLevel = level;
+        int localLevel = level;
 
-        Exhibit exhibit = Main.game[level].stageEvent;
-//        Exhibit exhibit = GameObject.Find("Main Camera").GetComponent<Main>().getStageEventContent(localLevel);
+// DW       Exhibit exhibit = Main.game[level].stageEvent;
+        Exhibit exhibit = GameObject.Find("Main Camera").GetComponent<Main>().getStageEventContent(localLevel);
         List<ContentItem> contentItems= exhibit.contentItems;
         //Create exhibit Title and year 3d text
         GameObject exhibitTitle = (GameObject)Instantiate(Resources.Load("ExhibitTitle"));
