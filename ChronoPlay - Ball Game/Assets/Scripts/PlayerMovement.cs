@@ -106,17 +106,18 @@ public class PlayerMovement : MonoBehaviour {
                 
                 break;
             case "Incorrect-Hole":
-                Destroy(other.gameObject);
+                //rigidbody.AddForce(Vector3.Up * force);
+                GetComponent<Rigidbody>().AddForce(Vector3.up * 200);
                 numIncorrect++;
-                scoreText.text = "SCORE: Correct = " + numCorrect + "  Incorrect = " + numIncorrect;
+                //scoreText.text = "SCORE: Correct = " + numCorrect + "  Incorrect = " + numIncorrect;
                 result = (GameObject)Instantiate(Resources.Load("Result"));
                 GameObject.Find("Result").GetComponent<Text>().text = "INCORRECT";
                 myAlpha = 1.0f;
                 resultFade = true;
                 Logger.LogPlayEvent("Incorrect Hole, Time Taken: " + (Time.timeSinceLevelLoad - timeSince).ToString("n1"), "Ball Game", level.ToString(), Main.superCollectionName, Main.collectionName, other.transform.name);
                 timeSince = Time.timeSinceLevelLoad;
-                level++;
-                setupStageEvent();
+                //level++;
+                //setupStageEvent();
                 
                 break;
             case "Restart-Hole":
