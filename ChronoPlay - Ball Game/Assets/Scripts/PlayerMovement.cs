@@ -4,6 +4,7 @@ using System;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour {
     public float speed;
@@ -106,24 +107,21 @@ public class PlayerMovement : MonoBehaviour {
                 
                 break;
             case "Incorrect-Hole":
-                //rigidbody.AddForce(Vector3.Up * force);
                 GetComponent<Rigidbody>().AddForce(Vector3.up * 200);
                 numIncorrect++;
-                //scoreText.text = "SCORE: Correct = " + numCorrect + "  Incorrect = " + numIncorrect;
+                scoreText.text = "SCORE: Correct = " + numCorrect + "  Incorrect = " + numIncorrect;
                 result = (GameObject)Instantiate(Resources.Load("Result"));
                 GameObject.Find("Result").GetComponent<Text>().text = "INCORRECT";
                 myAlpha = 1.0f;
                 resultFade = true;
                 Logger.LogPlayEvent("Incorrect Hole, Time Taken: " + (Time.timeSinceLevelLoad - timeSince).ToString("n1"), "Ball Game", level.ToString(), Main.superCollectionName, Main.collectionName, other.transform.name);
                 timeSince = Time.timeSinceLevelLoad;
-                //level++;
-                //setupStageEvent();
                 
                 break;
             case "Restart-Hole":
                 Logger.LogPlayEvent("Total Time:"+ Time.timeSinceLevelLoad.ToString("n1")+", Correct:"+ numCorrect+" Incorrect:"+ numIncorrect, "Ball Game", level.ToString(), Main.superCollectionName, Main.collectionName, other.transform.name);
                 loadingImage.SetActive(true);
-                Application.LoadLevel(0);
+                SceneManager.LoadScene(0);
                 break;
             default:
                 break;
