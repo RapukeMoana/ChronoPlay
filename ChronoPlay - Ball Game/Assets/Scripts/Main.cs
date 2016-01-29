@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine.UI;
 using Assets.JNMTouchControls.Scripts;
+using UnityEngine.SceneManagement;
 
 public class Main : MonoBehaviour {
 
@@ -35,7 +36,7 @@ public class Main : MonoBehaviour {
         {
             timelineRetrieved = true;
             ChronozoomHandler.GenerateLists(timeline, limitContentToImages);
-            game = ChronozoomHandler.SetUpGame(wormholesPerPlatform, platformsPerGames);
+            game = ChronozoomHandler.SetUpGame(wormholesPerPlatform, platformsPerGames+1);
 
             if (timelineRetrieved)
             {
@@ -46,7 +47,7 @@ public class Main : MonoBehaviour {
                 }
                 else
                 {
-                    Application.LoadLevel("MainScene");
+                    SceneManager.LoadScene("MainScene");
                 }
             }
 
@@ -61,7 +62,7 @@ public class Main : MonoBehaviour {
         }
         else
         {
-            Application.LoadLevel("MainScene");
+            SceneManager.LoadScene("MainScene");
         }
     }
 
@@ -85,26 +86,35 @@ public class Main : MonoBehaviour {
             //Last Platform
             if(i == platformsPerGames-1)
             {
-                setupLastPlatform(platform.name);
-            }
-            //Normal Platform
-            else
-            {
+                //setupLastPlatform(platform.name);
                 //Correct wormhole
-                setupHole(platform.name, game[i], true, 0);
+                setupHole(platform.name, game[i], true, 0, true);
 
                 //Incorrect wormhole(s)
                 for (int j = 0; j < wormholesPerPlatform - 1; j++)
                 {
                     //Create ItemImages from URL 
-                    setupHole(platform.name, game[i], false, j);
+                    setupHole(platform.name, game[i], false, j, true);
+                }
+            }
+            //Normal Platform
+            else
+            {
+                //Correct wormhole
+                setupHole(platform.name, game[i], true, 0, false);
+
+                //Incorrect wormhole(s)
+                for (int j = 0; j < wormholesPerPlatform - 1; j++)
+                {
+                    //Create ItemImages from URL 
+                    setupHole(platform.name, game[i], false, j, false);
                 }
             } 
         }
         
     }
 
-    private void setupHole(string platformName, GameStage stage, bool isCorrect, int holeNumber)
+    private void setupHole(string platformName, GameStage stage, bool isCorrect, int holeNumber, bool isLast)
     {
         
         //Get random positions to choose hole location
@@ -128,10 +138,10 @@ public class Main : MonoBehaviour {
         holeRow[row] = true;
 
         //Create image which will be shown above the hole
-        StartCoroutine(createItemImage(isCorrect, stage, holeNumber, holePosition));
+        StartCoroutine(createItemImage(isCorrect, stage, holeNumber, holePosition, isLast));
     }
 
-    IEnumerator createItemImage(bool isCorrect, GameStage stage, int holeNumber, GameObject holePosition)
+    IEnumerator createItemImage(bool isCorrect, GameStage stage, int holeNumber, GameObject holePosition, bool isLast)
     {
         Texture2D texture = new Texture2D(1, 1);
         Vector3 holeCoordinate = holePosition.transform.position;
@@ -193,7 +203,10 @@ public class Main : MonoBehaviour {
         if (isCorrect)
         {
             itemImageSensor.tag = "Correct-Hole";
-            itemImage.tag = "Correct";
+            if(isLast)
+                itemImage.tag = "Restart-Hole";
+            else
+                itemImage.tag = "Correct";
         }
         else
         {
