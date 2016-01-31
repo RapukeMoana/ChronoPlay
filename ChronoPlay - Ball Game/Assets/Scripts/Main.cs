@@ -83,6 +83,10 @@ public class Main : MonoBehaviour {
             Vector3 platformPosition = new Vector3(0f, -(i*plateDistance), 0f);
             platform.transform.position = platformPosition;
 
+            //Create Exhibit content items "walls"
+            setupExhibitContentItem(i);
+
+            //Create holes
             //Last Platform
             if(i == platformsPerGames-1)
             {
@@ -112,6 +116,28 @@ public class Main : MonoBehaviour {
             } 
         }
         
+    }
+
+    private void setupExhibitContentItem(int plateNumber)
+    {
+        //Creates objects
+        GameObject exhibitContentItem = (GameObject)Instantiate(Resources.Load("Exhibit_Content_Items"));
+
+        //Add name to platform (e.g. platform-0 is first platform)
+        exhibitContentItem.name = "Exhibit-" + plateNumber;
+
+        //Position plate below the previous 
+        Vector3 itemPosition = new Vector3(0f, -(plateNumber * plateDistance)-2f, 10f);
+        exhibitContentItem.transform.position = itemPosition;
+
+        StartCoroutine(createExhibitItemImage());
+    }
+
+    IEnumerator createExhibitItemImage()
+    {
+        //TODO: Get and add images
+        int numberOfImages = game[0].stageEvent.contentItems.Count;
+        yield return null;
     }
 
     private void setupHole(string platformName, GameStage stage, bool isCorrect, int holeNumber, bool isLast)
