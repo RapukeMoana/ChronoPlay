@@ -93,6 +93,10 @@ public class PlayerMovement : MonoBehaviour {
         {
             //If correct hole, update score and show result
             case "Correct-Hole":
+                //Close Side Description
+                if (sideDescriptionVisible)
+                    gameCanvas.alpha = 0;
+
                 Destroy(other.gameObject);
                 numCorrect++;
                 scoreText.text = "SCORE: Correct = " + numCorrect+ "  Incorrect = "+numIncorrect;
