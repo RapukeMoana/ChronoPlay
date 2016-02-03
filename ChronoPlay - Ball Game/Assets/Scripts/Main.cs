@@ -304,11 +304,11 @@ public class Main : MonoBehaviour {
         //Add correct/incorrect tags
         if (isCorrect)
         {
-            itemImageSensor.tag = "Correct-Hole";
-            if(isLast)
-                itemImage.tag = "Restart-Hole";
+            if (isLast)
+                itemImageSensor.tag = "Restart-Hole";
             else
                 itemImage.tag = "Correct";
+                itemImageSensor.tag = "Correct-Hole";
         }
         else
         {
