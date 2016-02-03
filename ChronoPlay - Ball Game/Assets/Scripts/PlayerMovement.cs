@@ -16,6 +16,7 @@ public class PlayerMovement : MonoBehaviour {
     public Canvas feedbackMenu;
     public InputField loggedBy;
     public InputField comments;
+    public Image progressBar;
 
     private Rigidbody rb;
     private float speedsmooth = 0.8f;
@@ -25,12 +26,14 @@ public class PlayerMovement : MonoBehaviour {
     private float timeSince = 0;
 
 
+
     // Use this for initialization
     void Start () {
         rb = GetComponent<Rigidbody>();
 
         myAlpha = 1.0f; // maybe you need other value
         //setupStageEvent();
+
     }
 
 	// Update is called once per frame
@@ -108,7 +111,11 @@ public class PlayerMovement : MonoBehaviour {
                 timeSince = Time.timeSinceLevelLoad;
                 level++;
                 //setupStageEvent();
-                
+
+                //Increase fill on statusbar
+                float progressFill = (level * 1f)/ Main.platformsPerGames;
+                progressBar.fillAmount = progressFill;
+
                 break;
             case "Incorrect-Hole":
                 GetComponent<Rigidbody>().AddForce(Vector3.up * 200);
