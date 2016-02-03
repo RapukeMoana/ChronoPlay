@@ -30,7 +30,7 @@ public class PlayerMovement : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
 
         myAlpha = 1.0f; // maybe you need other value
-        setupStageEvent();
+        //setupStageEvent();
     }
 
 	// Update is called once per frame
@@ -107,7 +107,7 @@ public class PlayerMovement : MonoBehaviour {
                 Logger.LogPlayEvent("Correct Hole, Time Taken: "+(Time.timeSinceLevelLoad- timeSince).ToString("n1"), "Ball Game", level.ToString(), Main.superCollectionName, Main.collectionName, other.transform.name);
                 timeSince = Time.timeSinceLevelLoad;
                 level++;
-                setupStageEvent();
+                //setupStageEvent();
                 
                 break;
             case "Incorrect-Hole":

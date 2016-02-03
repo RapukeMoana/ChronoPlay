@@ -26,6 +26,8 @@ public class Main : MonoBehaviour {
     public Canvas settingsMenu;
     public Canvas timelineSelectMenu;
 
+    public object contentItem { get; private set; }
+
 
     // Use this for initialization
     void Start()
@@ -120,24 +122,72 @@ public class Main : MonoBehaviour {
 
     private void setupExhibitContentItem(int plateNumber)
     {
-        //Creates objects
-        GameObject exhibitContentItem = (GameObject)Instantiate(Resources.Load("Exhibit_Content_Items"));
-
-        //Add name to platform (e.g. platform-0 is first platform)
-        exhibitContentItem.name = "Exhibit-" + plateNumber;
-
-        //Position plate below the previous 
-        Vector3 itemPosition = new Vector3(0f, -(plateNumber * plateDistance)-2f, 10f);
-        exhibitContentItem.transform.position = itemPosition;
-
-        StartCoroutine(createExhibitItemImage());
+        int numberOfItems = game[plateNumber].stageEvent.contentItems.Count;
+        for (var i = 0; i < numberOfItems && i< 6; i++)
+        {
+           
+            StartCoroutine(createExhibitItemImage(game[plateNumber].stageEvent.contentItems[i],i,plateNumber));
+            if (numberOfItems % 2 == 1 && i == numberOfItems - 1 && i != 5) {
+                StartCoroutine(createExhibitItemImage(game[plateNumber].stageEvent.contentItems[i], i+1, plateNumber));
+            }
+        }
+        
     }
 
-    IEnumerator createExhibitItemImage()
+    IEnumerator createExhibitItemImage(ContentItem contentItem, int itemNumber,int plateNumber)
     {
-        //TODO: Get and add images
-        int numberOfImages = game[0].stageEvent.contentItems.Count;
-        yield return null;
+        
+
+        Texture2D texture = new Texture2D(1, 1);
+        string stageEventid = contentItem.id + "-large";
+        string stageEventUri = contentItem.uri;
+        string stageEventDescription = contentItem.title;
+
+        //Creates item image object
+        GameObject itemImageLarge = (GameObject)Instantiate(Resources.Load("Exhibit_Content_Items_"+(itemNumber+1)));
+        itemImageLarge.tag = "ItemImageLarge";
+        itemImageLarge.name = stageEventid;
+
+        Vector3 itemPosition = new Vector3(itemImageLarge.transform.position.x, -(plateNumber * plateDistance)+2f, itemImageLarge.transform.position.z);
+        itemImageLarge.transform.position = itemPosition;
+
+        //Create description 3d text
+        //GameObject itemImageLargeDescription = (GameObject)Instantiate(Resources.Load("ExhibitItemDescription"));
+        //itemImageLargeDescription.tag = "ItemImageDescription";
+
+        //Vector3 tempPosition = itemImageLarge.transform.position;
+        //itemImageLargeDescription.GetComponent<TextMesh>().text = stageEventDescription;
+        //itemImageLargeDescription.transform.position = new Vector3(tempPosition.x, tempPosition.y - 15f, tempPosition.z - 20f);
+
+        // Start a download of the given URL
+        WWW www = new WWW(Uri.EscapeUriString(stageEventUri));
+
+
+
+        // Wait for download to complete
+        yield return www;
+
+        // assign texture
+        //www.LoadImageIntoTexture(texture);
+        try
+        {
+            // assign texture
+            if (www.error == null)
+            {
+                www.LoadImageIntoTexture(texture);
+            }
+            else
+            {
+                Logger.LogException("CZBall", "Main", "createStageEvent", www.url + " not found");
+            }
+        }
+        catch
+        {
+            Logger.LogException("CZBall", "PlayerMovemenr", "createStageEvent", "www.LoadImageIntoTexture(texture)");
+        }
+        itemImageLarge.gameObject.GetComponent<Renderer>().material.mainTexture = texture;
+
+
     }
 
     private void setupHole(string platformName, GameStage stage, bool isCorrect, int holeNumber, bool isLast)
