@@ -89,7 +89,6 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     void OnCollisionEnter(Collision other) {
-        Text scoreText = GameObject.Find("ScoreText").GetComponent<Text>();
         GameObject result;
         //Checks to see which wormhole ball enters 
         switch (other.transform.tag)
@@ -102,7 +101,6 @@ public class PlayerMovement : MonoBehaviour {
 
                 Destroy(other.gameObject);
                 numCorrect++;
-                scoreText.text = "SCORE: Correct = " + numCorrect+ "  Incorrect = "+numIncorrect;
                 result = (GameObject)Instantiate(Resources.Load("Result"));
                 GameObject.Find("Result").GetComponent<Text>().text = "CORRECT";
                 myAlpha = 1.0f;
@@ -120,7 +118,6 @@ public class PlayerMovement : MonoBehaviour {
             case "Incorrect-Hole":
                 GetComponent<Rigidbody>().AddForce(Vector3.up * 200);
                 numIncorrect++;
-                scoreText.text = "SCORE: Correct = " + numCorrect + "  Incorrect = " + numIncorrect;
                 result = (GameObject)Instantiate(Resources.Load("Result"));
                 GameObject.Find("Result").GetComponent<Text>().text = "INCORRECT";
                 myAlpha = 1.0f;
