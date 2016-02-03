@@ -53,10 +53,6 @@ public class Main : MonoBehaviour {
                 }
             }
 
-            //Set title to game canvas
-            Text timelineTitle = GameObject.Find("TimelineTitle").GetComponent<Text>();
-            timelineTitle.text = superCollectionName+ " ("+ collectionName +")";
-
             long startYear = game[0].stageEvent.time;
             long endYear = game[game.Count - 1].stageEvent.time;
 
