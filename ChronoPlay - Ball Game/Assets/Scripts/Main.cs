@@ -78,6 +78,9 @@ public class Main : MonoBehaviour {
             //Reset one hole per row rule
             holeRow = new bool[7];
 
+            //Reserve row 5 for title and year on platform
+            holeRow[5] = true;
+
             //Add name to platform (e.g. platform-0 is first platform)
             platform.name = "Platform-" + i;
 
@@ -122,14 +125,32 @@ public class Main : MonoBehaviour {
 
     private void setupExhibitContentItem(int plateNumber)
     {
+        //Create exhibit year
+        GameObject exhibitYear = (GameObject)Instantiate(Resources.Load("ExhibitYear"));
+
+        Vector3 yearPosition = new Vector3(exhibitYear.transform.position.x, -(plateNumber * plateDistance) + 0.1f, exhibitYear.transform.position.z);
+        exhibitYear.transform.position = yearPosition;
+
+        long year = game[plateNumber].stageEvent.time;
+        if (year < 0)
+        {
+            exhibitYear.GetComponent<TextMesh>().text = (((year * -1).ToString().Length != 4) ?  (year * (-1)).ToString("n0") + " BC" :  year * (-1) + " BC");
+        }
+        else
+            exhibitYear.GetComponent<TextMesh>().text =  ((year.ToString().Length != 4) ?  year.ToString("n0")  : "" + year );
+
+        //Create exhibit title
+        GameObject exhibitTitle = (GameObject)Instantiate(Resources.Load("ExhibitTitle"));
+
+        Vector3 titlePosition = new Vector3(exhibitTitle.transform.position.x, -(plateNumber * plateDistance) + 0.1f, exhibitTitle.transform.position.z);
+        exhibitTitle.transform.position = titlePosition;
+
+        exhibitTitle.GetComponent<TextMesh>().text = game[plateNumber].stageEvent.title;
+
+        //Create exhibit  items
         int numberOfItems = game[plateNumber].stageEvent.contentItems.Count;
         for (var i = 0; i < numberOfItems && i< 6; i++)
         {
-            //GameObject itemImageLargeDescription = (GameObject)Instantiate(Resources.Load("ExhibitYear"));
-
-            //Vector3 itemPosition = new Vector3(itemImageLargeDescription.transform.position.x, -(plateNumber * plateDistance), itemImageLargeDescription.transform.position.z);
-            //itemImageLargeDescription.transform.position = itemPosition;
-
 
             StartCoroutine(createExhibitItemImage(game[plateNumber].stageEvent.contentItems[i],i,plateNumber));
             if (numberOfItems % 2 == 1 && i == numberOfItems - 1 && i != 5) {
