@@ -125,7 +125,12 @@ public class Main : MonoBehaviour {
         int numberOfItems = game[plateNumber].stageEvent.contentItems.Count;
         for (var i = 0; i < numberOfItems && i< 6; i++)
         {
-           
+            //GameObject itemImageLargeDescription = (GameObject)Instantiate(Resources.Load("ExhibitYear"));
+
+            //Vector3 itemPosition = new Vector3(itemImageLargeDescription.transform.position.x, -(plateNumber * plateDistance), itemImageLargeDescription.transform.position.z);
+            //itemImageLargeDescription.transform.position = itemPosition;
+
+
             StartCoroutine(createExhibitItemImage(game[plateNumber].stageEvent.contentItems[i],i,plateNumber));
             if (numberOfItems % 2 == 1 && i == numberOfItems - 1 && i != 5) {
                 StartCoroutine(createExhibitItemImage(game[plateNumber].stageEvent.contentItems[i], i+1, plateNumber));
