@@ -76,6 +76,7 @@ public class Main : MonoBehaviour {
 
             //Reserve row 5 for title and year on platform
             holeRow[5] = true;
+            holeRow[2] = true;
 
             //Add name to platform (e.g. platform-0 is first platform)
             platform.name = "Platform-" + i;
@@ -141,7 +142,22 @@ public class Main : MonoBehaviour {
         Vector3 titlePosition = new Vector3(exhibitTitle.transform.position.x, -(plateNumber * plateDistance) + 0.1f, exhibitTitle.transform.position.z);
         exhibitTitle.transform.position = titlePosition;
 
-        exhibitTitle.GetComponent<TextMesh>().text = game[plateNumber].stageEvent.title;
+        string titleTemp = game[plateNumber].stageEvent.title;
+        if (titleTemp.Length >= 40)
+            titleTemp = titleTemp.Substring(0, 35) + "...";
+            
+        exhibitTitle.GetComponent<TextMesh>().text = titleTemp;
+
+        //Second exhibit year and title
+        GameObject exhibitYear2 = (GameObject)Instantiate(Resources.Load("ExhibitYear"));
+        GameObject exhibitTitle2 = (GameObject)Instantiate(Resources.Load("ExhibitTitle"));
+
+        exhibitYear2.GetComponent<TextMesh>().text = exhibitYear.GetComponent<TextMesh>().text;
+        exhibitTitle2.GetComponent<TextMesh>().text = exhibitTitle.GetComponent<TextMesh>().text;
+
+        exhibitYear2.transform.position = new Vector3(exhibitYear.transform.position.x, exhibitYear.transform.position.y, exhibitYear.transform.position.z+8.5f);
+        exhibitTitle2.transform.position = new Vector3(exhibitTitle.transform.position.x, exhibitTitle.transform.position.y, exhibitTitle.transform.position.z + 8.5f);
+
 
         //Create exhibit  items
         int numberOfItems = game[plateNumber].stageEvent.contentItems.Count;
