@@ -301,10 +301,14 @@ public class Main : MonoBehaviour {
         if (isCorrect)
         {
             if (isLast)
+            {
+                itemImage.tag = "Correct";
                 itemImageSensor.tag = "Restart-Hole";
-            else
+            }
+            else {
                 itemImage.tag = "Correct";
                 itemImageSensor.tag = "Correct-Hole";
+            }
         }
         else
         {

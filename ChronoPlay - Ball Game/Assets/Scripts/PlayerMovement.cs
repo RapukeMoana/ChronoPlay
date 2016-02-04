@@ -22,8 +22,8 @@ public class PlayerMovement : MonoBehaviour {
     private float speedsmooth = 0.8f;
     private float myAlpha = 1.0f;
     private bool resultFade = true, sideDescriptionVisible = false;
-    private int numCorrect = 0, numIncorrect = 0, level = 0;
-    private float timeSince = 0;
+    public static int numCorrect = 0, numIncorrect = 0, level = 0;
+    public static float timeSince = 0;
 
 
 
@@ -33,6 +33,7 @@ public class PlayerMovement : MonoBehaviour {
 
         myAlpha = 1.0f; // maybe you need other value
         //setupStageEvent();
+
 
     }
 
@@ -129,7 +130,7 @@ public class PlayerMovement : MonoBehaviour {
             case "Restart-Hole":
                 Logger.LogPlayEvent("Total Time:"+ Time.timeSinceLevelLoad.ToString("n1")+", Correct:"+ numCorrect+" Incorrect:"+ numIncorrect, "Ball Game", level.ToString(), Main.superCollectionName, Main.collectionName, other.transform.name);
                 loadingImage.SetActive(true);
-                SceneManager.LoadScene(0);
+                SceneManager.LoadScene(2);
                 break;
             default:
                 break;
