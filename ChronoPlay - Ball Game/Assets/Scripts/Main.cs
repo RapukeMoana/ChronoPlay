@@ -149,9 +149,6 @@ public class Main : MonoBehaviour {
         {
 
             StartCoroutine(createExhibitItemImage(game[plateNumber].stageEvent.contentItems[i],i,plateNumber));
-            if (numberOfItems % 2 == 1 && i == numberOfItems - 1 && i != 5) {
-                StartCoroutine(createExhibitItemImage(game[plateNumber].stageEvent.contentItems[i], i+1, plateNumber));
-            }
         }
         
     }
