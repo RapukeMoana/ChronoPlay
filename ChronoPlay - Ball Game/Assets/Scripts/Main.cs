@@ -77,6 +77,7 @@ public class Main : MonoBehaviour {
             //Reserve row 5 for title and year on platform
             holeRow[5] = true;
             holeRow[2] = true;
+            holeRow[4] = true;
 
             //Add name to platform (e.g. platform-0 is first platform)
             platform.name = "Platform-" + i;
@@ -158,18 +159,22 @@ public class Main : MonoBehaviour {
         exhibitYear2.transform.position = new Vector3(exhibitYear.transform.position.x, exhibitYear.transform.position.y, exhibitYear.transform.position.z+8.5f);
         exhibitTitle2.transform.position = new Vector3(exhibitTitle.transform.position.x, exhibitTitle.transform.position.y, exhibitTitle.transform.position.z + 8.5f);
 
-
         //Create exhibit  items
         int numberOfItems = game[plateNumber].stageEvent.contentItems.Count;
-        for (var i = 0; i < numberOfItems && i< 6; i++)
-        {
 
-            StartCoroutine(createExhibitItemImage(game[plateNumber].stageEvent.contentItems[i],i,plateNumber));
+        //Only allow max 6 items
+        if (numberOfItems > 6)
+            numberOfItems = 6;
+
+        for (var i = 0; i < numberOfItems; i++)
+        {
+            
+            StartCoroutine(createExhibitItemImage(game[plateNumber].stageEvent.contentItems[i],i,plateNumber, numberOfItems));
         }
         
     }
 
-    IEnumerator createExhibitItemImage(ContentItem contentItem, int itemNumber,int plateNumber)
+    IEnumerator createExhibitItemImage(ContentItem contentItem, int itemNumber,int plateNumber, int numberOfItems)
     {
         
 
@@ -194,10 +199,13 @@ public class Main : MonoBehaviour {
         //itemImageLargeDescription.GetComponent<TextMesh>().text = stageEventDescription;
         //itemImageLargeDescription.transform.position = new Vector3(tempPosition.x, tempPosition.y - 15f, tempPosition.z - 20f);
 
+        //Create small image object
+        GameObject itemImageSmall = (GameObject)Instantiate(Resources.Load("Exhibit_Content_Items_Small"));
+        Vector3 itemSmallPosition = new Vector3(itemNumber * 3.5f-((numberOfItems-1)*1.75f), itemPosition.y-2f, itemImageSmall.transform.position.z);
+        itemImageSmall.transform.position = itemSmallPosition;
+
         // Start a download of the given URL
         WWW www = new WWW(Uri.EscapeUriString(stageEventUri));
-
-
 
         // Wait for download to complete
         yield return www;
@@ -221,7 +229,7 @@ public class Main : MonoBehaviour {
             Logger.LogException("CZBall", "PlayerMovemenr", "createStageEvent", "www.LoadImageIntoTexture(texture)");
         }
         itemImageLarge.gameObject.GetComponent<Renderer>().material.mainTexture = texture;
-
+        itemImageSmall.gameObject.GetComponent<Renderer>().material.mainTexture = texture;
 
     }
 
