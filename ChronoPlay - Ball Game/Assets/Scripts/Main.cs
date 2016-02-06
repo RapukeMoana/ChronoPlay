@@ -21,7 +21,7 @@ public class Main : MonoBehaviour {
     public static int wormholesPerPlatform = 3;
     public static int platformsPerGames = 10;
     public static bool limitContentToImages = true;
-    public static float plateDistance = 20f;
+    public static float plateDistance = 12f;
     public Canvas mainMenu;
     public Canvas settingsMenu;
     public Canvas timelineSelectMenu;
