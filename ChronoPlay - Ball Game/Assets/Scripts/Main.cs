@@ -192,12 +192,20 @@ public class Main : MonoBehaviour {
         itemImageLarge.transform.position = itemPosition;
 
         //Create description 3d text
-        //GameObject itemImageLargeDescription = (GameObject)Instantiate(Resources.Load("ExhibitItemDescription"));
-        //itemImageLargeDescription.tag = "ItemImageDescription";
+        GameObject itemImageLargeDescription = (GameObject)Instantiate(Resources.Load("ExhibitItemDescription"));
+        itemImageLargeDescription.tag = "ItemImageDescription";
 
-        //Vector3 tempPosition = itemImageLarge.transform.position;
-        //itemImageLargeDescription.GetComponent<TextMesh>().text = stageEventDescription;
-        //itemImageLargeDescription.transform.position = new Vector3(tempPosition.x, tempPosition.y - 15f, tempPosition.z - 20f);
+        Vector3 tempPosition = itemImageLarge.transform.position;
+        itemImageLargeDescription.GetComponent<TextMesh>().text = stageEventDescription;
+        if(itemNumber == 0 || itemNumber==1)
+            itemImageLargeDescription.transform.position = new Vector3(tempPosition.x, tempPosition.y+3f , tempPosition.z+3f);
+        else
+            itemImageLargeDescription.transform.position = new Vector3(tempPosition.x, tempPosition.y + 4f, tempPosition.z);
+
+        if(itemNumber == 2 || itemNumber == 4)
+            itemImageLargeDescription.transform.eulerAngles = new Vector3(itemImageLarge.transform.eulerAngles.x, itemImageLarge.transform.eulerAngles.y+180, 0);
+        else
+            itemImageLargeDescription.transform.eulerAngles = new Vector3(itemImageLarge.transform.eulerAngles.x, itemImageLarge.transform.eulerAngles.y, 0);
 
         //Create small image object
         GameObject itemImageSmall = (GameObject)Instantiate(Resources.Load("Exhibit_Content_Items_Small"));
