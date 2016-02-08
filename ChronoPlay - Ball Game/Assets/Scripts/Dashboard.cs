@@ -35,6 +35,13 @@ public class Dashboard : MonoBehaviour {
         {
             //sliderPlatform.value = PlayerPrefs.GetInt("Slider Platforms");
             //sliderHoles.value = PlayerPrefs.GetInt("Slider Holes");
+            settings.numPlatforms = Convert.ToInt32(sliderPlatform.value);
+            settings.numHoles = Convert.ToInt32(sliderHoles.value);
+        }
+        else
+        {
+            settings.numPlatforms = Convert.ToInt32(sliderPlatform.value);
+            settings.numHoles = Convert.ToInt32(sliderHoles.value);
         }
 
 
