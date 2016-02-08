@@ -82,7 +82,6 @@ public class Dashboard : MonoBehaviour {
 
         PlayerPrefs.SetInt("Slider Holes", Convert.ToInt32(holes));
         PlayerPrefs.Save();
-        Debug.Log(Convert.ToInt32(holes));
     }
 
 
