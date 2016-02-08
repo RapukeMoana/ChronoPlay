@@ -18,7 +18,7 @@ public class Dashboard : MonoBehaviour {
     public Text sliderNumberOfPlatforms;
     public Text sliderNumberOfHoles;
 
-    private SettingsConfig settings;
+    private SettingsConfig settings = new SettingsConfig();
 
     // Use this for initialization
     void Start () {
@@ -30,7 +30,14 @@ public class Dashboard : MonoBehaviour {
             averageTimeText.text = PlayerPrefs.GetFloat("Average Time").ToString("n1")+"s";
         }
 
-        settings = new SettingsConfig();
+        //TODO: Presist user preference
+        if(PlayerPrefs.HasKey("Slider Platforms"))
+        {
+            //sliderPlatform.value = PlayerPrefs.GetInt("Slider Platforms");
+            //sliderHoles.value = PlayerPrefs.GetInt("Slider Holes");
+        }
+
+
     }
 
     // Update is called once per frame
@@ -55,12 +62,20 @@ public class Dashboard : MonoBehaviour {
     {
         sliderNumberOfPlatforms.text = platform + "";
         settings.numPlatforms = Convert.ToInt32(platform);
+
+        PlayerPrefs.SetInt("Slider Platforms", Convert.ToInt32(platform));
+        PlayerPrefs.Save();
+
     }
 
     void ChangeValueHoles(float holes)
     {
         sliderNumberOfHoles.text = holes + "";
         settings.numHoles = Convert.ToInt32(holes);
+
+        PlayerPrefs.SetInt("Slider Holes", Convert.ToInt32(holes));
+        PlayerPrefs.Save();
+        Debug.Log(Convert.ToInt32(holes));
     }
 
 
@@ -73,5 +88,6 @@ public class Dashboard : MonoBehaviour {
         loadingImage.SetActive(true);
         SceneManager.LoadScene(1);
         menuEnabled = false;
+        
     }
 }

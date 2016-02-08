@@ -133,7 +133,7 @@ public class PlayerMovement : MonoBehaviour {
                 Logger.LogPlayEvent("Total Time:"+ Time.timeSinceLevelLoad.ToString("n1")+", Correct:"+ numCorrect+" Incorrect:"+ numIncorrect, "Ball Game", level.ToString(), Main.superCollectionName, Main.collectionName, other.transform.name);
                 saveProgress();
                 loadingImage.SetActive(true);
-                SceneManager.LoadScene(2);
+                SceneManager.LoadScene(0);
                 break;
             default:
                 break;
