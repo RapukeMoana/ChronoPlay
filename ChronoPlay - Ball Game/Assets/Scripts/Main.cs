@@ -207,8 +207,10 @@ public class Main : MonoBehaviour {
         else
             itemImageLargeDescription.transform.eulerAngles = new Vector3(itemImageLarge.transform.eulerAngles.x, itemImageLarge.transform.eulerAngles.y, 0);
 
-        //Create small image object
+        //Create small image object on platform
         GameObject itemImageSmall = (GameObject)Instantiate(Resources.Load("Exhibit_Content_Items_Small"));
+        itemImageSmall.tag = "ItemImageLarge";
+        itemImageSmall.name = stageEventid;
         Vector3 itemSmallPosition = new Vector3(itemNumber * 3.5f-((numberOfItems-1)*1.75f), itemPosition.y-2f, itemImageSmall.transform.position.z);
         itemImageSmall.transform.position = itemSmallPosition;
 
