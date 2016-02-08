@@ -131,6 +131,7 @@ public class PlayerMovement : MonoBehaviour {
                 break;
             case "Restart-Hole":
                 Logger.LogPlayEvent("Total Time:"+ Time.timeSinceLevelLoad.ToString("n1")+", Correct:"+ numCorrect+" Incorrect:"+ numIncorrect, "Ball Game", level.ToString(), Main.superCollectionName, Main.collectionName, other.transform.name);
+                saveProgress();
                 loadingImage.SetActive(true);
                 SceneManager.LoadScene(2);
                 break;
@@ -314,6 +315,17 @@ public class PlayerMovement : MonoBehaviour {
         }
     }
 
+    //Save score to storage
+    private void saveProgress()
+    {
+        PlayerPrefs.SetInt("Total Correct", numCorrect);
+        PlayerPrefs.SetInt("Total Incorrect", numIncorrect);
+        PlayerPrefs.SetFloat("Total Time", timeSince);
+        PlayerPrefs.SetFloat("Average Time", timeSince / Main.platformsPerGames);
+        PlayerPrefs.SetString("Last Played Date", System.DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss"));
+        PlayerPrefs.Save();
+    }
+
     //Clicking on feedback button shows the menu and pauses the game
     public void ShowFeedbackMenu()
     {
@@ -341,5 +353,7 @@ public class PlayerMovement : MonoBehaviour {
         feedbackMenu.enabled = false;
         Time.timeScale = 1;
     }
+
+
 }
 
