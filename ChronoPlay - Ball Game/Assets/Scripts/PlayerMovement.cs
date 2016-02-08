@@ -33,8 +33,10 @@ public class PlayerMovement : MonoBehaviour {
 
         myAlpha = 1.0f; // maybe you need other value
         //setupStageEvent();
-
-
+        numCorrect = 0;
+        numIncorrect = 0;
+        level = 0;
+        timeSince = 0;
     }
 
 	// Update is called once per frame
