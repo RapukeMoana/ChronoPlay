@@ -198,12 +198,12 @@ public class Main : MonoBehaviour {
 
         Vector3 tempPosition = itemImageLarge.transform.position;
         itemImageLargeDescription.GetComponent<TextMesh>().text = stageEventDescription;
-        if(itemNumber == 0 || itemNumber==1)
+        if(itemNumber == 5 || itemNumber== 6)
             itemImageLargeDescription.transform.position = new Vector3(tempPosition.x, tempPosition.y+3f , tempPosition.z+3f);
         else
             itemImageLargeDescription.transform.position = new Vector3(tempPosition.x, tempPosition.y + 4f, tempPosition.z);
 
-        if(itemNumber == 2 || itemNumber == 4)
+        if(itemNumber == 0 || itemNumber == 2)
             itemImageLargeDescription.transform.eulerAngles = new Vector3(itemImageLarge.transform.eulerAngles.x, itemImageLarge.transform.eulerAngles.y+180, 0);
         else
             itemImageLargeDescription.transform.eulerAngles = new Vector3(itemImageLarge.transform.eulerAngles.x, itemImageLarge.transform.eulerAngles.y, 0);
