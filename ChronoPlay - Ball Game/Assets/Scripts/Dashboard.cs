@@ -96,4 +96,16 @@ public class Dashboard : MonoBehaviour {
         menuEnabled = false;
         
     }
+
+    public void StartEarth()
+    {
+        settings.superCollection = "bighistorylabs";
+        settings.collection = "bighistorylabs";
+        settings.SetPublicVariables();
+
+        loadingImage.SetActive(true);
+        SceneManager.LoadScene(1);
+        menuEnabled = false;
+
+    }
 }
