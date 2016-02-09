@@ -318,6 +318,8 @@ public class PlayerMovement : MonoBehaviour {
     //Save score to storage
     private void saveProgress()
     {
+        PlayerPrefs.SetString("Platforms", Main.platformsPerGames+"");
+        PlayerPrefs.SetString("Holes", Main.wormholesPerPlatform + "");
         PlayerPrefs.SetInt("Total Correct", numCorrect);
         PlayerPrefs.SetInt("Total Incorrect", numIncorrect);
         PlayerPrefs.SetFloat("Total Time", timeSince);

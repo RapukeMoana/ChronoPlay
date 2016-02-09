@@ -6,6 +6,7 @@ using System;
 
 public class Dashboard : MonoBehaviour {
 
+    public Text holesAndPlatforms;
     public Text totalCorrectText;
     public Text totalIncorrectText;
     public Text totalTimeText;
@@ -24,6 +25,7 @@ public class Dashboard : MonoBehaviour {
     void Start () {
         if(PlayerPrefs.HasKey("Last Played Date"))
         {
+            holesAndPlatforms.text = PlayerPrefs.GetString("Platforms") + "/" + PlayerPrefs.GetString("Holes");
             totalCorrectText.text = PlayerPrefs.GetInt("Total Correct")+"";
             totalIncorrectText.text = PlayerPrefs.GetInt("Total Incorrect")+"";
             totalTimeText.text = PlayerPrefs.GetFloat("Total Time").ToString("n1")+"s";
