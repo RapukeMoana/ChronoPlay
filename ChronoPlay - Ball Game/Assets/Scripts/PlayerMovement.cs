@@ -127,6 +127,7 @@ public class PlayerMovement : MonoBehaviour {
                 resultFade = true;
                 Logger.LogPlayEvent("Incorrect Hole, Time Taken: " + (Time.timeSinceLevelLoad - timeSince).ToString("n1"), "Ball Game", level.ToString(), Main.superCollectionName, Main.collectionName, other.transform.name);
                 timeSince = Time.timeSinceLevelLoad;
+                showYear(other.transform.name, other.transform.position);
                 
                 break;
             case "Restart-Hole":
@@ -140,8 +141,6 @@ public class PlayerMovement : MonoBehaviour {
                 break;
         }      
     }
-
-
 
     void Update()
     {
@@ -327,6 +326,15 @@ public class PlayerMovement : MonoBehaviour {
         PlayerPrefs.SetFloat("Average Time", timeSince / Main.platformsPerGames);
         PlayerPrefs.SetString("Last Played Date", System.DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss"));
         PlayerPrefs.Save();
+    }
+
+    private void showYear(string year, Vector3 position)
+    {
+        //Place description on item image
+        GameObject incorrectYear = (GameObject)Instantiate(Resources.Load("ItemDescription"));
+        incorrectYear.GetComponent<TextMesh>().text = year;
+        incorrectYear.GetComponent<TextMesh>().transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+        incorrectYear.transform.position = new Vector3(position.x,position.y+4.1f,position.z+2.5f);
     }
 
     //Clicking on feedback button shows the menu and pauses the game

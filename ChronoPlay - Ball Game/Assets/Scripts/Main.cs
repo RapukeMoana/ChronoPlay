@@ -167,7 +167,6 @@ public class Main : MonoBehaviour {
         if (numberOfItems > 6)
             numberOfItems = 6;
 
-        Debug.Log(numberOfItems);
         for (var i = 0; i < numberOfItems; i++)
         {
             
@@ -278,19 +277,29 @@ public class Main : MonoBehaviour {
         Vector3 holeCoordinate = holePosition.transform.position;
 
         //Get uri of image
-        string uri, title, id;
+        string uri, title, id, yearFormatted;
+        long year;
         if (isCorrect)
         {
             uri = stage.correctWormhole.uri;
             title = stage.correctWormhole.title;
             id = stage.correctWormhole.id;
+            year = stage.correctWormhole.year;
         }
         else
         {
             uri = stage.incorrectWormholes[holeNumber].uri;
             title = stage.incorrectWormholes[holeNumber].title;
             id = stage.incorrectWormholes[holeNumber].id;
+            year = stage.incorrectWormholes[holeNumber].year;
         }
+
+        //Format year
+        if (year < 0)
+            yearFormatted = ((year * -1).ToString().Length != 4) ? (year * (-1)).ToString("n0") + " BC" : (year * -1).ToString() + " BC";
+        else
+            yearFormatted = (year.ToString().Length != 4) ? year.ToString("n0") : year.ToString();
+
 
         // Start a download of the given URL
         WWW www;
@@ -325,7 +334,7 @@ public class Main : MonoBehaviour {
 
         //Create sensor
         GameObject itemImageSensor = (GameObject)Instantiate(Resources.Load("ItemImageSensor"));
-        itemImageSensor.name = id+"-sensor";
+        itemImageSensor.name = yearFormatted;
 
         //Create hole on platform
         Destroy(holePosition);
