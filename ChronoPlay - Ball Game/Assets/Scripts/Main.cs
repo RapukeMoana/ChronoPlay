@@ -167,6 +167,7 @@ public class Main : MonoBehaviour {
         if (numberOfItems > 6)
             numberOfItems = 6;
 
+        Debug.Log(numberOfItems);
         for (var i = 0; i < numberOfItems; i++)
         {
             
