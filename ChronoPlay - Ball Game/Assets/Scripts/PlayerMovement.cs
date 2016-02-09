@@ -127,7 +127,9 @@ public class PlayerMovement : MonoBehaviour {
                 resultFade = true;
                 Logger.LogPlayEvent("Incorrect Hole, Time Taken: " + (Time.timeSinceLevelLoad - timeSince).ToString("n1"), "Ball Game", level.ToString(), Main.superCollectionName, Main.collectionName, other.transform.name);
                 timeSince = Time.timeSinceLevelLoad;
-                showYear(other.transform.name, other.transform.position);
+                
+                //TODO: Year not showing up with correct year
+                //showYear(other.transform.name, other.transform.position);
                 
                 break;
             case "Restart-Hole":

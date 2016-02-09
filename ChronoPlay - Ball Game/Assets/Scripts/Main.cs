@@ -252,22 +252,22 @@ public class Main : MonoBehaviour {
     {
         
         //Get random positions to choose hole location
-        int row = UnityEngine.Random.Range(0, 6);
-        int col = UnityEngine.Random.Range(0, 6);
+        int row = UnityEngine.Random.Range(0, 7);
+        int col = UnityEngine.Random.Range(0, 7);
 
         while (holeRow[row])
         {
-            row = UnityEngine.Random.Range(0, 6);
+            row = UnityEngine.Random.Range(0, 7);
         }
 
         GameObject holePosition = GameObject.Find(platformName+"HoleCover-"+row+"-"+col);
 
-        while (holePosition == null)
-        {
-            row = UnityEngine.Random.Range(0, 8);
-            col = UnityEngine.Random.Range(0, 8);
-            holePosition = GameObject.Find(platformName + "HoleCover-" + row + "-" + col);
-        }
+        //while (holePosition == null)
+        //{
+        //    row = UnityEngine.Random.Range(0, 8);
+        //    col = UnityEngine.Random.Range(0, 8);
+        //    holePosition = GameObject.Find(platformName + "HoleCover-" + row + "-" + col);
+        //}
 
         holeRow[row] = true;
 
