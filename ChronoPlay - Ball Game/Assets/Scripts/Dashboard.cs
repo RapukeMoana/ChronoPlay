@@ -43,6 +43,9 @@ public class Dashboard : MonoBehaviour {
             settings.numPlatforms = Convert.ToInt32(sliderPlatform.value);
             settings.numHoles = Convert.ToInt32(sliderHoles.value);
         }
+        sliderNumberOfPlatforms.text = sliderPlatform.value+"";
+        sliderNumberOfHoles.text = sliderHoles.value + "";
+
 
 
     }
