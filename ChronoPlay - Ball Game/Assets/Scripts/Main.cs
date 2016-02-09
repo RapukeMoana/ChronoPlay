@@ -25,6 +25,7 @@ public class Main : MonoBehaviour {
     public Canvas mainMenu;
     public Canvas settingsMenu;
     public Canvas timelineSelectMenu;
+    public CanvasGroup loadingImage;
 
     public object contentItem { get; private set; }
 
@@ -32,6 +33,9 @@ public class Main : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
+        loadingImage.alpha = 1;
+        Time.timeScale = 0;
+
         timeline = ChronozoomHandler.RetrieveTimeline(superCollectionName, collectionName);
 //        Logger.LogPlayEvent("Got Timelines: "+(Time.timeSinceLevelLoad).ToString("n1"), "Ball Game", "Main", Main.superCollectionName, Main.collectionName, "");
         if (timeline != null && !String.IsNullOrEmpty(timeline.__type))
@@ -532,5 +536,11 @@ public class Main : MonoBehaviour {
     {
         SetSliderValue(value);
         SetSliderLabel(value);
+    }
+
+    public void playGame()
+    {
+        loadingImage.alpha = 0;
+        Time.timeScale = 1;
     }
 }
