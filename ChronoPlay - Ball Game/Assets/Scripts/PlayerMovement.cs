@@ -131,6 +131,7 @@ public class PlayerMovement : MonoBehaviour {
                 break;
             case "Restart-Hole":
                 Logger.LogPlayEvent("Total Time:"+ Time.timeSinceLevelLoad.ToString("n1")+", Correct:"+ numCorrect+" Incorrect:"+ numIncorrect, "Ball Game", level.ToString(), Main.superCollectionName, Main.collectionName, other.transform.name);
+                numCorrect++;
                 saveProgress();
                 loadingImage.SetActive(true);
                 SceneManager.LoadScene(0);
