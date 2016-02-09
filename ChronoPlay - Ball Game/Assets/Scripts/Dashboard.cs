@@ -28,8 +28,8 @@ public class Dashboard : MonoBehaviour {
             holesAndPlatforms.text = PlayerPrefs.GetString("Platforms") + "/" + PlayerPrefs.GetString("Holes");
             totalCorrectText.text = PlayerPrefs.GetInt("Total Correct")+"";
             totalIncorrectText.text = PlayerPrefs.GetInt("Total Incorrect")+"";
-            totalTimeText.text = PlayerPrefs.GetFloat("Total Time").ToString("n1")+"s";
-            averageTimeText.text = PlayerPrefs.GetFloat("Average Time").ToString("n1")+"s";
+            totalTimeText.text = PlayerPrefs.GetFloat("Total Time").ToString("n0")+"s";
+            averageTimeText.text = PlayerPrefs.GetFloat("Average Time").ToString("n0")+"s";
         }
 
         //TODO: Presist user preference
@@ -112,5 +112,10 @@ public class Dashboard : MonoBehaviour {
         SceneManager.LoadScene(1);
         menuEnabled = false;
 
+    }
+
+    public void OpenChronozoomWebsite()
+    {
+        Application.OpenURL("http://www.chronozoom.com/");
     }
 }
