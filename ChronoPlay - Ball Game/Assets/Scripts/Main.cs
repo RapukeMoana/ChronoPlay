@@ -542,5 +542,6 @@ public class Main : MonoBehaviour {
     {
         loadingImage.alpha = 0;
         Time.timeScale = 1;
+        
     }
 }

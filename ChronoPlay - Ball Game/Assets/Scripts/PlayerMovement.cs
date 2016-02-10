@@ -12,7 +12,7 @@ public class PlayerMovement : MonoBehaviour {
     public bool isKeyBoard;
     public int zoom;
     public CanvasGroup gameCanvas;
-    public GameObject loadingImage;
+    public CanvasGroup loadingImage;
     public Canvas feedbackMenu;
     public InputField loggedBy;
     public InputField comments;
@@ -136,7 +136,7 @@ public class PlayerMovement : MonoBehaviour {
                 Logger.LogPlayEvent("Total Time:"+ Time.timeSinceLevelLoad.ToString("n1")+", Correct:"+ numCorrect+" Incorrect:"+ numIncorrect, "Ball Game", level.ToString(), Main.superCollectionName, Main.collectionName, other.transform.name);
                 numCorrect++;
                 saveProgress();
-                loadingImage.SetActive(true);
+                //loadingImage.SetActive(true);
                 SceneManager.LoadScene(0);
                 break;
             default:
@@ -167,7 +167,7 @@ public class PlayerMovement : MonoBehaviour {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
-            if (Physics.Raycast(ray, out hit, 800f))
+            if (Physics.Raycast(ray, out hit, 800f) && loadingImage.alpha == 0)
             {
                 showDescription(GameObject.Find(hit.collider.gameObject.name));
             }
