@@ -17,6 +17,8 @@ public class PlayerMovement : MonoBehaviour {
     public InputField loggedBy;
     public InputField comments;
     public Image progressBar;
+    public static bool browseMode = false;
+    public GameObject gameCamera;
 
     private Rigidbody rb;
     private float speedsmooth = 0.8f;
@@ -24,6 +26,7 @@ public class PlayerMovement : MonoBehaviour {
     private bool resultFade = true, sideDescriptionVisible = false;
     public static int numCorrect = 0, numIncorrect = 0, level = 0;
     public static float timeSince = 0;
+    private Vector3 browsePosition;
 
 
 
@@ -89,6 +92,11 @@ public class PlayerMovement : MonoBehaviour {
         {
             GameObject.Find("Main Camera").GetComponent<Camera>().fieldOfView -= zoom;
         }
+
+        if (browseMode)
+        {
+            gameCamera.transform.position = Vector3.Lerp(gameCamera.transform.position, browsePosition, Time.deltaTime * 2);
+        }
     }
 
     void OnCollisionEnter(Collision other) {
@@ -136,8 +144,13 @@ public class PlayerMovement : MonoBehaviour {
                 Logger.LogPlayEvent("Total Time:"+ Time.timeSinceLevelLoad.ToString("n1")+", Correct:"+ numCorrect+" Incorrect:"+ numIncorrect, "Ball Game", level.ToString(), Main.superCollectionName, Main.collectionName, other.transform.name);
                 numCorrect++;
                 saveProgress();
+                //Time.timeScale = 0;
+                //gameCamera.transform.position = new Vector3(0, 8f, -13f);
+                //gameCamera.transform.position = Vector3.Lerp(gameCamera.transform.position, new Vector3(0, gameCamera.transform.position.y, -13f), Time.deltaTime*2);
+                browseMode = true;
+                browsePosition = new Vector3(0, gameCamera.transform.position.y+4f, -13f);
                 //loadingImage.SetActive(true);
-                SceneManager.LoadScene(0);
+                //SceneManager.LoadScene(0);
                 break;
             default:
                 break;
