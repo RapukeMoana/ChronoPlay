@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour {
     public float speed;
-    public float plateDistance = 20f;
+    public float plateDistance;
     public bool isKeyBoard;
     public int zoom;
     public CanvasGroup gameCanvas;
@@ -19,13 +19,13 @@ public class PlayerMovement : MonoBehaviour {
     public Image progressBar;
     public static bool browseMode = false;
     public GameObject gameCamera;
+    public static int numCorrect = 0, numIncorrect = 0, level = 0;
+    public static float timeSince = 0;
 
     private Rigidbody rb;
     private float speedsmooth = 0.8f;
     private float myAlpha = 1.0f;
     private bool resultFade = true, sideDescriptionVisible = false;
-    public static int numCorrect = 0, numIncorrect = 0, level = 0;
-    public static float timeSince = 0;
     private Vector3 browsePosition;
 
 
@@ -40,13 +40,14 @@ public class PlayerMovement : MonoBehaviour {
         numIncorrect = 0;
         level = 0;
         timeSince = 0;
+        plateDistance = Main.plateDistance;
     }
 
 	// Update is called once per frame
 	void FixedUpdate () {
 
         //accelerometer option - but cant test 
-        if (isKeyBoard)
+        if (isKeyBoard && !browseMode)
         {
             float moveHorizontal = Input.GetAxis("Horizontal");
             float moveVertical = Input.GetAxis("Vertical");
@@ -95,6 +96,13 @@ public class PlayerMovement : MonoBehaviour {
 
         if (browseMode)
         {
+            
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+                browsePosition = new Vector3(browsePosition.x, (browsePosition.y + plateDistance), browsePosition.z);
+
+            if (Input.GetKeyDown(KeyCode.DownArrow))
+                browsePosition = new Vector3(browsePosition.x, (browsePosition.y - plateDistance), browsePosition.z);
+
             gameCamera.transform.position = Vector3.Lerp(gameCamera.transform.position, browsePosition, Time.deltaTime * 2);
         }
     }
@@ -144,11 +152,13 @@ public class PlayerMovement : MonoBehaviour {
                 Logger.LogPlayEvent("Total Time:"+ Time.timeSinceLevelLoad.ToString("n1")+", Correct:"+ numCorrect+" Incorrect:"+ numIncorrect, "Ball Game", level.ToString(), Main.superCollectionName, Main.collectionName, other.transform.name);
                 numCorrect++;
                 saveProgress();
-                //Time.timeScale = 0;
-                //gameCamera.transform.position = new Vector3(0, 8f, -13f);
-                //gameCamera.transform.position = Vector3.Lerp(gameCamera.transform.position, new Vector3(0, gameCamera.transform.position.y, -13f), Time.deltaTime*2);
-                browseMode = true;
-                browsePosition = new Vector3(0, gameCamera.transform.position.y+4f, -13f);
+                if (!browseMode)
+                {
+                    
+                    browseMode = true;
+                    browsePosition = new Vector3(0, gameCamera.transform.position.y + 4f, -13f);
+                }
+                
                 //loadingImage.SetActive(true);
                 //SceneManager.LoadScene(0);
                 break;
