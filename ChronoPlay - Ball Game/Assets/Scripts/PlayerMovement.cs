@@ -129,7 +129,7 @@ public class PlayerMovement : MonoBehaviour {
                 timeSince = Time.timeSinceLevelLoad;
                 
                 //TODO: Year not showing up with correct year
-                //showYear(other.transform.name, other.transform.position);
+                showYear(other.transform.name, other.transform.position);
                 
                 break;
             case "Restart-Hole":
