@@ -104,7 +104,8 @@ public class PlayerMovement : MonoBehaviour {
                 if (browseLevel > 0)
                 {
                     browseLevel--;
-                    browsePosition = new Vector3(browsePosition.x, (browsePosition.y + plateDistance), browsePosition.z);
+                    browsePosition = new Vector3(browsePosition.x, -(browseLevel * plateDistance)+8f, browsePosition.z);
+                    browseModeProgressBar();
                 }
             }
 
@@ -114,7 +115,8 @@ public class PlayerMovement : MonoBehaviour {
                 if(browseLevel < level)
                 {
                     browseLevel++;
-                    browsePosition = new Vector3(browsePosition.x, (browsePosition.y - plateDistance), browsePosition.z);
+                    browsePosition = new Vector3(browsePosition.x, -(browseLevel * plateDistance)+8f, browsePosition.z);
+                    browseModeProgressBar();
                 }
 
             }
@@ -122,6 +124,13 @@ public class PlayerMovement : MonoBehaviour {
 
             gameCamera.transform.position = Vector3.Lerp(gameCamera.transform.position, browsePosition, Time.deltaTime * 2);
         }
+    }
+
+    void browseModeProgressBar()
+    {
+        //Increase fill on statusbar
+        float progressFill = (browseLevel * 1f) / Main.platformsPerGames;
+        progressBar.fillAmount = progressFill;
     }
 
     void OnCollisionEnter(Collision other) {
