@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour {
     public int zoom;
     public CanvasGroup gameCanvas;
     public CanvasGroup loadingImage;
+    public CanvasGroup browseCanvas;
     public Canvas feedbackMenu;
     public InputField loggedBy;
     public InputField comments;
@@ -97,7 +98,7 @@ public class PlayerMovement : MonoBehaviour {
 
         if (browseMode)
         {
-
+            Text statsText = GameObject.Find("Statistics_Text").GetComponent<Text>();
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
                 
@@ -106,6 +107,7 @@ public class PlayerMovement : MonoBehaviour {
                     browseLevel--;
                     browsePosition = new Vector3(browsePosition.x, -(browseLevel * plateDistance)+8f, browsePosition.z);
                     browseModeProgressBar();
+                    statsText.text = "Event:" + (browseLevel+1);
                 }
             }
 
@@ -117,6 +119,7 @@ public class PlayerMovement : MonoBehaviour {
                     browseLevel++;
                     browsePosition = new Vector3(browsePosition.x, -(browseLevel * plateDistance)+8f, browsePosition.z);
                     browseModeProgressBar();
+                    statsText.text = "Event:" + (browseLevel + 1);
                 }
 
             }
@@ -184,6 +187,7 @@ public class PlayerMovement : MonoBehaviour {
                     browseMode = true;
                     browsePosition = new Vector3(0, gameCamera.transform.position.y + 4f, -13f);
                     browseLevel = level;
+                    browseCanvas.alpha = 1;
                 }
                 
                 //loadingImage.SetActive(true);
