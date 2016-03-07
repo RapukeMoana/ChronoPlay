@@ -152,9 +152,10 @@ public class PlayerMovement : MonoBehaviour {
                 Logger.LogPlayEvent("Total Time:"+ Time.timeSinceLevelLoad.ToString("n1")+", Correct:"+ numCorrect+" Incorrect:"+ numIncorrect, "Ball Game", level.ToString(), Main.superCollectionName, Main.collectionName, other.transform.name);
                 numCorrect++;
                 saveProgress();
+
+                //Stop time if game is over
                 if (!browseMode)
-                {
-                    
+                { 
                     browseMode = true;
                     browsePosition = new Vector3(0, gameCamera.transform.position.y + 4f, -13f);
                 }
@@ -195,9 +196,11 @@ public class PlayerMovement : MonoBehaviour {
                 showDescription(GameObject.Find(hit.collider.gameObject.name));
             }
         }
-        Text timerText = GameObject.Find("TimerText").GetComponent<Text>();
-        timerText.text = ("TIME: "+(Time.timeSinceLevelLoad).ToString("n1")) + " seconds";
-
+        if (!browseMode)
+        {
+            Text timerText = GameObject.Find("TimerText").GetComponent<Text>();
+            timerText.text = ("TIME: " + (Time.timeSinceLevelLoad).ToString("n1")) + " seconds";
+        }
     }
 
     //Show description of selected item
