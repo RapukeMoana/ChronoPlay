@@ -27,6 +27,7 @@ public class PlayerMovement : MonoBehaviour {
     private float myAlpha = 1.0f;
     private bool resultFade = true, sideDescriptionVisible = false;
     private Vector3 browsePosition;
+    private int browseLevel;
 
 
 
@@ -96,12 +97,28 @@ public class PlayerMovement : MonoBehaviour {
 
         if (browseMode)
         {
-            
+
             if (Input.GetKeyDown(KeyCode.UpArrow))
-                browsePosition = new Vector3(browsePosition.x, (browsePosition.y + plateDistance), browsePosition.z);
+            {
+                
+                if (browseLevel > 0)
+                {
+                    browseLevel--;
+                    browsePosition = new Vector3(browsePosition.x, (browsePosition.y + plateDistance), browsePosition.z);
+                }
+            }
 
             if (Input.GetKeyDown(KeyCode.DownArrow))
-                browsePosition = new Vector3(browsePosition.x, (browsePosition.y - plateDistance), browsePosition.z);
+            {
+                
+                if(browseLevel < level)
+                {
+                    browseLevel++;
+                    browsePosition = new Vector3(browsePosition.x, (browsePosition.y - plateDistance), browsePosition.z);
+                }
+
+            }
+
 
             gameCamera.transform.position = Vector3.Lerp(gameCamera.transform.position, browsePosition, Time.deltaTime * 2);
         }
@@ -153,11 +170,11 @@ public class PlayerMovement : MonoBehaviour {
                 numCorrect++;
                 saveProgress();
 
-                //Stop time if game is over
                 if (!browseMode)
                 { 
                     browseMode = true;
                     browsePosition = new Vector3(0, gameCamera.transform.position.y + 4f, -13f);
+                    browseLevel = level;
                 }
                 
                 //loadingImage.SetActive(true);
@@ -196,6 +213,8 @@ public class PlayerMovement : MonoBehaviour {
                 showDescription(GameObject.Find(hit.collider.gameObject.name));
             }
         }
+
+        //Stops time if game is over
         if (!browseMode)
         {
             Text timerText = GameObject.Find("TimerText").GetComponent<Text>();
