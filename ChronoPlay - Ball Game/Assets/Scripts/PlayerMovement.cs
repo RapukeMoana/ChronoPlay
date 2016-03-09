@@ -400,9 +400,8 @@ public class PlayerMovement : MonoBehaviour {
     //Clicking on feedback button shows the menu and pauses the game
     public void ShowFeedbackMenu()
     {
-        Debug.Log("TESTTTT");
-        //feedbackMenu.enabled = true;
-        //Time.timeScale = 0;
+        feedbackMenu.enabled = true;
+        Time.timeScale = 0;
     }
 
     //Submit feedback

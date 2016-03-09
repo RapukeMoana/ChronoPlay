@@ -19,6 +19,10 @@ public class Dashboard : MonoBehaviour {
     public Text sliderNumberOfPlatforms;
     public Text sliderNumberOfHoles;
 
+    public Canvas feedbackMenu;
+    public InputField loggedBy;
+    public InputField comments;
+
     private SettingsConfig settings = new SettingsConfig();
 
     // Use this for initialization
@@ -117,5 +121,33 @@ public class Dashboard : MonoBehaviour {
     public void OpenChronozoomWebsite()
     {
         Application.OpenURL("http://www.chronozoom.com/");
+    }
+
+    //Clicking on feedback button shows the menu and pauses the game
+    public void ShowFeedbackMenu()
+    {
+        feedbackMenu.enabled = true;
+        Time.timeScale = 0;
+    }
+
+    //Submit feedback
+    public void SubmitFeedback()
+    {
+        if (!string.IsNullOrEmpty(comments.text) || !string.IsNullOrEmpty(loggedBy.text))
+        {
+            Logger.LogFeedback(comments.text, 0, "", loggedBy.text);
+            HideFeedbackMenu();
+        }
+        else
+        {
+            print("Insufficent details to submit feedback");
+            HideFeedbackMenu();
+        }
+    }
+
+    public void HideFeedbackMenu()
+    {
+        feedbackMenu.enabled = false;
+        Time.timeScale = 1;
     }
 }
