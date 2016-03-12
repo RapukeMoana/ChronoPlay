@@ -30,26 +30,13 @@ namespace Assets.JNMTouchControls.Scripts
         {
             base.Start();
 
-            _camera = Camera.main.transform;
-
-            _player = GameObject.FindGameObjectWithTag("Player").transform.GetChild(0);
-
-            Vector3 angles = _camera.eulerAngles;
-
-            _eulerY = angles.y;	
 
         }
 
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
-
-            Quaternion rotation = Quaternion.Euler(AngleX, _eulerY, 0);
-            _camera.rotation = rotation;
-
-            Vector3 rotatedCam = rotation * Vector3.forward * Distance + new Vector3(0, -1, 0);
-            Vector3 position = _player.position - rotatedCam;
-            _camera.position = position; 	
+	
         }
 
         protected override void HandleInput(UnityEngine.Vector3 input)
@@ -58,12 +45,12 @@ namespace Assets.JNMTouchControls.Scripts
             
             Vector3 diff = _button.position - _buttonFrame.position;
 
+
             float distance = Vector3.Distance(_button.position, _buttonFrame.position);
 
             distance /= (_buttonFrame.sizeDelta.x / 2.0f);
 
             Vector2 normDiff = new Vector3(diff.x / _dragRadius, diff.y / _dragRadius);
-
             if (normDiff.x < 0 ||normDiff.x > 0)
             {
                 _camera.RotateAround(_player.position, new Vector3(0, 1, 0), normDiff.x * RotationXSpeed * Time.deltaTime);
@@ -88,6 +75,7 @@ namespace Assets.JNMTouchControls.Scripts
                         AngleX += diffAngleX;
                     }
                 }
+                AngleX = normDiff.y;
             }
         }
     }
