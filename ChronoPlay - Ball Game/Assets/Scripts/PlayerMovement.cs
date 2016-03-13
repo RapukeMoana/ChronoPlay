@@ -138,7 +138,7 @@ public class PlayerMovement : MonoBehaviour {
     void browseModeProgressBar()
     {
         //Increase fill on statusbar
-        float progressFill = (browseLevel * 1f) / Main.platformsPerGames;
+        float progressFill = (browseLevel * 1f+1) / (Main.platformsPerGames+1);
         progressBar.fillAmount = progressFill;
     }
 
