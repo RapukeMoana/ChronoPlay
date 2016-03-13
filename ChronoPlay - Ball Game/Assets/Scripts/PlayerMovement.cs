@@ -425,6 +425,10 @@ public class PlayerMovement : MonoBehaviour {
         Time.timeScale = 1;
     }
 
+    public void Quit()
+    {
+        SceneManager.LoadScene(0);
+    }
 
 }
 
