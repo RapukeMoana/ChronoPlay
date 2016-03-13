@@ -162,12 +162,15 @@ public class PlayerMovement : MonoBehaviour {
                 Logger.LogPlayEvent("Correct Hole, Time Taken: "+(Time.timeSinceLevelLoad- timeSince).ToString("n1"), "Ball Game", level.ToString(), Main.superCollectionName, Main.collectionName, other.transform.name);
                 timeSince = Time.timeSinceLevelLoad;
                 level++;
+
+                GameObject.Find((other.transform.name).Substring(7)).GetComponent<Renderer>().material.SetColor("_Color", Color.green);
                 //setupStageEvent();
 
                 //Increase fill on statusbar
                 float progressFill = (level * 1f)/ Main.platformsPerGames;
                 progressBar.fillAmount = progressFill;
 
+                
                 break;
             case "Incorrect-Hole":
                 GetComponent<Rigidbody>().AddForce(Vector3.up * 200);
@@ -178,9 +181,13 @@ public class PlayerMovement : MonoBehaviour {
                 resultFade = true;
                 Logger.LogPlayEvent("Incorrect Hole, Time Taken: " + (Time.timeSinceLevelLoad - timeSince).ToString("n1"), "Ball Game", level.ToString(), Main.superCollectionName, Main.collectionName, other.transform.name);
                 timeSince = Time.timeSinceLevelLoad;
+
                 
+                other.gameObject.GetComponent<Renderer>().material.SetColor("_Color", Color.red);
+                GameObject.Find((other.transform.name).Substring(7)).GetComponent<Renderer>().material.SetColor("_Color", Color.red);
+
                 //TODO: Year not showing up with correct year
-                showYear(other.transform.name, other.transform.position);
+                //showYear(other.transform.name, other.transform.position);
                 
                 break;
             case "Restart-Hole":

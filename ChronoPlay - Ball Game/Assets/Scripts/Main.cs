@@ -338,7 +338,9 @@ public class Main : MonoBehaviour {
 
         //Create sensor
         GameObject itemImageSensor = (GameObject)Instantiate(Resources.Load("ItemImageSensor"));
-        itemImageSensor.name = yearFormatted;
+
+        //itemImageSensor.name = yearFormatted;
+        itemImageSensor.name = "sensor-"+id;
 
         //Create hole on platform
         Destroy(holePosition);
