@@ -173,8 +173,9 @@ public class PlayerMovement : MonoBehaviour {
                 
                 break;
             case "Incorrect-Hole":
+                //Bounce ball up
                 GetComponent<Rigidbody>().AddForce(Vector3.up * 200);
-                numIncorrect++;
+                
                 result = (GameObject)Instantiate(Resources.Load("Result"));
                 GameObject.Find("Result").GetComponent<Text>().text = "INCORRECT";
                 myAlpha = 1.0f;
@@ -182,7 +183,13 @@ public class PlayerMovement : MonoBehaviour {
                 Logger.LogPlayEvent("Incorrect Hole, Time Taken: " + (Time.timeSinceLevelLoad - timeSince).ToString("n1"), "Ball Game", level.ToString(), Main.superCollectionName, Main.collectionName, other.transform.name);
                 timeSince = Time.timeSinceLevelLoad;
 
-                
+                //Update total incorrect
+                numIncorrect++;
+                Text incorrectText = GameObject.Find("IncorrectText").GetComponent<Text>();
+                incorrectText.text = "Incorrect: " + numIncorrect;
+
+
+
                 other.gameObject.GetComponent<Renderer>().material.SetColor("_Color", Color.red);
                 GameObject.Find((other.transform.name).Substring(7)).GetComponent<Renderer>().material.SetColor("_Color", Color.red);
 
