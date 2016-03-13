@@ -194,6 +194,7 @@ public class PlayerMovement : MonoBehaviour {
                 Logger.LogPlayEvent("Total Time:"+ Time.timeSinceLevelLoad.ToString("n1")+", Correct:"+ numCorrect+" Incorrect:"+ numIncorrect, "Ball Game", level.ToString(), Main.superCollectionName, Main.collectionName, other.transform.name);
                 numCorrect++;
                 saveProgress();
+                GameObject.Find((other.transform.name).Substring(7)).GetComponent<Renderer>().material.SetColor("_Color", Color.green);
 
                 if (!browseMode)
                 { 
