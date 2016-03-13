@@ -76,6 +76,7 @@ public class StickController : MonoBehaviour
         // Simulate the Stick in Editor or Standalone
         if (Input.GetMouseButtonDown(0))
         {
+            
             if (CheckButtonDown(Input.mousePosition))
             {
                 _buttonId = 1;

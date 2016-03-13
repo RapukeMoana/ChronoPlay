@@ -22,13 +22,15 @@ public class PlayerMovement : MonoBehaviour {
     public GameObject gameCamera;
     public static int numCorrect = 0, numIncorrect = 0, level = 0;
     public static float timeSince = 0;
+    public static int browseLevel;
+    public GameObject Stick_R;
 
     private Rigidbody rb;
     private float speedsmooth = 0.8f;
     private float myAlpha = 1.0f;
     private bool resultFade = true, sideDescriptionVisible = false;
     private Vector3 browsePosition;
-    private int browseLevel;
+    
 
 
 
@@ -98,16 +100,14 @@ public class PlayerMovement : MonoBehaviour {
 
         if (browseMode)
         {
-            Text statsText = GameObject.Find("Statistics_Text").GetComponent<Text>();
+            
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
                 
                 if (browseLevel > 0)
-                {
+                {  
                     browseLevel--;
-                    browsePosition = new Vector3(browsePosition.x, -(browseLevel * plateDistance)+8f, browsePosition.z);
-                    browseModeProgressBar();
-                    statsText.text = "Event:" + (browseLevel+1);
+                    changeBrowseView();
                 }
             }
 
@@ -117,9 +117,7 @@ public class PlayerMovement : MonoBehaviour {
                 if(browseLevel < level)
                 {
                     browseLevel++;
-                    browsePosition = new Vector3(browsePosition.x, -(browseLevel * plateDistance)+8f, browsePosition.z);
-                    browseModeProgressBar();
-                    statsText.text = "Event:" + (browseLevel + 1);
+                    changeBrowseView();
                 }
 
             }
@@ -127,6 +125,14 @@ public class PlayerMovement : MonoBehaviour {
 
             gameCamera.transform.position = Vector3.Lerp(gameCamera.transform.position, browsePosition, Time.deltaTime * 2);
         }
+    }
+
+    public void changeBrowseView()
+    {
+        Text statsText = GameObject.Find("Statistics_Text").GetComponent<Text>();
+        browsePosition = new Vector3(browsePosition.x, -(browseLevel * plateDistance) + 8f, browsePosition.z);
+        browseModeProgressBar();
+        statsText.text = "Event:" + (browseLevel + 1);
     }
 
     void browseModeProgressBar()
@@ -188,6 +194,7 @@ public class PlayerMovement : MonoBehaviour {
                     browsePosition = new Vector3(0, gameCamera.transform.position.y + 4f, -13f);
                     browseLevel = level;
                     browseCanvas.alpha = 1;
+                    Stick_R.SetActive(true);
                 }
                 
                 //loadingImage.SetActive(true);

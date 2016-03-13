@@ -8,34 +8,19 @@ namespace Assets.JNMTouchControls.Scripts
 {
     public class StickCameraController : StickController
     {
-        private Transform _camera;
-
-        private Transform _player;
-
-        private float _eulerY = 0.0f;
-
-        public float RotationXSpeed = 100.0f;
-
-        public float RotationYSpeed = 20.0f;
-
-        public float AngleX = 40.0f;
-
-        public float MinAngleX = 20.0f;
-
-        public float MaxAngleX = 60.0f;
-
-        public float Distance = 10.0f;
+        private bool keyReleased;
 
         protected override void Start()
         {
             base.Start();
-
+            keyReleased = true;
 
         }
 
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
+
 	
         }
 
@@ -45,38 +30,35 @@ namespace Assets.JNMTouchControls.Scripts
             
             Vector3 diff = _button.position - _buttonFrame.position;
 
-
-            float distance = Vector3.Distance(_button.position, _buttonFrame.position);
-
-            distance /= (_buttonFrame.sizeDelta.x / 2.0f);
-
             Vector2 normDiff = new Vector3(diff.x / _dragRadius, diff.y / _dragRadius);
-            if (normDiff.x < 0 ||normDiff.x > 0)
+
+            if(keyReleased && Mathf.Round(normDiff.y) == 1.0)
             {
-                _camera.RotateAround(_player.position, new Vector3(0, 1, 0), normDiff.x * RotationXSpeed * Time.deltaTime);
-                _eulerY = _camera.eulerAngles.y;
+                
+                if (PlayerMovement.browseLevel > 0)
+                {
+                    PlayerMovement.browseLevel--;
+                    GameObject.Find("Player").GetComponent<PlayerMovement>().changeBrowseView();
+                }
+                keyReleased = false;
+
             }
 
-            if (normDiff.y < 0 || normDiff.y  > 0)
+            if (keyReleased && Mathf.Round(normDiff.y) == -1.0)
             {
-                float diffAngleX = normDiff.y * RotationYSpeed * Time.deltaTime;
-
-                if (diffAngleX > 0)
+                if (PlayerMovement.browseLevel < PlayerMovement.level)
                 {
-                    if (AngleX < MaxAngleX)
-                    {
-                        AngleX += diffAngleX;
-                    }
+                    PlayerMovement.browseLevel++;
+                    GameObject.Find("Player").GetComponent<PlayerMovement>().changeBrowseView();
                 }
-                else
-                {
-                    if (AngleX > MinAngleX)
-                    {
-                        AngleX += diffAngleX;
-                    }
-                }
-                AngleX = normDiff.y;
+                keyReleased = false;
             }
+
+            if (Mathf.Round(normDiff.y) == 0)
+            {
+                keyReleased = true;
+            }
+            
         }
     }
 }
