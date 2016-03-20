@@ -163,8 +163,7 @@ public class PlayerMovement : MonoBehaviour {
                 timeSince = Time.timeSinceLevelLoad;
                 level++;
 
-                //GameObject.Find((other.transform.name).Substring(7)).GetComponent<Renderer>().material.SetColor("_Color", Color.green);
-                //setupStageEvent();
+                showResult(other.transform.name, other.transform.position, other.transform.tag);
 
                 //Increase fill on statusbar
                 float progressFill = (level * 1f)/ Main.platformsPerGames;
@@ -191,18 +190,16 @@ public class PlayerMovement : MonoBehaviour {
 
 
                 other.gameObject.GetComponent<Renderer>().material.SetColor("_Color", Color.red);
-                //GameObject.Find((other.transform.name).Substring(7)).GetComponent<Renderer>().material.SetColor("_Color", Color.red);
 
-                //TODO: Year not showing up with correct year
-                showYear(other.transform.name, other.transform.position);
+                showResult(other.transform.name, other.transform.position, other.transform.tag);
                 
                 break;
             case "Restart-Hole":
                 Logger.LogPlayEvent("Total Time:"+ Time.timeSinceLevelLoad.ToString("n1")+", Correct:"+ numCorrect+" Incorrect:"+ numIncorrect, "Ball Game", level.ToString(), Main.superCollectionName, Main.collectionName, other.transform.name);
                 numCorrect++;
                 saveProgress();
-                //GameObject.Find((other.transform.name).Substring(7)).GetComponent<Renderer>().material.SetColor("_Color", Color.green);
 
+                showResult(other.transform.name, other.transform.position, other.transform.tag);
                 if (!browseMode)
                 { 
                     browseMode = true;
@@ -419,13 +416,24 @@ public class PlayerMovement : MonoBehaviour {
         PlayerPrefs.Save();
     }
 
-    private void showYear(string year, Vector3 position)
+    private void showResult(string year, Vector3 position, string tag)
     {
         //Place description on item image
         GameObject incorrectYear = (GameObject)Instantiate(Resources.Load("ItemDescription"));
         incorrectYear.GetComponent<TextMesh>().text = year;
-        incorrectYear.GetComponent<TextMesh>().transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+        incorrectYear.GetComponent<TextMesh>().transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
         incorrectYear.transform.position = new Vector3(position.x,position.y+4.1f,position.z+2.5f);
+
+        //Create border to show correct/incorrect
+        GameObject border;
+        Debug.Log(tag);
+        if (tag == "Correct-Hole" || tag == "Restart-Hole")
+            border = (GameObject)Instantiate(Resources.Load("Border-Green"));
+        else
+            border = (GameObject)Instantiate(Resources.Load("Border-Red"));
+
+        border.transform.position = new Vector3(position.x - 0.1f, position.y + 3.5f, position.z + 2f);
+
     }
 
     //Clicking on feedback button shows the menu and pauses the game
