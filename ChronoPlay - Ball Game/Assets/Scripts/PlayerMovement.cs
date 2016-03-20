@@ -426,7 +426,6 @@ public class PlayerMovement : MonoBehaviour {
 
         //Create border to show correct/incorrect
         GameObject border;
-        Debug.Log(tag);
         if (tag == "Correct-Hole" || tag == "Restart-Hole")
             border = (GameObject)Instantiate(Resources.Load("Border-Green"));
         else
