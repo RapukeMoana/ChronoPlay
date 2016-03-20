@@ -122,6 +122,7 @@ public class PlayerMovement : MonoBehaviour {
 
             }
 
+            
 
             gameCamera.transform.position = Vector3.Lerp(gameCamera.transform.position, browsePosition, Time.deltaTime * 2);
         }
@@ -133,6 +134,10 @@ public class PlayerMovement : MonoBehaviour {
         browsePosition = new Vector3(browsePosition.x, -(browseLevel * plateDistance) + 8f, browsePosition.z);
         browseModeProgressBar();
         statsText.text = "Event:" + (browseLevel + 1);
+
+        //Close side description if still visible
+        if (sideDescriptionVisible)
+            gameCanvas.alpha = 0;
     }
 
     void browseModeProgressBar()
