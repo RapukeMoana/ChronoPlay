@@ -427,7 +427,7 @@ public class PlayerMovement : MonoBehaviour {
         GameObject incorrectYear = (GameObject)Instantiate(Resources.Load("ItemDescription"));
         incorrectYear.GetComponent<TextMesh>().text = year;
         incorrectYear.GetComponent<TextMesh>().transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-        incorrectYear.transform.position = new Vector3(position.x,position.y+4.1f,position.z+2.5f);
+        incorrectYear.transform.position = new Vector3(position.x,position.y+3.95f,position.z+2.3f);
 
         //Create border to show correct/incorrect
         GameObject border;
