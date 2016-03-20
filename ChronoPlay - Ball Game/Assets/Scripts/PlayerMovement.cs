@@ -163,7 +163,7 @@ public class PlayerMovement : MonoBehaviour {
                 timeSince = Time.timeSinceLevelLoad;
                 level++;
 
-                GameObject.Find((other.transform.name).Substring(7)).GetComponent<Renderer>().material.SetColor("_Color", Color.green);
+                //GameObject.Find((other.transform.name).Substring(7)).GetComponent<Renderer>().material.SetColor("_Color", Color.green);
                 //setupStageEvent();
 
                 //Increase fill on statusbar
@@ -191,17 +191,17 @@ public class PlayerMovement : MonoBehaviour {
 
 
                 other.gameObject.GetComponent<Renderer>().material.SetColor("_Color", Color.red);
-                GameObject.Find((other.transform.name).Substring(7)).GetComponent<Renderer>().material.SetColor("_Color", Color.red);
+                //GameObject.Find((other.transform.name).Substring(7)).GetComponent<Renderer>().material.SetColor("_Color", Color.red);
 
                 //TODO: Year not showing up with correct year
-                //showYear(other.transform.name, other.transform.position);
+                showYear(other.transform.name, other.transform.position);
                 
                 break;
             case "Restart-Hole":
                 Logger.LogPlayEvent("Total Time:"+ Time.timeSinceLevelLoad.ToString("n1")+", Correct:"+ numCorrect+" Incorrect:"+ numIncorrect, "Ball Game", level.ToString(), Main.superCollectionName, Main.collectionName, other.transform.name);
                 numCorrect++;
                 saveProgress();
-                GameObject.Find((other.transform.name).Substring(7)).GetComponent<Renderer>().material.SetColor("_Color", Color.green);
+                //GameObject.Find((other.transform.name).Substring(7)).GetComponent<Renderer>().material.SetColor("_Color", Color.green);
 
                 if (!browseMode)
                 { 
@@ -210,6 +210,10 @@ public class PlayerMovement : MonoBehaviour {
                     browseLevel = level;
                     browseCanvas.alpha = 1;
                     Stick_R.SetActive(true);
+
+                    //Close side description if still visible at the end of game
+                    if (sideDescriptionVisible)
+                        gameCanvas.alpha = 0;
                 }
                 
                 //loadingImage.SetActive(true);
@@ -242,7 +246,7 @@ public class PlayerMovement : MonoBehaviour {
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-
+            
             if (Physics.Raycast(ray, out hit, 800f) && loadingImage.alpha == 0)
             {
                 showDescription(GameObject.Find(hit.collider.gameObject.name));
@@ -260,13 +264,18 @@ public class PlayerMovement : MonoBehaviour {
     //Show description of selected item
     private void showDescription(GameObject selectedItem)
     {
-        ContentItem selected = GameObject.Find("Main Camera").GetComponent<Main>().getContentItemById(level, selectedItem.name, selectedItem.tag);
+        //Use browse level as variable if in browse mode
+        ContentItem selected;
+        if (browseMode)
+            selected = GameObject.Find("Main Camera").GetComponent<Main>().getContentItemById(browseLevel, selectedItem.name, selectedItem.tag);
+        else
+            selected = GameObject.Find("Main Camera").GetComponent<Main>().getContentItemById(level, selectedItem.name, selectedItem.tag);
 
         Text descriptionText = GameObject.Find("Description").GetComponent<Text>();
         Text descriptionTitleText = GameObject.Find("DescriptionTitle").GetComponent<Text>();
         RawImage descriptionImage = GameObject.Find("DescriptionImage").GetComponent<RawImage>();
         ScrollRect scrollRect = GameObject.Find("ScrollRect").GetComponent<ScrollRect>();
-
+        
         //If the clicked object is a content item
         if (selected != null)
         {

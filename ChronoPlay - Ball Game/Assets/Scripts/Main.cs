@@ -295,7 +295,7 @@ public class Main : MonoBehaviour {
             uri = stage.incorrectWormholes[holeNumber].uri;
             title = stage.incorrectWormholes[holeNumber].title;
             id = stage.incorrectWormholes[holeNumber].id;
-            year = stage.incorrectWormholes[holeNumber].year;
+            year = stage.incorrectWormholes[holeNumber].ParentExhibitTime;
         }
 
         //Format year
@@ -340,7 +340,8 @@ public class Main : MonoBehaviour {
         GameObject itemImageSensor = (GameObject)Instantiate(Resources.Load("ItemImageSensor"));
 
         //itemImageSensor.name = yearFormatted;
-        itemImageSensor.name = "sensor-"+id;
+        //itemImageSensor.name = "sensor-"+id;
+        itemImageSensor.name = yearFormatted;
 
         //Create hole on platform
         Destroy(holePosition);
