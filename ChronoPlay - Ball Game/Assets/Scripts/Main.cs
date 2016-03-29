@@ -29,7 +29,7 @@ public class Main : MonoBehaviour {
 
     public object contentItem { get; private set; }
 
-    public static List<string> contentItemList;
+    public static List<ContentItem> contentItemList;
 
 
     // Use this for initialization
@@ -39,7 +39,7 @@ public class Main : MonoBehaviour {
         Time.timeScale = 0;
         
         StartCoroutine(getTimeLine());
-        contentItemList = new List<string>();
+        contentItemList = new List<ContentItem>();
     }
 
     IEnumerator getTimeLine()
@@ -300,7 +300,7 @@ public class Main : MonoBehaviour {
             uri = stage.correctWormhole.uri;
             title = stage.correctWormhole.title;
             id = stage.correctWormhole.id;
-            year = stage.correctWormhole.year;
+            year = stage.correctWormhole.ParentExhibitTime;
         }
         else
         {
@@ -308,7 +308,7 @@ public class Main : MonoBehaviour {
             title = stage.incorrectWormholes[holeNumber].title;
             id = stage.incorrectWormholes[holeNumber].id;
             year = stage.incorrectWormholes[holeNumber].ParentExhibitTime;
-            contentItemList.Add(id);
+            contentItemList.Add(stage.incorrectWormholes[holeNumber]);
         }
 
         //Format year

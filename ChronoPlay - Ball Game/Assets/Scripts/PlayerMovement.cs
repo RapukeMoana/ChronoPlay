@@ -220,16 +220,34 @@ public class PlayerMovement : MonoBehaviour {
                     //Close side description if still visible at the end of game
                     if (sideDescriptionVisible)
                         gameCanvas.alpha = 0;
+
+
+                    //Show colour border for all items
+                    foreach (var ci in Main.contentItemList)
+                    {
+                        GameObject go = GameObject.Find(ci.id);
+                        GameObject border = (GameObject)Instantiate(Resources.Load("Border-Red"));
+
+                        border.transform.position = go.transform.position;
+
+                        //Format year
+                        var yearFormatted ="";
+                        var year = ci.ParentExhibitTime;
+                        if (year < 0)
+                            yearFormatted = ((year * -1).ToString().Length != 4) ? (year * (-1)).ToString("n0") + " BC" : (year * -1).ToString() + " BC";
+                        else
+                            yearFormatted = (year.ToString().Length != 4) ? year.ToString("n0") : year.ToString();
+
+
+                        GameObject incorrectYear = (GameObject)Instantiate(Resources.Load("ItemDescription"));
+                        incorrectYear.GetComponent<TextMesh>().text = yearFormatted;
+                        incorrectYear.GetComponent<TextMesh>().transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+                        incorrectYear.transform.position = new Vector3(
+                            go.transform.position.x, go.transform.position.y + 0.6f, go.transform.position.z);
+                    }
                 }
 
-                //Show colour border for all items
-                foreach(var ci in Main.contentItemList)
-                {
-                    GameObject go = GameObject.Find(ci);
-                    GameObject border = (GameObject)Instantiate(Resources.Load("Border-Red"));
-
-                    border.transform.position = go.transform.position;
-                }
+                
                 
                 //loadingImage.SetActive(true);
                 //SceneManager.LoadScene(0);
