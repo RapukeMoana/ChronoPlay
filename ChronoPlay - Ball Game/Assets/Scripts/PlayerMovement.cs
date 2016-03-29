@@ -221,6 +221,14 @@ public class PlayerMovement : MonoBehaviour {
                     if (sideDescriptionVisible)
                         gameCanvas.alpha = 0;
                 }
+
+                foreach(var ci in Main.contentItemList)
+                {
+                    GameObject go = GameObject.Find(ci);
+                    GameObject border = (GameObject)Instantiate(Resources.Load("Border-Red"));
+
+                    border.transform.position = go.transform.position;
+                }
                 
                 //loadingImage.SetActive(true);
                 //SceneManager.LoadScene(0);

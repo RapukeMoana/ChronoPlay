@@ -29,6 +29,8 @@ public class Main : MonoBehaviour {
 
     public object contentItem { get; private set; }
 
+    public static List<string> contentItemList;
+
 
     // Use this for initialization
     void Start()
@@ -37,6 +39,7 @@ public class Main : MonoBehaviour {
         Time.timeScale = 0;
         
         StartCoroutine(getTimeLine());
+        contentItemList = new List<string>();
     }
 
     IEnumerator getTimeLine()
@@ -305,6 +308,7 @@ public class Main : MonoBehaviour {
             title = stage.incorrectWormholes[holeNumber].title;
             id = stage.incorrectWormholes[holeNumber].id;
             year = stage.incorrectWormholes[holeNumber].ParentExhibitTime;
+            contentItemList.Add(id);
         }
 
         //Format year
