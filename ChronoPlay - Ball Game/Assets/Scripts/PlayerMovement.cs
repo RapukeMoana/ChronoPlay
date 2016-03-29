@@ -222,6 +222,7 @@ public class PlayerMovement : MonoBehaviour {
                         gameCanvas.alpha = 0;
                 }
 
+                //Show colour border for all items
                 foreach(var ci in Main.contentItemList)
                 {
                     GameObject go = GameObject.Find(ci);
