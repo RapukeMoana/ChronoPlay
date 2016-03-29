@@ -16,6 +16,7 @@ public class Dashboard : MonoBehaviour {
 
     public Slider sliderPlatform;
     public Slider sliderHoles;
+    public Toggle browseMode;
     public Text sliderNumberOfPlatforms;
     public Text sliderNumberOfHoles;
 
@@ -51,8 +52,12 @@ public class Dashboard : MonoBehaviour {
             settings.numPlatforms = Convert.ToInt32(sliderPlatform.value);
             settings.numHoles = Convert.ToInt32(sliderHoles.value);
         }
+
+        PlayerPrefs.SetString("No Timer", "false");
+
         sliderNumberOfPlatforms.text = sliderPlatform.value+"";
         sliderNumberOfHoles.text = sliderHoles.value + "";
+
 
 
 
@@ -70,8 +75,10 @@ public class Dashboard : MonoBehaviour {
     {
         sliderPlatform.onValueChanged.AddListener(ChangeValuePlatform);
         sliderHoles.onValueChanged.AddListener(ChangeValueHoles);
+        browseMode.onValueChanged.AddListener(ChangeMode);
         ChangeValuePlatform(sliderPlatform.value);
         ChangeValueHoles(sliderPlatform.value);
+        ChangeMode(browseMode.isOn);
     }
 
     void OnDisable()
@@ -98,6 +105,11 @@ public class Dashboard : MonoBehaviour {
         PlayerPrefs.Save();
     }
 
+    void ChangeMode(bool isOn)
+    {
+        PlayerPrefs.SetString("No Timer", isOn + "");
+        PlayerPrefs.Save();
+    }
 
     public void StartCosmos()
     {

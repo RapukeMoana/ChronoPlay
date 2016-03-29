@@ -46,6 +46,11 @@ public class PlayerMovement : MonoBehaviour {
         level = 0;
         timeSince = 0;
         plateDistance = Main.plateDistance;
+        if(PlayerPrefs.GetString("No Timer") == "True")
+        {
+            GameObject background = GameObject.Find("TimerBackground");
+            background.GetComponent<RectTransform>().sizeDelta = new Vector2(background.GetComponent<RectTransform>().sizeDelta.x, 70);
+        }
     }
 
 	// Update is called once per frame
@@ -255,7 +260,7 @@ public class PlayerMovement : MonoBehaviour {
         }
 
         //Stops time if game is over
-        if (!browseMode)
+        if (!browseMode && PlayerPrefs.GetString("No Timer") == "false")
         {
             Text timerText = GameObject.Find("TimerText").GetComponent<Text>();
             timerText.text = ("TIME: " + (Time.timeSinceLevelLoad).ToString("n1")) + " seconds";
