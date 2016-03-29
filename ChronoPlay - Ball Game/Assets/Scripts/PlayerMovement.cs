@@ -13,7 +13,7 @@ public class PlayerMovement : MonoBehaviour {
     public int zoom;
     public CanvasGroup gameCanvas;
     public CanvasGroup loadingImage;
-    public CanvasGroup browseCanvas;
+
     public Canvas feedbackMenu;
     public InputField loggedBy;
     public InputField comments;
@@ -23,6 +23,7 @@ public class PlayerMovement : MonoBehaviour {
     public static int numCorrect = 0, numIncorrect = 0, level = 0;
     public static float timeSince = 0;
     public static int browseLevel;
+    public GameObject Stick_L;
     public GameObject Stick_R;
 
     private Rigidbody rb;
@@ -130,10 +131,8 @@ public class PlayerMovement : MonoBehaviour {
 
     public void changeBrowseView()
     {
-        Text statsText = GameObject.Find("Statistics_Text").GetComponent<Text>();
         browsePosition = new Vector3(browsePosition.x, -(browseLevel * plateDistance) + 8f, browsePosition.z);
         browseModeProgressBar();
-        statsText.text = "Event:" + (browseLevel + 1);
 
         //Close side description if still visible
         if (sideDescriptionVisible)
@@ -210,8 +209,8 @@ public class PlayerMovement : MonoBehaviour {
                     browseMode = true;
                     browsePosition = new Vector3(0, gameCamera.transform.position.y + 4f, -13f);
                     browseLevel = level;
-                    browseCanvas.alpha = 1;
                     Stick_R.SetActive(true);
+                    Stick_L.SetActive(false);
 
                     //Close side description if still visible at the end of game
                     if (sideDescriptionVisible)
