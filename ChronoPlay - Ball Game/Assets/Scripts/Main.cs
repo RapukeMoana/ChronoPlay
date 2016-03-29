@@ -35,21 +35,28 @@ public class Main : MonoBehaviour {
     {
         loadingImage.alpha = 1;
         Time.timeScale = 0;
+        
+        StartCoroutine(getTimeLine());
+    }
 
+    IEnumerator getTimeLine()
+    {
         timeline = ChronozoomHandler.RetrieveTimeline(superCollectionName, collectionName);
-//        Logger.LogPlayEvent("Got Timelines: "+(Time.timeSinceLevelLoad).ToString("n1"), "Ball Game", "Main", Main.superCollectionName, Main.collectionName, "");
+        yield return null;
+
+
         if (timeline != null && !String.IsNullOrEmpty(timeline.__type))
         {
             timelineRetrieved = true;
             ChronozoomHandler.GenerateLists(timeline, limitContentToImages);
-            game = ChronozoomHandler.SetUpGame(wormholesPerPlatform, platformsPerGames+1);
+            game = ChronozoomHandler.SetUpGame(wormholesPerPlatform, platformsPerGames + 1);
 
             if (timelineRetrieved)
             {
                 if (game != null)
                 {
                     setupGame(game);
-                    Logger.LogPlayEvent("GameSetup Done", "Ball Game", "Main"+"Start", Main.superCollectionName, Main.collectionName, game.ToString());
+                    Logger.LogPlayEvent("GameSetup Done", "Ball Game", "Main" + "Start", Main.superCollectionName, Main.collectionName, game.ToString());
                 }
                 else
                 {
@@ -66,6 +73,8 @@ public class Main : MonoBehaviour {
         {
             SceneManager.LoadScene("MainScene");
         }
+
+        
     }
 
     private void setupGame(List<GameStage> game)

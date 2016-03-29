@@ -23,6 +23,8 @@ public class Dashboard : MonoBehaviour {
     public InputField loggedBy;
     public InputField comments;
 
+    public Text loadingText;
+
     private SettingsConfig settings = new SettingsConfig();
 
     // Use this for initialization
@@ -58,7 +60,10 @@ public class Dashboard : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-	
+        if (!menuEnabled)
+        {
+            loadingText.color = new Color(loadingText.color.r, loadingText.color.g, loadingText.color.b, Mathf.PingPong(Time.time, 1));
+        }
 	}
 
     void OnEnable()
@@ -100,10 +105,12 @@ public class Dashboard : MonoBehaviour {
         settings.collection = "cosmos";
         settings.SetPublicVariables();
 
-        loadingImage.SetActive(true);
-        SceneManager.LoadScene(1);
-        menuEnabled = false;
-        
+        //loadingImage.SetActive(true);
+        //SceneManager.LoadScene(1);
+        //menuEnabled = false;
+
+
+        LoadLevel();
     }
 
     public void StartEarth()
@@ -112,9 +119,33 @@ public class Dashboard : MonoBehaviour {
         settings.collection = "bighistorylabs";
         settings.SetPublicVariables();
 
-        loadingImage.SetActive(true);
-        SceneManager.LoadScene(1);
+        //loadingImage.SetActive(true);
+        //SceneManager.LoadScene(1);
+        //menuEnabled = false;
+
+        
+        LoadLevel();
+
+    }
+
+    //Load level with progress updates
+    void LoadLevel()
+    {
         menuEnabled = false;
+        loadingImage.SetActive(true);
+        StartCoroutine(LevelCoroutine());
+    }
+
+    IEnumerator LevelCoroutine()
+    {
+        //TODO: Remove temporary wait to show loading
+        yield return new WaitForSeconds(2);
+        AsyncOperation async = SceneManager.LoadSceneAsync(1);
+
+        while (!async.isDone)
+        {
+            yield return null;
+        }
 
     }
 
