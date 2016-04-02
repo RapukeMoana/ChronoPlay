@@ -221,6 +221,9 @@ public class PlayerMovement : MonoBehaviour {
                     if (sideDescriptionVisible)
                         gameCanvas.alpha = 0;
 
+                    Text whatsnext = GameObject.Find("WhatsNext").GetComponent<Text>();
+                    whatsnext.text = "Game End";
+                    whatsnext.color = new Color(1f, 155f/255f, 0f);
 
                     //Show colour border for all items
                     foreach (var ci in Main.contentItemList)
