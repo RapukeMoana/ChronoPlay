@@ -238,12 +238,17 @@ public class PlayerMovement : MonoBehaviour {
                         else
                             yearFormatted = (year.ToString().Length != 4) ? year.ToString("n0") : year.ToString();
 
-
-                        GameObject incorrectYear = (GameObject)Instantiate(Resources.Load("ItemDescription"));
+                        //Place description on item image
+                        GameObject incorrectYear = (GameObject)Instantiate(Resources.Load("ItemYear"));
                         incorrectYear.GetComponent<TextMesh>().text = yearFormatted;
-                        incorrectYear.GetComponent<TextMesh>().transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+                        incorrectYear.GetComponent<TextMesh>().transform.localScale = new Vector3(0.15f, 0.15f, 0.15f);
                         incorrectYear.transform.position = new Vector3(
                             go.transform.position.x, go.transform.position.y + 0.6f, go.transform.position.z);
+
+                        if (yearFormatted.Length > 4)
+                        {
+                            incorrectYear.transform.GetChild(0).transform.localScale += new Vector3(2.5f, 0, 0);
+                        }
                     }
                 }
 
@@ -455,10 +460,16 @@ public class PlayerMovement : MonoBehaviour {
     private void showResult(string year, Vector3 position, string tag)
     {
         //Place description on item image
-        GameObject incorrectYear = (GameObject)Instantiate(Resources.Load("ItemDescription"));
+        GameObject incorrectYear = (GameObject)Instantiate(Resources.Load("ItemYear"));
         incorrectYear.GetComponent<TextMesh>().text = year;
-        incorrectYear.GetComponent<TextMesh>().transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+        incorrectYear.GetComponent<TextMesh>().transform.localScale = new Vector3(0.15f, 0.15f, 0.15f);
         incorrectYear.transform.position = new Vector3(position.x,position.y+3.95f,position.z+2.3f);
+
+        if(year.Length > 4)
+        {
+            incorrectYear.transform.GetChild(0).transform.localScale += new Vector3(2.5f, 0, 0);
+        }
+            
 
         //Create border to show correct/incorrect
         GameObject border;
