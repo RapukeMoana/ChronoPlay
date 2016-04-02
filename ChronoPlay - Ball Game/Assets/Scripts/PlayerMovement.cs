@@ -328,7 +328,7 @@ public class PlayerMovement : MonoBehaviour {
             descriptionImage.texture = texture;
 
             //Scroll to the top 
-            scrollRect.verticalNormalizedPosition = 100f;
+            scrollRect.verticalNormalizedPosition = 50f;
             sideDescriptionVisible = true;
             gameCanvas.alpha = 1;
         }
