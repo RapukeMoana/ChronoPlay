@@ -238,7 +238,6 @@ public class Main : MonoBehaviour {
         yield return www;
 
         // assign texture
-        //www.LoadImageIntoTexture(texture);
         try
         {
             // assign texture
