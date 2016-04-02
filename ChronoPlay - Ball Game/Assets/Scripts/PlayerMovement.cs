@@ -512,6 +512,7 @@ public class PlayerMovement : MonoBehaviour {
 
     public void Quit()
     {
+        browseMode = false;
         SceneManager.LoadScene(0);
     }
 
