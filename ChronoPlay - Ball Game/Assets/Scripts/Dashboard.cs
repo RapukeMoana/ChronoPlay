@@ -3,8 +3,13 @@ using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
+using System.Net;
+using System.IO;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
-public class Dashboard : MonoBehaviour {
+public class Dashboard : MonoBehaviour
+{
 
     public Text holesAndPlatforms;
     public Text totalCorrectText;
@@ -16,31 +21,37 @@ public class Dashboard : MonoBehaviour {
 
     public Slider sliderPlatform;
     public Slider sliderHoles;
-    public Toggle browseMode;
     public Text sliderNumberOfPlatforms;
     public Text sliderNumberOfHoles;
+    public Dropdown dropdown;
 
     public Canvas feedbackMenu;
     public InputField loggedBy;
     public InputField comments;
 
-    public Text loadingText;
-
     private SettingsConfig settings = new SettingsConfig();
+    private const string _ApiKey = "2c917dc4aaa343a0817688db82ef275d";
+    private const string _PublishedCollectionsRequestURL = "http://chronoplayapi.azurewebsites.net:80/api/Counts?APIKey=";
+    private const string _ProjectName = "ChronoPlay - Dashboard Scene";
+    private const string _ScriptFileName = "Dashboard.cs";
 
     // Use this for initialization
-    void Start () {
-        if(PlayerPrefs.HasKey("Last Played Date"))
+    void Start()
+    {
+        List<PlayableCollection> playableCollections = RetrievePublishedCollections();
+
+
+        if (PlayerPrefs.HasKey("Last Played Date"))
         {
             holesAndPlatforms.text = PlayerPrefs.GetString("Platforms") + "/" + PlayerPrefs.GetString("Holes");
-            totalCorrectText.text = PlayerPrefs.GetInt("Total Correct")+"";
-            totalIncorrectText.text = PlayerPrefs.GetInt("Total Incorrect")+"";
-            totalTimeText.text = PlayerPrefs.GetFloat("Total Time").ToString("n0")+"s";
-            averageTimeText.text = PlayerPrefs.GetFloat("Average Time").ToString("n0")+"s";
+            totalCorrectText.text = PlayerPrefs.GetInt("Total Correct") + "";
+            totalIncorrectText.text = PlayerPrefs.GetInt("Total Incorrect") + "";
+            totalTimeText.text = PlayerPrefs.GetFloat("Total Time").ToString("n0") + "s";
+            averageTimeText.text = PlayerPrefs.GetFloat("Average Time").ToString("n0") + "s";
         }
 
         //TODO: Presist user preference
-        if(PlayerPrefs.HasKey("Slider Platforms"))
+        if (PlayerPrefs.HasKey("Slider Platforms"))
         {
             //sliderPlatform.value = PlayerPrefs.GetInt("Slider Platforms");
             //sliderHoles.value = PlayerPrefs.GetInt("Slider Holes");
@@ -52,33 +63,58 @@ public class Dashboard : MonoBehaviour {
             settings.numPlatforms = Convert.ToInt32(sliderPlatform.value);
             settings.numHoles = Convert.ToInt32(sliderHoles.value);
         }
-
-        PlayerPrefs.SetString("No Timer", "false");
-
-        sliderNumberOfPlatforms.text = sliderPlatform.value+"";
+        sliderNumberOfPlatforms.text = sliderPlatform.value + "";
         sliderNumberOfHoles.text = sliderHoles.value + "";
-
 
 
 
     }
 
     // Update is called once per frame
-    void Update () {
-        if (!menuEnabled)
+    void Update()
+    {
+
+    }
+
+    public List<PlayableCollection> RetrievePublishedCollections()
+    {
+        string resultStr = String.Empty;
+        List<PlayableCollection> logResponse = new List<PlayableCollection>();
+        string requestUrl = _PublishedCollectionsRequestURL + _ApiKey;
+
+        try
         {
-            loadingText.color = new Color(loadingText.color.r, loadingText.color.g, loadingText.color.b, Mathf.PingPong(Time.time, 1));
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUrl);
+            request.Method = "GET";
+            request.ContentType = "application/x-www-form-urlencoded";
+            IAsyncResult asyncResult = request.BeginGetResponse(null, null);
+            while (!asyncResult.AsyncWaitHandle.WaitOne(100)) { }
+
+            HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(asyncResult);
+            {
+                using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+                {
+                    resultStr = reader.ReadToEnd();
+                }
+            }
+
+            logResponse = JsonConvert.DeserializeObject<List<PlayableCollection>>(resultStr);
+
+            return logResponse;
         }
-	}
+        catch (Exception)
+        {
+            Logger.LogException(_ProjectName, _ScriptFileName, "RetrievePublishedCollections", "Error connecting to API");
+            return logResponse;
+        }
+    }
 
     void OnEnable()
     {
         sliderPlatform.onValueChanged.AddListener(ChangeValuePlatform);
         sliderHoles.onValueChanged.AddListener(ChangeValueHoles);
-        browseMode.onValueChanged.AddListener(ChangeMode);
         ChangeValuePlatform(sliderPlatform.value);
         ChangeValueHoles(sliderPlatform.value);
-        ChangeMode(browseMode.isOn);
     }
 
     void OnDisable()
@@ -105,60 +141,66 @@ public class Dashboard : MonoBehaviour {
         PlayerPrefs.Save();
     }
 
-    void ChangeMode(bool isOn)
+    //public void StartCosmos()
+    //{
+    //    settings.superCollection = "chronozoom";
+    //    settings.collection = "cosmos";
+    //    settings.SetPublicVariables();
+
+    //    loadingImage.SetActive(true);
+    //    SceneManager.LoadScene(1);
+    //    menuEnabled = false;
+
+    //}
+
+    //public void StartEarth()
+    //{
+    //    settings.superCollection = "bighistorylabs";
+    //    settings.collection = "bighistorylabs";
+    //    settings.SetPublicVariables();
+
+    //    loadingImage.SetActive(true);
+    //    SceneManager.LoadScene(1);
+    //    menuEnabled = false;
+
+    //}
+
+    public void StartGame(string collectionIdentifier)
     {
-        PlayerPrefs.SetString("No Timer", isOn + "");
-        PlayerPrefs.Save();
-    }
+        Dictionary<string, string> gameDetailsDictionary = new Dictionary<string, string>();
+        string collection = string.Empty;
 
-    public void StartCosmos()
-    {
-        settings.superCollection = "chronozoom";
-        settings.collection = "cosmos";
-        settings.SetPublicVariables();
+        //How it works:
+        //gameDetailsDictionary.Add("superCollectionName", "collectionName"]);
+        gameDetailsDictionary.Add("mrmccrudden", "MrMcCrudden");
+        gameDetailsDictionary.Add("chronozoom", "Cosmos");
+        gameDetailsDictionary.Add("bmwooddell", "bmwooddell");
+        gameDetailsDictionary.Add("nobelprize", "Nobel");
+        gameDetailsDictionary.Add("loriguidos", "loriguidos");
+        gameDetailsDictionary.Add("rachelkim", "rachelkim");
+        gameDetailsDictionary.Add("sbontrag", "sbontrag");
+        gameDetailsDictionary.Add("teresarosasilva", "TeresaRosaSilva");
+        gameDetailsDictionary.Add("mrbond", "MrBond");
+        gameDetailsDictionary.Add("cornish", "Cornish");
+        gameDetailsDictionary.Add("missmartindale", "missmartindale");
+        gameDetailsDictionary.Add("j30033", "j30033");
+        gameDetailsDictionary.Add("kharazinuniversity", "KharazinUniversity-2-3");
+        gameDetailsDictionary.Add("bighistorylabs", "bighistorylabs");
+        gameDetailsDictionary.Add("geraledesma", "geraledesma");
 
-        //loadingImage.SetActive(true);
-        //SceneManager.LoadScene(1);
-        //menuEnabled = false;
+        gameDetailsDictionary.TryGetValue(collectionIdentifier, out collection);
+        Debug.Log("superCollection: " + collectionIdentifier + "    Collection: " + collection);
 
-
-        LoadLevel();
-    }
-
-    public void StartEarth()
-    {
-        settings.superCollection = "bighistorylabs";
-        settings.collection = "bighistorylabs";
-        settings.SetPublicVariables();
-
-        //loadingImage.SetActive(true);
-        //SceneManager.LoadScene(1);
-        //menuEnabled = false;
-
-        
-        LoadLevel();
-
-    }
-
-    //Load level with progress updates
-    void LoadLevel()
-    {
-        menuEnabled = false;
-        loadingImage.SetActive(true);
-        StartCoroutine(LevelCoroutine());
-    }
-
-    IEnumerator LevelCoroutine()
-    {
-        //TODO: Remove temporary wait to show loading
-        yield return new WaitForSeconds(2);
-        AsyncOperation async = SceneManager.LoadSceneAsync(1);
-
-        while (!async.isDone)
+        if (!String.IsNullOrEmpty(collection))
         {
-            yield return null;
-        }
+            settings.superCollection = collectionIdentifier;
+            settings.collection = collection;
+            settings.SetPublicVariables();
 
+            loadingImage.SetActive(true);
+            SceneManager.LoadScene(1);
+            menuEnabled = false;
+        }
     }
 
     public void OpenChronozoomWebsite()
@@ -193,4 +235,18 @@ public class Dashboard : MonoBehaviour {
         feedbackMenu.enabled = false;
         Time.timeScale = 1;
     }
+}
+
+public class PlayableCollection
+{
+    public int idx { get; set; }
+    public string SuperCollection { get; set; }
+    public string Collection { get; set; }
+    public double? Timeline_Count { get; set; }
+    public double? Exhibit_Count { get; set; }
+    public bool Publish { get; set; }
+    public string CZClone { get; set; }
+    public string Language { get; set; }
+    public string Comment { get; set; }
+    public double? Content_Item_Count { get; set; }
 }
