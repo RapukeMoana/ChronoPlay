@@ -83,7 +83,7 @@ public class Main : MonoBehaviour {
     private void setupGame(List<GameStage> game)
     {
         //Loops through and creates a level per loop
-        for (int i = 0; i < platformsPerGames; i++) {
+        for (int i = 0; i < platformsPerGames+1; i++) {
             //Creates platforms
             GameObject platform = (GameObject)Instantiate(Resources.Load("Plate"));
 
@@ -102,27 +102,18 @@ public class Main : MonoBehaviour {
             Vector3 platformPosition = new Vector3(0f, -(i*plateDistance), 0f);
             platform.transform.position = platformPosition;
 
-            //Create Exhibit content items "walls"
-            setupExhibitContentItem(i);
-
             //Create holes
             //Last Platform
-            if(i == platformsPerGames-1)
+            if(i == platformsPerGames)
             {
-                //setupLastPlatform(platform.name);
-                //Correct wormhole
-                setupHole(platform.name, game[i], true, 0, true);
-
-                //Incorrect wormhole(s)
-                for (int j = 0; j < wormholesPerPlatform - 1; j++)
-                {
-                    //Create ItemImages from URL 
-                    setupHole(platform.name, game[i], false, j, true);
-                }
+                setupLastPlatform(platform.name);
             }
             //Normal Platform
             else
             {
+                //Create Exhibit content items "walls"
+                setupExhibitContentItem(i);
+
                 //Correct wormhole
                 setupHole(platform.name, game[i], true, 0, false);
 
@@ -272,13 +263,6 @@ public class Main : MonoBehaviour {
         }
 
         GameObject holePosition = GameObject.Find(platformName+"HoleCover-"+row+"-"+col);
-
-        //while (holePosition == null)
-        //{
-        //    row = UnityEngine.Random.Range(0, 8);
-        //    col = UnityEngine.Random.Range(0, 8);
-        //    holePosition = GameObject.Find(platformName + "HoleCover-" + row + "-" + col);
-        //}
 
         holeRow[row] = true;
 

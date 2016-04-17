@@ -208,7 +208,7 @@ public class PlayerMovement : MonoBehaviour {
                 numCorrect++;
                 saveProgress();
 
-                showResult(other.transform.name, other.transform.position, other.transform.tag);
+                //showResult(other.transform.name, other.transform.position, other.transform.tag);
                 if (!browseMode)
                 { 
                     browseMode = true;
