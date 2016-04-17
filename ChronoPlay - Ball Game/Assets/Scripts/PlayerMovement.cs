@@ -203,7 +203,7 @@ public class PlayerMovement : MonoBehaviour {
                 showResult(other.transform.name, other.transform.position, other.transform.tag);
                 
                 break;
-            case "Restart-Hole":
+            case "Review-Hole":
                 Logger.LogPlayEvent("Total Time:"+ Time.timeSinceLevelLoad.ToString("n1")+", Correct:"+ numCorrect+" Incorrect:"+ numIncorrect, "Ball Game", level.ToString(), Main.superCollectionName, Main.collectionName, other.transform.name);
                 numCorrect++;
                 saveProgress();
@@ -259,6 +259,16 @@ public class PlayerMovement : MonoBehaviour {
                 
                 //loadingImage.SetActive(true);
                 //SceneManager.LoadScene(0);
+                break;
+            case "NewGame-Hole":
+                SceneManager.LoadScene(0);
+                break;
+            case "Restart-Hole":
+                loadingImage.alpha = 1;
+                Time.timeScale = 0;
+                Scene scene = SceneManager.GetActiveScene();
+                SceneManager.LoadScene(scene.name);
+
                 break;
             default:
                 break;

@@ -394,41 +394,93 @@ public class Main : MonoBehaviour {
     //Last platform has one hole that lets user restart game
     private void setupLastPlatform(string platformName)
     {
-        GameObject holePosition = GameObject.Find(platformName + "HoleCover-" + "1" + "-" + "5");
-        Vector3 holeCoordinate = holePosition.transform.position;
-        Texture2D texture = new Texture2D(1, 1);
-        texture = (Texture2D)Resources.Load("NewGameImage");
+        //Gets hole position for new game (menu)
+        GameObject newGameHolePosition = GameObject.Find(platformName + "HoleCover-" + "1" + "-" + "5");
+        Vector3 newGameHoleCoordinate = newGameHolePosition.transform.position;
+        Texture2D newGameTexture = new Texture2D(1, 1);
+        newGameTexture = (Texture2D)Resources.Load("MainMenuImage");
 
-        //GameObject itemImageDescription = (GameObject)Instantiate(Resources.Load("ItemDescription"));
+        //Gets hole position for restart game
+        GameObject restartGameHolePosition = GameObject.Find(platformName + "HoleCover-" + "3" + "-" + "1");
+        Vector3 restartGameHoleCoordinate = restartGameHolePosition.transform.position;
+        Texture2D restartGameTexture = new Texture2D(1, 1);
+        restartGameTexture = (Texture2D)Resources.Load("RestartImage");
 
-        //Creates item image object
-        GameObject itemImage = (GameObject)Instantiate(Resources.Load("ItemImage"));
-        itemImage.name = "RestartGameImage";
+        //Gets hole position for review game
+        GameObject reviewGameHolePosition = GameObject.Find(platformName + "HoleCover-" + "4" + "-" + "3");
+        Vector3 reviewGameHoleCoordinate = reviewGameHolePosition.transform.position;
+        Texture2D reviewGameTexture = new Texture2D(1, 1);
+        reviewGameTexture = (Texture2D)Resources.Load("ReviewGameImage");
 
-        //Create sensor
-        GameObject itemImageSensor = (GameObject)Instantiate(Resources.Load("ItemImageSensor"));
-        itemImageSensor.name = "RestartGameImage-sensor";
+        //Creates item image object for new game (menu)
+        GameObject newGameHoleCoordinateItemImage = (GameObject)Instantiate(Resources.Load("ItemImage"));
+        newGameHoleCoordinateItemImage.name = "NewGameImage";
 
-        //Create hole on platform
-        Destroy(holePosition);
+        //Creates item image object for restart game
+        GameObject restartGameHoleCoordinateItemImage = (GameObject)Instantiate(Resources.Load("ItemImage"));
+        restartGameHoleCoordinateItemImage.name = "RestartGameImage";
+
+        //Creates item image object for review game
+        GameObject reviewGameHoleCoordinateItemImage = (GameObject)Instantiate(Resources.Load("ItemImage"));
+        reviewGameHoleCoordinateItemImage.name = "ReviewGameImage";
+
+        //Create sensor for new game (menu)
+        GameObject newGameItemImageSensor = (GameObject)Instantiate(Resources.Load("ItemImageSensor"));
+        newGameItemImageSensor.name = "RestartGameImage-sensor";
+        newGameItemImageSensor.transform.position = new Vector3(newGameHoleCoordinate.x, newGameHoleCoordinate.y - 0.2f, newGameHoleCoordinate.z);
+        newGameItemImageSensor.tag = "NewGame-Hole";
+
+        //Create sensor for restart game
+        GameObject restartGameItemImageSensor = (GameObject)Instantiate(Resources.Load("ItemImageSensor"));
+        restartGameItemImageSensor.name = "RestartGameImage-sensor";
+        restartGameItemImageSensor.transform.position = new Vector3(restartGameHoleCoordinate.x, restartGameHoleCoordinate.y - 0.2f, restartGameHoleCoordinate.z);
+        restartGameItemImageSensor.tag = "Restart-Hole";
+
+        //Create sensor for review game
+        GameObject reviewGameItemImageSensor = (GameObject)Instantiate(Resources.Load("ItemImageSensor"));
+        reviewGameItemImageSensor.name = "ReviewGameImage-sensor";
+        reviewGameItemImageSensor.transform.position = new Vector3(reviewGameHoleCoordinate.x, reviewGameHoleCoordinate.y - 0.2f, reviewGameHoleCoordinate.z);
+        reviewGameItemImageSensor.tag = "Review-Hole";
+
+        //Create holes on platform
+        Destroy(newGameHolePosition);
+        Destroy(restartGameHolePosition);
+        Destroy(reviewGameHolePosition);
 
 
-        //Place image on top of the current wormhole
-        itemImage.transform.position = new Vector3(holeCoordinate.x, holeCoordinate.y + 3, holeCoordinate.z + 2);
-        itemImage.GetComponent<Renderer>().material.mainTexture = texture;
+        //Place image on top of the current wormhole for new game
+        newGameHoleCoordinateItemImage.transform.position = new Vector3(newGameHoleCoordinate.x, newGameHoleCoordinate.y + 3, newGameHoleCoordinate.z + 2);
+        newGameHoleCoordinateItemImage.GetComponent<Renderer>().material.mainTexture = newGameTexture;
 
-        //Place description on item image
-        GameObject itemImageDescription = (GameObject)Instantiate(Resources.Load("ItemDescription"));
+        //Place image on top of the current wormhole for restart game
+        restartGameHoleCoordinateItemImage.transform.position = new Vector3(restartGameHoleCoordinate.x, restartGameHoleCoordinate.y + 3, restartGameHoleCoordinate.z + 2);
+        restartGameHoleCoordinateItemImage.GetComponent<Renderer>().material.mainTexture = restartGameTexture;
 
-        Vector3 tempPosition = itemImage.transform.position;
-        itemImageDescription.GetComponent<TextMesh>().text = "NEW GAME";
-        itemImageDescription.GetComponent<TextMesh>().transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-        itemImageDescription.transform.position = new Vector3(tempPosition.x, tempPosition.y - 1.35f, tempPosition.z - 1.2f);
+        //Place image on top of the current wormhole review game
+        reviewGameHoleCoordinateItemImage.transform.position = new Vector3(reviewGameHoleCoordinate.x, reviewGameHoleCoordinate.y + 3, reviewGameHoleCoordinate.z + 2);
+        reviewGameHoleCoordinateItemImage.GetComponent<Renderer>().material.mainTexture = reviewGameTexture;
 
+        //Place description on item image for new game
+        GameObject newGameItemImageDescription = (GameObject)Instantiate(Resources.Load("ItemDescription"));
+        Vector3 tempPosition = newGameHoleCoordinateItemImage.transform.position;
+        newGameItemImageDescription.GetComponent<TextMesh>().text = "MAIN MENU";
+        newGameItemImageDescription.GetComponent<TextMesh>().transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+        newGameItemImageDescription.transform.position = new Vector3(tempPosition.x, tempPosition.y - 1.35f, tempPosition.z - 1.2f);
 
-        //Place image on sensor (hole)
-        itemImageSensor.transform.position = new Vector3(holeCoordinate.x, holeCoordinate.y - 0.2f, holeCoordinate.z);
-        itemImageSensor.tag = "Restart-Hole";
+        //Place description on item image for restart game
+        GameObject restartGameItemImageDescription = (GameObject)Instantiate(Resources.Load("ItemDescription"));
+        tempPosition = restartGameHoleCoordinateItemImage.transform.position;
+        restartGameItemImageDescription.GetComponent<TextMesh>().text = "RESTART GAME";
+        restartGameItemImageDescription.GetComponent<TextMesh>().transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+        restartGameItemImageDescription.transform.position = new Vector3(tempPosition.x, tempPosition.y - 1.35f, tempPosition.z - 1.2f);
+
+        //Place description on item image for review game
+        GameObject reviewGameItemImageDescription = (GameObject)Instantiate(Resources.Load("ItemDescription"));
+        tempPosition = reviewGameHoleCoordinateItemImage.transform.position;
+        reviewGameItemImageDescription.GetComponent<TextMesh>().text = "REVIEW GAME";
+        reviewGameItemImageDescription.GetComponent<TextMesh>().transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+        reviewGameItemImageDescription.transform.position = new Vector3(tempPosition.x, tempPosition.y - 1.35f, tempPosition.z - 1.2f);
+
     }
 
     // Update is called once per frame
