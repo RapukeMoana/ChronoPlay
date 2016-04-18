@@ -246,7 +246,7 @@ public class PlayerMovement : MonoBehaviour {
                         incorrectYear.GetComponent<TextMesh>().text = yearFormatted;
                         incorrectYear.GetComponent<TextMesh>().transform.localScale = new Vector3(0.15f, 0.15f, 0.15f);
                         incorrectYear.transform.position = new Vector3(
-                            go.transform.position.x, go.transform.position.y + 0.6f, go.transform.position.z);
+                            go.transform.position.x+0.1f, go.transform.position.y + 0.45f, go.transform.position.z+0.3f);
 
                         if (yearFormatted.Length > 4)
                         {
