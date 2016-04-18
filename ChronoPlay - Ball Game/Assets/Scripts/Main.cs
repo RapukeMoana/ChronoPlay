@@ -107,6 +107,9 @@ public class Main : MonoBehaviour {
             if(i == platformsPerGames)
             {
                 setupLastPlatform(platform.name);
+
+                //Create Exhibit content items "walls"
+                setupExhibitContentItem(i);
             }
             //Normal Platform
             else
@@ -395,7 +398,7 @@ public class Main : MonoBehaviour {
     private void setupLastPlatform(string platformName)
     {
         //Gets hole position for new game (menu)
-        GameObject newGameHolePosition = GameObject.Find(platformName + "HoleCover-" + "1" + "-" + "5");
+        GameObject newGameHolePosition = GameObject.Find(platformName + "HoleCover-" + "0" + "-" + "3");
         Vector3 newGameHoleCoordinate = newGameHolePosition.transform.position;
         Texture2D newGameTexture = new Texture2D(1, 1);
         newGameTexture = (Texture2D)Resources.Load("MainMenuImage");
@@ -407,7 +410,7 @@ public class Main : MonoBehaviour {
         restartGameTexture = (Texture2D)Resources.Load("RestartImage");
 
         //Gets hole position for review game
-        GameObject reviewGameHolePosition = GameObject.Find(platformName + "HoleCover-" + "4" + "-" + "3");
+        GameObject reviewGameHolePosition = GameObject.Find(platformName + "HoleCover-" + "3" + "-" + "6");
         Vector3 reviewGameHoleCoordinate = reviewGameHolePosition.transform.position;
         Texture2D reviewGameTexture = new Texture2D(1, 1);
         reviewGameTexture = (Texture2D)Resources.Load("ReviewGameImage");
