@@ -519,8 +519,7 @@ public class Main : MonoBehaviour {
     void Update () {
 
         loadingText.color = new Color(loadingText.color.r, loadingText.color.g, loadingText.color.b, Mathf.PingPong(Time.time, 1));
-        //loadingText.text = "Hello"+Time.frameCount;
-        Debug.Log(Mathf.PingPong(0, 100));
+
     }
 
     public Exhibit getStageEventContent(int level)
