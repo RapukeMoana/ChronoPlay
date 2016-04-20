@@ -39,8 +39,8 @@ public class Main : MonoBehaviour {
     void Start()
     {
         loadingImage.alpha = 1;
-        Time.timeScale = 0;
-        
+        GameObject player = GameObject.Find("Player");
+        player.GetComponent<Rigidbody>().useGravity = false;
         StartCoroutine(getTimeLine());
         contentItemList = new List<ContentItem>();
     }
@@ -626,8 +626,10 @@ public class Main : MonoBehaviour {
     public void playGame()
     {
         loadingImage.alpha = 0;
-        Time.timeScale = 1;
-        
+
+        GameObject player = GameObject.Find("Player");
+        player.GetComponent<Rigidbody>().useGravity = true;
+
     }
 
 
