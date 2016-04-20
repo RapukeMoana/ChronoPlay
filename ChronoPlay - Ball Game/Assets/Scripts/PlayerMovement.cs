@@ -18,7 +18,7 @@ public class PlayerMovement : MonoBehaviour {
     public InputField loggedBy;
     public InputField comments;
     public Image progressBar;
-    public static bool browseMode = false;
+    public static bool browseMode = false, isLastLevel = false;
     public GameObject gameCamera;
     public static int numCorrect = 0, numIncorrect = 0, level = 0;
     public static float timeSince = 0;
@@ -178,6 +178,10 @@ public class PlayerMovement : MonoBehaviour {
                 float progressFill = (level * 1f)/ Main.platformsPerGames;
                 progressBar.fillAmount = progressFill;
 
+                if(level == Main.platformsPerGames)
+                {
+                    isLastLevel = true;
+                }
                 
                 break;
             case "Incorrect-Hole":
@@ -266,6 +270,8 @@ public class PlayerMovement : MonoBehaviour {
             case "Restart-Hole":
                 loadingImage.alpha = 1;
                 Time.timeScale = 0;
+                browseMode = false;
+                isLastLevel = false;
                 Scene scene = SceneManager.GetActiveScene();
                 SceneManager.LoadScene(scene.name);
 
@@ -305,7 +311,7 @@ public class PlayerMovement : MonoBehaviour {
         }
 
         //Stops time if game is over
-        if (!browseMode && PlayerPrefs.GetString("No Timer") == "false")
+        if (!browseMode && !isLastLevel && PlayerPrefs.GetString("No Timer") == "false")
         {
             Text timerText = GameObject.Find("TimerText").GetComponent<Text>();
             timerText.text = ("TIME: " + (Time.timeSinceLevelLoad).ToString("n1")) + " seconds";

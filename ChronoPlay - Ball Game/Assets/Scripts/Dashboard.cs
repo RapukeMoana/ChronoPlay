@@ -40,7 +40,6 @@ public class Dashboard : MonoBehaviour
     {
         List<PlayableCollection> playableCollections = RetrievePublishedCollections();
 
-
         if (PlayerPrefs.HasKey("Last Played Date"))
         {
             holesAndPlatforms.text = PlayerPrefs.GetString("Platforms") + "/" + PlayerPrefs.GetString("Holes");

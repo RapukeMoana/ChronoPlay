@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using UnityEngine.UI;
 using Assets.JNMTouchControls.Scripts;
 using UnityEngine.SceneManagement;
+using Newtonsoft.Json;
 
 public class Main : MonoBehaviour {
 
@@ -26,6 +27,8 @@ public class Main : MonoBehaviour {
     public Canvas settingsMenu;
     public Canvas timelineSelectMenu;
     public CanvasGroup loadingImage;
+    public Text loadingText;
+    public Button playButton;
 
     public object contentItem { get; private set; }
 
@@ -42,15 +45,40 @@ public class Main : MonoBehaviour {
         contentItemList = new List<ContentItem>();
     }
 
+
+
     IEnumerator getTimeLine()
     {
-        timeline = ChronozoomHandler.RetrieveTimeline(superCollectionName, collectionName);
-        yield return null;
+        yield return StartCoroutine(retrieveTimelineAsync(superCollectionName, collectionName));
+        //timeline = ChronozoomHandler.RetrieveTimeline(superCollectionName, collectionName);
+        //yield return null;
+        constructTimeline();
+    }
 
+    IEnumerator retrieveTimelineAsync(string superCollectionName, string collectionName)
+    {
 
+        string requestTemplate = "http://www.chronozoom.com/api/gettimelines?supercollection={0}&collection={1}";
+        string requestUrl = String.Format(requestTemplate, superCollectionName, collectionName);
+        WWW www = new WWW(requestUrl);
+        yield return www;
+        if (www.error == null)
+        {
+            timeline = JsonConvert.DeserializeObject<Timeline>(www.text);
+            timelineRetrieved = true;
+        }
+        else
+        {
+            Debug.Log("ERROR: " + www.error);
+        }
+    }
+
+    private void constructTimeline()
+    {
         if (timeline != null && !String.IsNullOrEmpty(timeline.__type))
         {
             timelineRetrieved = true;
+
             ChronozoomHandler.GenerateLists(timeline, limitContentToImages);
             game = ChronozoomHandler.SetUpGame(wormholesPerPlatform, platformsPerGames + 1);
 
@@ -71,14 +99,15 @@ public class Main : MonoBehaviour {
             long endYear = game[game.Count - 1].stageEvent.time;
 
             RenderTimeline(startYear.ToString(), endYear.ToString());
+
+            playButton.gameObject.SetActive(true);
         }
         else
         {
-            SceneManager.LoadScene("MainScene");
+            SceneManager.LoadScene(0);
         }
-
-        
     }
+
 
     private void setupGame(List<GameStage> game)
     {
@@ -489,7 +518,9 @@ public class Main : MonoBehaviour {
     // Update is called once per frame
     void Update () {
 
-
+        loadingText.color = new Color(loadingText.color.r, loadingText.color.g, loadingText.color.b, Mathf.PingPong(Time.time, 1));
+        //loadingText.text = "Hello"+Time.frameCount;
+        Debug.Log(Mathf.PingPong(0, 100));
     }
 
     public Exhibit getStageEventContent(int level)
