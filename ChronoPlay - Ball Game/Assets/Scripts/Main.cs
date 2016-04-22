@@ -39,13 +39,52 @@ public class Main : MonoBehaviour {
     void Start()
     {
         loadingImage.alpha = 1;
+        StartCoroutine(playInstructionAnimation());
         GameObject player = GameObject.Find("Player");
         player.GetComponent<Rigidbody>().useGravity = false;
         StartCoroutine(getTimeLine());
         contentItemList = new List<ContentItem>();
     }
 
+    //Fade in animation for instruction elements
+    IEnumerator playInstructionAnimation()
+    {
+        Image instruction1 = GameObject.Find("Instruction-1").GetComponent<Image>();
+        instruction1.canvasRenderer.SetAlpha(0.0f);
+        Image instruction2 = GameObject.Find("Instruction-2").GetComponent<Image>();
+        instruction2.canvasRenderer.SetAlpha(0.0f);
+        Image instruction3 = GameObject.Find("Instruction-3").GetComponent<Image>();
+        instruction3.canvasRenderer.SetAlpha(0.0f);
+        Image instruction4 = GameObject.Find("Instruction-4").GetComponent<Image>();
+        instruction4.canvasRenderer.SetAlpha(0.0f);
+        Image instruction5 = GameObject.Find("Instruction-5").GetComponent<Image>();
+        instruction5.canvasRenderer.SetAlpha(0.0f);
+        Image instruction6 = GameObject.Find("Instruction-6").GetComponent<Image>();
+        instruction6.canvasRenderer.SetAlpha(0.0f);
+        Image instruction7 = GameObject.Find("Instruction-7").GetComponent<Image>();
+        instruction7.canvasRenderer.SetAlpha(0.0f);
 
+        yield return new WaitForSeconds(1);
+        instruction1.CrossFadeAlpha(1.0f, 1, false);
+
+        yield return new WaitForSeconds(1);
+        instruction2.CrossFadeAlpha(1.0f, 1, false);
+
+        yield return new WaitForSeconds(1);
+        instruction3.CrossFadeAlpha(1.0f, 1, false);
+
+        yield return new WaitForSeconds(1);
+        instruction4.CrossFadeAlpha(1.0f, 1, false);
+
+        yield return new WaitForSeconds(1.5f);
+        instruction5.CrossFadeAlpha(1.0f, 1, false);
+
+        yield return new WaitForSeconds(1);
+        instruction6.CrossFadeAlpha(1.0f, 1, false);
+
+        yield return new WaitForSeconds(1);
+        instruction7.CrossFadeAlpha(1.0f, 1, false);
+    }
 
     IEnumerator getTimeLine()
     {
