@@ -266,12 +266,14 @@ public class PlayerMovement : MonoBehaviour {
                 break;
             case "NewGame-Hole":
                 SceneManager.LoadScene(0);
+                Main.restartSameCollection = false;
                 break;
             case "Restart-Hole":
                 loadingImage.alpha = 1;
                 Time.timeScale = 0;
                 browseMode = false;
                 isLastLevel = false;
+                Main.restartSameCollection = true;
                 Scene scene = SceneManager.GetActiveScene();
                 SceneManager.LoadScene(scene.name);
 
@@ -532,6 +534,7 @@ public class PlayerMovement : MonoBehaviour {
     public void Quit()
     {
         browseMode = false;
+        Main.restartSameCollection = true;
         SceneManager.LoadScene(0);
     }
 

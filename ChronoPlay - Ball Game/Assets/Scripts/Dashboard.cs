@@ -65,8 +65,8 @@ public class Dashboard : MonoBehaviour
         sliderNumberOfPlatforms.text = sliderPlatform.value + "";
         sliderNumberOfHoles.text = sliderHoles.value + "";
 
-
-
+        //Initialise 
+        Main.restartSameCollection = false;
     }
 
     // Update is called once per frame
