@@ -44,7 +44,7 @@ public class Dashboard : MonoBehaviour
     void Start()
     {
         _playableCollections = RetrievePublishedCollections();
-        populateCollectionScrollView();
+        StartCoroutine(populateCollectionScrollView());
         collectionScrollbar.value = 0;
 
         if (PlayerPrefs.HasKey("Last Played Date"))
@@ -72,11 +72,9 @@ public class Dashboard : MonoBehaviour
         sliderNumberOfPlatforms.text = sliderPlatform.value + "";
         sliderNumberOfHoles.text = sliderHoles.value + "";
 
-<<<<<<< HEAD
-=======
         //Initialise 
         Main.restartSameCollection = false;
->>>>>>> origin/master
+
     }
 
     // Update is called once per frame
@@ -85,37 +83,59 @@ public class Dashboard : MonoBehaviour
 
     }
 
-    public void populateCollectionScrollView()
+    IEnumerator populateCollectionScrollView()
     {
         float xLocation = 0;
         GameObject template = GameObject.Find("Collection_playableItem");
-        try
+        foreach (PlayableCollection collection in _playableCollections)
         {
-            foreach (PlayableCollection collection in _playableCollections)
+            GameObject myTemplate = (GameObject)Instantiate(Resources.Load("CollectionItem"));
+            Texture2D texture = new Texture2D(1, 1);
+
+            Text[] textLabels = myTemplate. GetComponentsInChildren<Text>();
+            //myTemplate.renderer = true;
+            textLabels[0].text = collection.Title;
+            textLabels[1].text = SetStartTimeLabel(collection.StartDate.ToString()) + "-" + SetEndTimeLabel(collection.EndDate.ToString());
+            myTemplate.name = collection.Collection;
+            myTemplate.transform.parent = GameObject.Find("Content").transform;
+
+            Vector3 contentPosition = new Vector3(template.transform.position.x + xLocation, template.transform.position.y, template.transform.position.z);
+            myTemplate.transform.position = contentPosition;
+            myTemplate.transform.localScale = new Vector3(1, 1);
+            xLocation = xLocation + 150;
+
+            if (collection.ImageURL != null)
             {
-                GameObject myTemplate = (GameObject)Instantiate(Resources.Load("CollectionItem"));
-            
-                Text[] textLabels = myTemplate. GetComponentsInChildren<Text>();
-                //myTemplate.renderer = true;
-                textLabels[0].text = collection.Title;
-                textLabels[1].text = SetStartTimeLabel(collection.StartDate.ToString()) + "-" + SetEndTimeLabel(collection.EndDate.ToString());
-                myTemplate.name = collection.Collection;
-                myTemplate.transform.parent = GameObject.Find("Content").transform;
+                RawImage image = myTemplate.GetComponent<RawImage>();
+                WWW www = new WWW(Uri.EscapeUriString(collection.ImageURL));
 
-                Vector3 contentPosition = new Vector3(template.transform.position.x + xLocation, template.transform.position.y, template.transform.position.z);
-                myTemplate.transform.position = contentPosition;
-                myTemplate.transform.localScale = new Vector3(1, 1);
-                xLocation = xLocation + 150;
+                yield return www;
 
-                Button templateFunction = myTemplate.GetComponent<Button>();
-                string title = collection.Title;
-                templateFunction.onClick.AddListener(delegate { StartGame(title, _playableCollections); });
+                // assign texture
+                try
+                {
+                    // assign texture
+                    if (www.error == null)
+                    {
+                        www.LoadImageIntoTexture(texture);
+                    }
+                    else
+                    {
+                        Logger.LogException("CZBall", "Dashboard", "populateCollectionScrollView", www.url + " not found");
+                    }
+                }
+                catch
+                {
+                    Logger.LogException("CZBall", "Dashboard", "populateCollectionScrollView", "www.LoadImageIntoTexture(texture)");
+                }
+                image.texture = texture;
             }
-        } catch (Exception ex)
-        {
-            Debug.Log(ex);
+                
+
+            Button templateFunction = myTemplate.GetComponent<Button>();
+            string title = collection.Title;
+            templateFunction.onClick.AddListener(delegate { StartGame(title, _playableCollections); });
         }
-      
 
         template.SetActive(false);
     }
@@ -281,4 +301,5 @@ public class PlayableCollection
     public string StartDate { get; set; }
     public string EndDate { get; set; }
     public string Title { get; set; }
+    public string ImageURL { get; set; }
 }
