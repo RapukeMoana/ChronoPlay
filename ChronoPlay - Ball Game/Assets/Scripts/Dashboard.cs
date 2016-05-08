@@ -25,6 +25,10 @@ public class Dashboard : MonoBehaviour
     public Text sliderNumberOfHoles;
     public Dropdown dropdown;
 
+    public ScrollRect collectionScrollRect;
+    public Scrollbar collectionScrollbar;
+    public RawImage collectionTemplate;
+
     public Canvas feedbackMenu;
     public InputField loggedBy;
     public InputField comments;
@@ -34,11 +38,14 @@ public class Dashboard : MonoBehaviour
     private const string _PublishedCollectionsRequestURL = "http://chronoplayapi.azurewebsites.net:80/api/Counts?APIKey=";
     private const string _ProjectName = "ChronoPlay - Dashboard Scene";
     private const string _ScriptFileName = "Dashboard.cs";
+    private List<PlayableCollection> _playableCollections = new List<PlayableCollection>();
 
     // Use this for initialization
     void Start()
     {
-        List<PlayableCollection> playableCollections = RetrievePublishedCollections();
+        _playableCollections = RetrievePublishedCollections();
+        populateCollectionScrollView();
+        collectionScrollbar.value = 0;
 
         if (PlayerPrefs.HasKey("Last Played Date"))
         {
@@ -65,14 +72,68 @@ public class Dashboard : MonoBehaviour
         sliderNumberOfPlatforms.text = sliderPlatform.value + "";
         sliderNumberOfHoles.text = sliderHoles.value + "";
 
-
-
     }
 
     // Update is called once per frame
     void Update()
     {
 
+    }
+
+    public void populateCollectionScrollView()
+    {
+        float xLocation = 0;
+        GameObject template = GameObject.Find("Collection_playableItem");
+        try
+        {
+            foreach (PlayableCollection collection in _playableCollections)
+            {
+                GameObject myTemplate = (GameObject)Instantiate(Resources.Load("CollectionItem"));
+            
+                Text[] textLabels = myTemplate. GetComponentsInChildren<Text>();
+                //myTemplate.renderer = true;
+                textLabels[0].text = collection.Title;
+                textLabels[1].text = SetStartTimeLabel(collection.StartDate.ToString()) + "-" + SetEndTimeLabel(collection.EndDate.ToString());
+                myTemplate.name = collection.Collection;
+                myTemplate.transform.parent = GameObject.Find("Content").transform;
+
+                Vector3 contentPosition = new Vector3(template.transform.position.x + xLocation, template.transform.position.y, template.transform.position.z);
+                myTemplate.transform.position = contentPosition;
+                myTemplate.transform.localScale = new Vector3(1, 1);
+                xLocation = xLocation + 150;
+
+                Button templateFunction = myTemplate.GetComponent<Button>();
+                string title = collection.Title;
+                templateFunction.onClick.AddListener(delegate { StartGame(title, _playableCollections); });
+            }
+        } catch (Exception ex)
+        {
+            Debug.Log(ex);
+        }
+      
+
+        template.SetActive(false);
+    }
+
+    private string SetStartTimeLabel(string startDate)
+    {
+        Int64 startYear = (Int64)Math.Round(Convert.ToDouble(startDate));
+        long minus1 = (long)-1;
+        if (startYear < 0)
+            return ((startYear * minus1).ToString().Length != 4) ? (startYear * (minus1)).ToString("n0") + " BC" : (startYear * minus1).ToString() + " BC";
+        else
+            return (startYear.ToString().Length != 4) ? startYear.ToString("n0") : startYear.ToString();
+
+    }
+
+    private string SetEndTimeLabel(string endDate)
+    {
+        Int64 endYear = (Int64) Math.Round(Convert.ToDouble(endDate));
+        long minus1 = (long)-1;
+        if (endYear < 0)
+            return((endYear * minus1).ToString().Length != 4) ? (endYear * (minus1)).ToString("n0") + " BC" : (endYear * minus1).ToString() + " BC";
+        else
+            return (endYear.ToString().Length != 4) ? endYear.ToString("n0") : endYear.ToString();
     }
 
     public List<PlayableCollection> RetrievePublishedCollections()
@@ -140,60 +201,24 @@ public class Dashboard : MonoBehaviour
         PlayerPrefs.Save();
     }
 
-    //public void StartCosmos()
-    //{
-    //    settings.superCollection = "chronozoom";
-    //    settings.collection = "cosmos";
-    //    settings.SetPublicVariables();
-
-    //    loadingImage.SetActive(true);
-    //    SceneManager.LoadScene(1);
-    //    menuEnabled = false;
-
-    //}
-
-    //public void StartEarth()
-    //{
-    //    settings.superCollection = "bighistorylabs";
-    //    settings.collection = "bighistorylabs";
-    //    settings.SetPublicVariables();
-
-    //    loadingImage.SetActive(true);
-    //    SceneManager.LoadScene(1);
-    //    menuEnabled = false;
-
-    //}
-
-    public void StartGame(string collectionIdentifier)
+    public void StartGame(string collectionTitle, List<PlayableCollection> collections)
     {
-        Dictionary<string, string> gameDetailsDictionary = new Dictionary<string, string>();
-        string collection = string.Empty;
+        Debug.Log("Starting game: " + collectionTitle);
+        PlayableCollection gameCol = null;
 
-        //How it works:
-        //gameDetailsDictionary.Add("superCollectionName", "collectionName"]);
-        gameDetailsDictionary.Add("mrmccrudden", "MrMcCrudden");
-        gameDetailsDictionary.Add("chronozoom", "Cosmos");
-        gameDetailsDictionary.Add("bmwooddell", "bmwooddell");
-        gameDetailsDictionary.Add("nobelprize", "Nobel");
-        gameDetailsDictionary.Add("loriguidos", "loriguidos");
-        gameDetailsDictionary.Add("rachelkim", "rachelkim");
-        gameDetailsDictionary.Add("sbontrag", "sbontrag");
-        gameDetailsDictionary.Add("teresarosasilva", "TeresaRosaSilva");
-        gameDetailsDictionary.Add("mrbond", "MrBond");
-        gameDetailsDictionary.Add("cornish", "Cornish");
-        gameDetailsDictionary.Add("missmartindale", "missmartindale");
-        gameDetailsDictionary.Add("j30033", "j30033");
-        gameDetailsDictionary.Add("kharazinuniversity", "KharazinUniversity-2-3");
-        gameDetailsDictionary.Add("bighistorylabs", "bighistorylabs");
-        gameDetailsDictionary.Add("geraledesma", "geraledesma");
-
-        gameDetailsDictionary.TryGetValue(collectionIdentifier, out collection);
-        Debug.Log("superCollection: " + collectionIdentifier + "    Collection: " + collection);
-
-        if (!String.IsNullOrEmpty(collection))
+        foreach (PlayableCollection col in collections)
         {
-            settings.superCollection = collectionIdentifier;
-            settings.collection = collection;
+            if(col.Title == collectionTitle)
+            {
+                gameCol = col;
+                break;
+            }
+        }
+
+        if (!String.IsNullOrEmpty(gameCol.Collection))
+        {
+            settings.superCollection = gameCol.SuperCollection;
+            settings.collection = gameCol.Collection;
             settings.SetPublicVariables();
 
             loadingImage.SetActive(true);
@@ -248,4 +273,7 @@ public class PlayableCollection
     public string Language { get; set; }
     public string Comment { get; set; }
     public double? Content_Item_Count { get; set; }
+    public string StartDate { get; set; }
+    public string EndDate { get; set; }
+    public string Title { get; set; }
 }
