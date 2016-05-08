@@ -15,6 +15,7 @@ public class Main : MonoBehaviour {
     public static List<GameStage> game;
     private static bool[] holeRow;
 
+    public static bool restartSameCollection = false;
     public static Timeline timeline = new Timeline();
     //__PUBLIC VARIABLES__
     public static string superCollectionName = "chronozoom"; //chronozoom nobelprize
@@ -38,10 +39,21 @@ public class Main : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        loadingImage.alpha = 1;
-        StartCoroutine(playInstructionAnimation());
-        GameObject player = GameObject.Find("Player");
-        player.GetComponent<Rigidbody>().useGravity = false;
+        //Bypasses the usual loading screen if restarting same collection
+        if (restartSameCollection)
+        {
+            playGame();
+            Time.timeScale = 1;
+        }
+        else
+        {
+            loadingImage.alpha = 1;
+            GameObject player = GameObject.Find("Player");
+            player.GetComponent<Rigidbody>().useGravity = false;
+            StartCoroutine(playInstructionAnimation());
+        }
+            
+        
         StartCoroutine(getTimeLine());
         contentItemList = new List<ContentItem>();
     }
@@ -88,9 +100,15 @@ public class Main : MonoBehaviour {
 
     IEnumerator getTimeLine()
     {
-        yield return StartCoroutine(retrieveTimelineAsync(superCollectionName, collectionName));
+        if (!timelineRetrieved && !restartSameCollection)
+        {
+            yield return StartCoroutine(retrieveTimelineAsync(superCollectionName, collectionName));
+            Debug.Log("Getting Timeline");
+        }
+            
         //timeline = ChronozoomHandler.RetrieveTimeline(superCollectionName, collectionName);
         //yield return null;
+        
         constructTimeline();
     }
 
@@ -118,8 +136,11 @@ public class Main : MonoBehaviour {
         {
             timelineRetrieved = true;
 
-            ChronozoomHandler.GenerateLists(timeline, limitContentToImages);
-            game = ChronozoomHandler.SetUpGame(wormholesPerPlatform, platformsPerGames + 1);
+            if (!restartSameCollection)
+            {
+                ChronozoomHandler.GenerateLists(timeline, limitContentToImages);
+                game = ChronozoomHandler.SetUpGame(wormholesPerPlatform, platformsPerGames + 1);
+            }
 
             if (timelineRetrieved)
             {
