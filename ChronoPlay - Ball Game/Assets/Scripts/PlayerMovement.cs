@@ -153,6 +153,7 @@ public class PlayerMovement : MonoBehaviour {
 
     void OnCollisionEnter(Collision other) {
         GameObject result;
+
         //Checks to see which wormhole ball enters 
         switch (other.transform.tag)
         {
