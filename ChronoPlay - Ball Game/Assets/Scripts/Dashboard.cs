@@ -7,6 +7,7 @@ using System.Net;
 using System.IO;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 public class Dashboard : MonoBehaviour
 {
@@ -45,6 +46,7 @@ public class Dashboard : MonoBehaviour
     {
         _playableCollections = RetrievePublishedCollections();
         StartCoroutine(populateCollectionScrollView());
+        //populateCollectionScrollView();
         collectionScrollbar.value = 0;
 
         if (PlayerPrefs.HasKey("Last Played Date"))
@@ -97,12 +99,15 @@ public class Dashboard : MonoBehaviour
             textLabels[0].text = collection.Title;
             textLabels[1].text = SetStartTimeLabel(collection.StartDate.ToString()) + "-" + SetEndTimeLabel(collection.EndDate.ToString());
             myTemplate.name = collection.Collection;
-            myTemplate.transform.parent = GameObject.Find("Content").transform;
+            myTemplate.transform.SetParent(GameObject.Find("Content").transform);
 
             Vector3 contentPosition = new Vector3(template.transform.position.x + xLocation, template.transform.position.y, template.transform.position.z);
             myTemplate.transform.position = contentPosition;
             myTemplate.transform.localScale = new Vector3(1, 1);
             xLocation = xLocation + 150;
+            Button templateFunction = myTemplate.GetComponent<Button>();
+            string title = collection.Title;
+            templateFunction.onClick.AddListener(delegate { StartGame(); });
 
             if (collection.ImageURL != null)
             {
@@ -110,7 +115,6 @@ public class Dashboard : MonoBehaviour
                 WWW www = new WWW(Uri.EscapeUriString(collection.ImageURL));
 
                 yield return www;
-
                 // assign texture
                 try
                 {
@@ -130,11 +134,6 @@ public class Dashboard : MonoBehaviour
                 }
                 image.texture = texture;
             }
-                
-
-            Button templateFunction = myTemplate.GetComponent<Button>();
-            string title = collection.Title;
-            templateFunction.onClick.AddListener(delegate { StartGame(title, _playableCollections); });
         }
 
         template.SetActive(false);
@@ -226,19 +225,21 @@ public class Dashboard : MonoBehaviour
         PlayerPrefs.Save();
     }
 
-    public void StartGame(string collectionTitle, List<PlayableCollection> collections)
+    public void StartGame()
     {
-        Debug.Log("Starting game: " + collectionTitle);
+        string collectionName =  EventSystem.current.currentSelectedGameObject.name;
         PlayableCollection gameCol = null;
 
-        foreach (PlayableCollection col in collections)
+        foreach (PlayableCollection col in _playableCollections)
         {
-            if(col.Title == collectionTitle)
+            if(col.Collection == collectionName)
             {
                 gameCol = col;
                 break;
             }
         }
+
+        Debug.Log("Starting: " + gameCol.Title);
 
         if (!String.IsNullOrEmpty(gameCol.Collection))
         {
