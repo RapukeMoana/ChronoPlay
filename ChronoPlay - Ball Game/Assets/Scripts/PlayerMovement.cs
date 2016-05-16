@@ -165,7 +165,7 @@ public class PlayerMovement : MonoBehaviour {
 
                 Destroy(other.gameObject);
                 numCorrect++;
-                result = (GameObject)Instantiate(Resources.Load("Result"));
+
                 GameObject.Find("Result").GetComponent<Text>().text = "CORRECT";
                 myAlpha = 1.0f;
                 resultFade = true;
@@ -189,7 +189,6 @@ public class PlayerMovement : MonoBehaviour {
                 //Bounce ball up
                 GetComponent<Rigidbody>().AddForce(Vector3.up * 200);
                 
-                result = (GameObject)Instantiate(Resources.Load("Result"));
                 GameObject.Find("Result").GetComponent<Text>().text = "INCORRECT";
                 myAlpha = 1.0f;
                 resultFade = true;

@@ -17,7 +17,6 @@ public class Dashboard : MonoBehaviour
     public Text totalIncorrectText;
     public Text totalTimeText;
     public Text averageTimeText;
-    public GameObject loadingImage;
     public static bool menuEnabled = true;
 
     public Slider sliderPlatform;
@@ -247,7 +246,7 @@ public class Dashboard : MonoBehaviour
             settings.collection = gameCol.Collection;
             settings.SetPublicVariables();
 
-            loadingImage.SetActive(true);
+            //loadingImage.SetActive(true);
             SceneManager.LoadScene(1);
             menuEnabled = false;
         }
