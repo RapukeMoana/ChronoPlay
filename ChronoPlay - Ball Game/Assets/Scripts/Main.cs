@@ -224,9 +224,14 @@ public class Main : MonoBehaviour {
                 }
             } 
         }
-        
-    }
 
+        //Set start and end year on UI
+        GameObject.Find("Start Year").GetComponent<Text>().text = game[0].stageEvent.time+ "";
+        GameObject.Find("End Year").GetComponent<Text>().text = game[platformsPerGames].stageEvent.time + "";
+        GameObject.Find("Collection Name").GetComponent<Text>().text = collectionName;
+
+    }
+    
     private void setupExhibitContentItem(int plateNumber)
     {
         //Create exhibit year
