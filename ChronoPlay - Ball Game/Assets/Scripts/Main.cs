@@ -51,6 +51,7 @@ public class Main : MonoBehaviour {
             GameObject player = GameObject.Find("Player");
             player.GetComponent<Rigidbody>().useGravity = false;
             StartCoroutine(playInstructionAnimation());
+            GameObject.Find("Collection Name").GetComponent<Text>().text = collectionName;
         }
             
         
@@ -228,7 +229,7 @@ public class Main : MonoBehaviour {
         //Set start and end year on UI
         GameObject.Find("Start Year").GetComponent<Text>().text = game[0].stageEvent.time+ "";
         GameObject.Find("End Year").GetComponent<Text>().text = game[platformsPerGames].stageEvent.time + "";
-        GameObject.Find("Collection Name").GetComponent<Text>().text = collectionName;
+        
 
     }
     
