@@ -51,7 +51,7 @@ public class Main : MonoBehaviour {
             GameObject player = GameObject.Find("Player");
             player.GetComponent<Rigidbody>().useGravity = false;
             StartCoroutine(playInstructionAnimation());
-            GameObject.Find("Collection Name").GetComponent<Text>().text = collectionName;
+            GameObject.Find("Collection Name").GetComponent<Text>().text = PlayerPrefs.GetString("Collection Name");
         }
             
         

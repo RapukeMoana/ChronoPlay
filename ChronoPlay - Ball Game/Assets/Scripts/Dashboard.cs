@@ -245,6 +245,7 @@ public class Dashboard : MonoBehaviour
             settings.superCollection = gameCol.SuperCollection;
             settings.collection = gameCol.Collection;
             settings.SetPublicVariables();
+            PlayerPrefs.SetString("Collection Name", gameCol.Title);
 
             //loadingImage.SetActive(true);
             SceneManager.LoadScene(1);
