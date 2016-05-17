@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class PlayerMovement : MonoBehaviour {
     public float speed;
@@ -25,6 +26,7 @@ public class PlayerMovement : MonoBehaviour {
     public static int browseLevel;
     public GameObject Stick_L;
     public GameObject Stick_R;
+    public GameObject descriptionImageFullScreenImage;
 
     private Rigidbody rb;
     private float speedsmooth = 0.8f;
@@ -355,6 +357,10 @@ public class PlayerMovement : MonoBehaviour {
             descriptionTitleText.text = selected.title;
             descriptionImage.texture = texture;
 
+            //Add button onclick
+            Button descriptionImageButton = descriptionImage.GetComponent<Button>();
+            descriptionImageButton.onClick.AddListener(delegate { descriptionImageFullScreen(); });
+
             //Scroll to the top 
             scrollRect.verticalNormalizedPosition = 50f;
             sideDescriptionVisible = true;
@@ -510,6 +516,19 @@ public class PlayerMovement : MonoBehaviour {
 
     }
 
+    //EventListener for side description image button
+    public void descriptionImageFullScreen() {
+        //Stop time
+        Time.timeScale = 0;
+
+        string fullScreenId = EventSystem.current.currentSelectedGameObject.name;
+        Debug.Log(fullScreenId);
+        descriptionImageFullScreenImage.SetActive(true);
+        descriptionImageFullScreenImage.GetComponent<RawImage>().texture =
+            EventSystem.current.currentSelectedGameObject.GetComponent<RawImage>().texture;
+    }
+
+
     //Clicking on feedback button shows the menu and pauses the game
     public void ShowFeedbackMenu()
     {
@@ -535,6 +554,12 @@ public class PlayerMovement : MonoBehaviour {
     public void HideFeedbackMenu()
     {
         feedbackMenu.enabled = false;
+        Time.timeScale = 1;
+    }
+
+    public void HideFullScreenDescriptionImage()
+    {
+        descriptionImageFullScreenImage.SetActive(false);
         Time.timeScale = 1;
     }
 
