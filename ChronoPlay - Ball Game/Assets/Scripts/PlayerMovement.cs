@@ -27,6 +27,8 @@ public class PlayerMovement : MonoBehaviour {
     public GameObject Stick_L;
     public GameObject Stick_R;
     public GameObject descriptionImageFullScreenImage;
+    public GameObject FullScreen_When;
+    public GameObject FullScreen_Title;
 
     private Rigidbody rb;
     private float speedsmooth = 0.8f;
@@ -249,10 +251,8 @@ public class PlayerMovement : MonoBehaviour {
                         //Format year
                         var yearFormatted ="";
                         var year = ci.ParentExhibitTime;
-                        if (year < 0)
-                            yearFormatted = ((year * -1).ToString().Length != 4) ? (year * (-1)).ToString("n0") + " BC" : (year * -1).ToString() + " BC";
-                        else
-                            yearFormatted = (year.ToString().Length != 4) ? year.ToString("n0") : year.ToString();
+
+                        yearFormatted = formatYear(year);
 
                         //Place description on item image
                         GameObject incorrectYear = (GameObject)Instantiate(Resources.Load("ItemYear"));
@@ -290,6 +290,14 @@ public class PlayerMovement : MonoBehaviour {
             default:
                 break;
         }      
+    }
+
+    private String formatYear(long year)
+    {
+        if (year < 0)
+            return ((year * -1).ToString().Length != 4) ? (year * (-1)).ToString("n0") + " BC" : (year * -1).ToString() + " BC";
+        else
+            return (year.ToString().Length != 4) ? year.ToString("n0") : year.ToString();
     }
 
     void Update()
@@ -360,6 +368,10 @@ public class PlayerMovement : MonoBehaviour {
             //Add button onclick
             Button descriptionImageButton = descriptionImage.GetComponent<Button>();
             descriptionImageButton.onClick.AddListener(delegate { descriptionImageFullScreen(); });
+
+            //Assign fullscreen text
+            FullScreen_When.GetComponent<Text>().text = formatYear(selected.ParentExhibitTime);
+            FullScreen_Title.GetComponent<Text>().text = selected.title + "";
 
             //Scroll to the top 
             scrollRect.verticalNormalizedPosition = 50f;
