@@ -101,7 +101,7 @@ public class Main : MonoBehaviour {
 
     IEnumerator getTimeLine()
     {
-        if (!timelineRetrieved && !restartSameCollection)
+        if (!restartSameCollection)
         {
             yield return StartCoroutine(retrieveTimelineAsync(superCollectionName, collectionName));
             Debug.Log("Getting Timeline");
