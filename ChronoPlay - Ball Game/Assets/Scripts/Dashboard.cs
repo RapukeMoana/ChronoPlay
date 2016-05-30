@@ -24,6 +24,7 @@ public class Dashboard : MonoBehaviour
     public Text sliderNumberOfPlatforms;
     public Text sliderNumberOfHoles;
     public Dropdown dropdown;
+    public Toggle browseModeToggle;
 
     public ScrollRect collectionScrollRect;
     public Scrollbar collectionScrollbar;
@@ -75,6 +76,7 @@ public class Dashboard : MonoBehaviour
 
         //Initialise 
         Main.restartSameCollection = false;
+        PlayerPrefs.SetString("No Timer", "false");
 
     }
 
@@ -196,6 +198,7 @@ public class Dashboard : MonoBehaviour
     {
         sliderPlatform.onValueChanged.AddListener(ChangeValuePlatform);
         sliderHoles.onValueChanged.AddListener(ChangeValueHoles);
+        browseModeToggle.onValueChanged.AddListener(ChangeBrowseToggle);
         ChangeValuePlatform(sliderPlatform.value);
         ChangeValueHoles(sliderPlatform.value);
     }
@@ -224,6 +227,13 @@ public class Dashboard : MonoBehaviour
         PlayerPrefs.Save();
     }
 
+    void ChangeBrowseToggle(bool on)
+    {
+        if (on)
+            PlayerPrefs.SetString("No Timer", "true");
+        else
+            PlayerPrefs.SetString("No Timer", "false");
+    }
     public void StartGame()
     {
         string collectionName =  EventSystem.current.currentSelectedGameObject.name;

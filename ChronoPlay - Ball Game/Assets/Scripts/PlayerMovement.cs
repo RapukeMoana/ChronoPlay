@@ -183,13 +183,6 @@ public class PlayerMovement : MonoBehaviour {
                 float progressFill = (level * 1f)/ Main.platformsPerGames;
                 progressBar.fillAmount = progressFill;
 
-                //TODO: Hayden  -> Progress bar with year 
-                //GameObject yearUI = (GameObject)Instantiate(Resources.Load("YearUI"));
-                //yearUI.transform.parent = GameObject.Find("Game_Canvas").transform;
-                //yearUI.GetComponent<Text>().text = Main.game[level].stageEvent.time + "";
-                //yearUI.GetComponent<RectTransform>().localPosition = new Vector3(-Screen.width, 10f, 10f);
-                //Debug.Log(yearUI.GetComponent<RectTransform>().position.y);
-
                 if(level == Main.platformsPerGames)
                 {
                     isLastLevel = true;
@@ -330,7 +323,7 @@ public class PlayerMovement : MonoBehaviour {
         }
 
         //Stops time if game is over
-        if (!browseMode && !isLastLevel && PlayerPrefs.GetString("No Timer") == "false")
+        if (!browseMode && !isLastLevel && PlayerPrefs.GetString("No Timer") != "true")
         {
             Text timerText = GameObject.Find("TimerText").GetComponent<Text>();
             timerText.text = ("TIME: " + (Time.timeSinceLevelLoad).ToString("n1")) + " seconds";
