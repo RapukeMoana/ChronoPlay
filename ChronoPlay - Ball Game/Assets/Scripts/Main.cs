@@ -14,6 +14,7 @@ public class Main : MonoBehaviour {
     private static bool timelineRetrieved = false;
     public static List<GameStage> game;
     private static bool[] holeRow;
+    private GameObject[] progressBarYearGameObjects;
 
     public static bool restartSameCollection = false;
     public static Timeline timeline = new Timeline();
@@ -223,14 +224,18 @@ public class Main : MonoBehaviour {
                     //Create ItemImages from URL 
                     setupHole(platform.name, game[i], false, j, false);
                 }
-            } 
+            }
+            //platformsPerGames
+
+            //Create progress bar year texts
+            GameObject yearUI = (GameObject)Instantiate(Resources.Load("YearUI"));
+            yearUI.transform.parent = GameObject.Find("Game_Canvas").transform;
+            yearUI.GetComponent<Text>().text = formatYear(game[i].stageEvent.time);
+
+            yearUI.GetComponent<RectTransform>().position = new Vector3(15f,i!=platformsPerGames?i==0?Screen.height: 
+                Screen.height-((Screen.height/platformsPerGames)* i-4f):15f, 0f);
         }
-
-        //Set start and end year on UI
-        GameObject.Find("Start Year").GetComponent<Text>().text = game[0].stageEvent.time+ "";
-        GameObject.Find("End Year").GetComponent<Text>().text = game[platformsPerGames].stageEvent.time + "";
         
-
     }
     
     private void setupExhibitContentItem(int plateNumber)
@@ -243,12 +248,7 @@ public class Main : MonoBehaviour {
 
         //Calculate exhibit year
         long year = game[plateNumber].stageEvent.time;
-        if (year < 0)
-        {
-            exhibitYear.GetComponent<TextMesh>().text = (((year * -1).ToString().Length != 4) ?  (year * (-1)).ToString("n0") + " BC" :  year * (-1) + " BC");
-        }
-        else
-            exhibitYear.GetComponent<TextMesh>().text =  ((year.ToString().Length != 4) ?  year.ToString("n0")  : "" + year );
+        exhibitYear.GetComponent<TextMesh>().text = formatYear(year);
 
         //Create exhibit title
         GameObject exhibitTitle = (GameObject)Instantiate(Resources.Load("ExhibitTitle"));
@@ -399,11 +399,8 @@ public class Main : MonoBehaviour {
             contentItemList.Add(stage.incorrectWormholes[holeNumber]);
         }
 
-        //Format year
-        if (year < 0)
-            yearFormatted = ((year * -1).ToString().Length != 4) ? (year * (-1)).ToString("n0") + " BC" : (year * -1).ToString() + " BC";
-        else
-            yearFormatted = (year.ToString().Length != 4) ? year.ToString("n0") : year.ToString();
+        yearFormatted = formatYear(year);
+
 
 
         // Start a download of the given URL
@@ -559,6 +556,14 @@ public class Main : MonoBehaviour {
         SetStartTimeLabel(startDate);
         SetSliderLabel(startDate);
         SetEndTimeLabel(endDate);
+    }
+
+    private String formatYear(long year)
+    {
+        if (year < 0)
+            return ((year * -1).ToString().Length != 4) ? (year * (-1)).ToString("n0") + " BC" : (year * -1).ToString() + " BC";
+        else
+            return (year.ToString().Length != 4) ? year.ToString("n0") : year.ToString();
     }
 
     private void SetStartTimeLabel(string startDate)
