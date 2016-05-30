@@ -15,6 +15,7 @@ public class Main : MonoBehaviour {
     public static List<GameStage> game;
     private static bool[] holeRow;
     private GameObject[] progressBarYearGameObjects;
+    private int resHeight;
 
     public static bool restartSameCollection = false;
     public static Timeline timeline = new Timeline();
@@ -54,8 +55,11 @@ public class Main : MonoBehaviour {
             StartCoroutine(playInstructionAnimation());
             GameObject.Find("Collection Name").GetComponent<Text>().text = PlayerPrefs.GetString("Collection Name");
         }
-            
-        
+
+        //For checking if screensize changed
+        resHeight = Screen.height;
+        progressBarYearGameObjects = new GameObject[platformsPerGames+1];
+
         StartCoroutine(getTimeLine());
         contentItemList = new List<ContentItem>();
     }
@@ -225,15 +229,14 @@ public class Main : MonoBehaviour {
                     setupHole(platform.name, game[i], false, j, false);
                 }
             }
-            //platformsPerGames
 
             //Create progress bar year texts
             GameObject yearUI = (GameObject)Instantiate(Resources.Load("YearUI"));
-            yearUI.transform.parent = GameObject.Find("Game_Canvas").transform;
+            yearUI.transform.SetParent(GameObject.Find("Game_Canvas").transform);
             yearUI.GetComponent<Text>().text = formatYear(game[i].stageEvent.time);
-
             yearUI.GetComponent<RectTransform>().position = new Vector3(15f,i!=platformsPerGames?i==0?Screen.height: 
                 Screen.height-((Screen.height/platformsPerGames)* i-4f):15f, 0f);
+            progressBarYearGameObjects[i] = yearUI;
         }
         
     }
@@ -504,6 +507,21 @@ public class Main : MonoBehaviour {
 
         loadingText.color = new Color(loadingText.color.r, loadingText.color.g, loadingText.color.b, Mathf.PingPong(Time.time, 1));
 
+        if (resHeight != Screen.height)
+        {
+            resHeight = Screen.height;
+            if(progressBarYearGameObjects[platformsPerGames] != null)
+                repositionYear();
+        }
+    }
+
+    private void repositionYear()
+    {
+        for(int i = 0; i < progressBarYearGameObjects.Length; i++)
+        {
+            progressBarYearGameObjects[i].GetComponent<RectTransform>().position = new Vector3(15f, i != platformsPerGames ? i == 0 ? Screen.height :
+                Screen.height - ((Screen.height / platformsPerGames) * i - 4f) : 15f, 0f);
+        }
     }
 
     public Exhibit getStageEventContent(int level)
