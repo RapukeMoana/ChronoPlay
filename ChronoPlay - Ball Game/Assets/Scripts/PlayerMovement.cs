@@ -151,7 +151,7 @@ public class PlayerMovement : MonoBehaviour {
     void browseModeProgressBar()
     {
         //Increase fill on statusbar
-        float progressFill = (browseLevel * 1f+1) / (Main.platformsPerGames+1);
+        float progressFill = (browseLevel * 1f) / (Main.platformsPerGames);
         progressBar.fillAmount = progressFill;
     }
 
@@ -187,7 +187,10 @@ public class PlayerMovement : MonoBehaviour {
                 {
                     isLastLevel = true;
                 }
-                
+
+                //Show statusbar year
+                Main.progressBarYearGameObjects[level].SetActive(true);
+
                 break;
             case "Incorrect-Hole":
                 //Bounce ball up

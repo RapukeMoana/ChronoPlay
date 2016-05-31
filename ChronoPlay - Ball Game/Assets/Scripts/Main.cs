@@ -14,7 +14,7 @@ public class Main : MonoBehaviour {
     private static bool timelineRetrieved = false;
     public static List<GameStage> game;
     private static bool[] holeRow;
-    private GameObject[] progressBarYearGameObjects;
+    
     private int resHeight;
 
     public static bool restartSameCollection = false;
@@ -26,6 +26,7 @@ public class Main : MonoBehaviour {
     public static int platformsPerGames = 10;
     public static bool limitContentToImages = true;
     public static float plateDistance = 12f;
+    public static GameObject[] progressBarYearGameObjects;
     public Canvas mainMenu;
     public Canvas settingsMenu;
     public Canvas timelineSelectMenu;
@@ -231,11 +232,13 @@ public class Main : MonoBehaviour {
             }
 
             //Create progress bar year texts
-            GameObject yearUI = (GameObject)Instantiate(Resources.Load("YearUI"));
+            GameObject yearUI = (GameObject)Instantiate(Resources.Load("YearUI-Orange"));
             yearUI.transform.SetParent(GameObject.Find("Game_Canvas").transform);
             yearUI.GetComponent<Text>().text = formatYear(game[i].stageEvent.time);
             yearUI.GetComponent<RectTransform>().position = new Vector3(15f,i!=platformsPerGames?i==0?Screen.height: 
                 Screen.height-((Screen.height/platformsPerGames)* i-4f):15f, 0f);
+            if(i!=0)
+                yearUI.SetActive(false);
             progressBarYearGameObjects[i] = yearUI;
         }
         
