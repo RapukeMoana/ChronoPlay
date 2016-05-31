@@ -19,6 +19,6 @@ public class GameCanvas : MonoBehaviour {
     public void closePanel()
     {
         gameCanvas.alpha = 0;
-
+        Time.timeScale = 1;
     }
 }
