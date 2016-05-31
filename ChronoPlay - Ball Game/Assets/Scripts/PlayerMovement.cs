@@ -541,7 +541,6 @@ public class PlayerMovement : MonoBehaviour {
         Time.timeScale = 0;
 
         string fullScreenId = EventSystem.current.currentSelectedGameObject.name;
-        Debug.Log(fullScreenId);
         descriptionImageFullScreenImage.SetActive(true);
         descriptionImageFullScreenImage.GetComponent<RawImage>().texture =
             EventSystem.current.currentSelectedGameObject.GetComponent<RawImage>().texture;

@@ -20,5 +20,8 @@ public class GameCanvas : MonoBehaviour {
     {
         gameCanvas.alpha = 0;
         Time.timeScale = 1;
+        GameObject fullscreen = GameObject.Find("DescriptionImageFullScreen");
+        if(fullscreen != null)
+            fullscreen.SetActive(false);
     }
 }
