@@ -638,7 +638,7 @@ public class Main : MonoBehaviour {
     public void playGame()
     {
         loadingImage.alpha = 0;
-
+        loadingImage.blocksRaycasts = false;
         GameObject player = GameObject.Find("Player");
         player.GetComponent<Rigidbody>().useGravity = true;
 

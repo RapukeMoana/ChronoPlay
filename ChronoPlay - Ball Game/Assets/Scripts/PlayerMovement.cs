@@ -145,7 +145,11 @@ public class PlayerMovement : MonoBehaviour {
 
         //Close side description if still visible
         if (sideDescriptionVisible)
+        {
             gameCanvas.alpha = 0;
+            gameCanvas.blocksRaycasts = false;
+        }
+            
     }
 
     void browseModeProgressBar()
@@ -164,8 +168,11 @@ public class PlayerMovement : MonoBehaviour {
             //If correct hole, update score and show result
             case "Correct-Hole":
                 //Close Side Description
-                if (sideDescriptionVisible)
+                if (sideDescriptionVisible) {
                     gameCanvas.alpha = 0;
+                    gameCanvas.blocksRaycasts = false;
+                }
+                    
 
                 Destroy(other.gameObject);
                 numCorrect++;
@@ -229,8 +236,11 @@ public class PlayerMovement : MonoBehaviour {
                     Stick_L.SetActive(false);
 
                     //Close side description if still visible at the end of game
-                    if (sideDescriptionVisible)
+                    if (sideDescriptionVisible) {
                         gameCanvas.alpha = 0;
+                        gameCanvas.blocksRaycasts = false;
+                    }
+                        
 
                     Text whatsnext = GameObject.Find("WhatsNext").GetComponent<Text>();
                     whatsnext.text = "Game End";
@@ -312,14 +322,14 @@ public class PlayerMovement : MonoBehaviour {
                 result.color = new Color(1.0f, 1.0f, 1.0f, 0);
             }
         }
-
         //Finds the object clicked
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             
-            if (Physics.Raycast(ray, out hit, 800f) && loadingImage.alpha == 0)
+            if (Physics.Raycast(ray, out hit, 800f) && loadingImage.alpha == 0 && 
+                !EventSystem.current.IsPointerOverGameObject())
             {
                 showDescription(GameObject.Find(hit.collider.gameObject.name));
             }
@@ -373,6 +383,7 @@ public class PlayerMovement : MonoBehaviour {
             scrollRect.verticalNormalizedPosition = 50f;
             sideDescriptionVisible = true;
             gameCanvas.alpha = 1;
+            gameCanvas.blocksRaycasts = true;
         }
 
         
@@ -541,6 +552,7 @@ public class PlayerMovement : MonoBehaviour {
     public void ShowFeedbackMenu()
     {
         feedbackMenu.enabled = true;
+        feedbackMenu.GetComponent<CanvasGroup>().blocksRaycasts = true;
         Time.timeScale = 0;
     }
 
@@ -562,6 +574,7 @@ public class PlayerMovement : MonoBehaviour {
     public void HideFeedbackMenu()
     {
         feedbackMenu.enabled = false;
+        feedbackMenu.GetComponent<CanvasGroup>().blocksRaycasts = false;
         Time.timeScale = 1;
     }
 
