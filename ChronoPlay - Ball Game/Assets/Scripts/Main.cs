@@ -582,7 +582,7 @@ public class Main : MonoBehaviour {
     private String formatYear(long year)
     {
         if (year < 0)
-            return ((year * -1).ToString().Length != 4) ? (year * (-1)).ToString("n0") + " BC" : (year * -1).ToString() + " BC";
+            return ((year * -1).ToString().Length != 4) ? (year * (-1)).ToString("n0") + " BCE" : (year * -1).ToString() + " BCE";
         else
             return (year.ToString().Length != 4) ? year.ToString("n0") : year.ToString();
     }
@@ -593,7 +593,7 @@ public class Main : MonoBehaviour {
         Text startTime = temp.GetComponent<Text>();
         long startYear = Convert.ToInt64(startDate);
         if (startYear < 0)
-            startTime.text = ((startYear * -1).ToString().Length != 4) ? (startYear * (-1)).ToString("n0") + " BC" : (startYear * -1).ToString() + " BC";
+            startTime.text = ((startYear * -1).ToString().Length != 4) ? (startYear * (-1)).ToString("n0") + " BCE" : (startYear * -1).ToString() + " BCE";
         else
             startTime.text = (startYear.ToString().Length != 4) ? startYear.ToString("n0") : startYear.ToString();
 
@@ -606,7 +606,7 @@ public class Main : MonoBehaviour {
 
         long endYear = Convert.ToInt64(endDate);
         if (endYear < 0)
-            endTime.text = ((endYear * -1).ToString().Length != 4) ? (endYear * (-1)).ToString("n0") + " BC" : (endYear * -1).ToString() + " BC";
+            endTime.text = ((endYear * -1).ToString().Length != 4) ? (endYear * (-1)).ToString("n0") + " BCE" : (endYear * -1).ToString() + " BCE";
         else
             endTime.text = (endYear.ToString().Length != 4) ? endYear.ToString("n0") : endYear.ToString();
     }
@@ -617,7 +617,7 @@ public class Main : MonoBehaviour {
         Text currentTime = temp.GetComponent<Text>();
         long year = Convert.ToInt64(time);
         if (year < 0)
-            currentTime.text = ((year * -1).ToString().Length != 4) ? (year * (-1)).ToString("n0") + " BC" : (year * -1).ToString() + " BC";
+            currentTime.text = ((year * -1).ToString().Length != 4) ? (year * (-1)).ToString("n0") + " BCE" : (year * -1).ToString() + " BCE";
         else
             currentTime.text = (year.ToString().Length != 4) ? year.ToString("n0") : year.ToString();
     }

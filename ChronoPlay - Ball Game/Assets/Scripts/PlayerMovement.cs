@@ -301,7 +301,7 @@ public class PlayerMovement : MonoBehaviour {
     private String formatYear(long year)
     {
         if (year < 0)
-            return ((year * -1).ToString().Length != 4) ? (year * (-1)).ToString("n0") + " BC" : (year * -1).ToString() + " BC";
+            return ((year * -1).ToString().Length != 4) ? (year * (-1)).ToString("n0") + " BCE" : (year * -1).ToString() + " BCE";
         else
             return (year.ToString().Length != 4) ? year.ToString("n0") : year.ToString();
     }
@@ -375,10 +375,6 @@ public class PlayerMovement : MonoBehaviour {
             Button descriptionImageButton = descriptionImage.GetComponent<Button>();
             descriptionImageButton.onClick.AddListener(delegate { descriptionImageFullScreen(); });
 
-            //Assign fullscreen text
-            FullScreen_When.GetComponent<Text>().text = formatYear(selected.ParentExhibitTime);
-            FullScreen_Title.GetComponent<Text>().text = selected.title + "";
-
             //Scroll to the top 
             scrollRect.verticalNormalizedPosition = 50f;
             sideDescriptionVisible = true;
@@ -415,7 +411,7 @@ public class PlayerMovement : MonoBehaviour {
         exhibitTitle.tag = "ExhibitTitle";
         long year = exhibit.time;
         if (year < 0) {
-            exhibitTitle.GetComponent<TextMesh>().text =  exhibit.title + (((year*-1).ToString().Length != 4) ? " (" + (year * (-1)).ToString("n0") + " BC)": " (" + year * (-1) + " BC)");
+            exhibitTitle.GetComponent<TextMesh>().text =  exhibit.title + (((year*-1).ToString().Length != 4) ? " (" + (year * (-1)).ToString("n0") + " BCE)": " (" + year * (-1) + " BCE)");
         } else
             exhibitTitle.GetComponent<TextMesh>().text = exhibit.title +  ((year.ToString().Length != 4) ? " (" + year.ToString("n0") + ")" : " (" + year + ")");
         exhibitTitle.transform.position = new Vector3(0f, -20f * (level)-0f, 100f);
