@@ -54,7 +54,7 @@ public class Main : MonoBehaviour {
             GameObject player = GameObject.Find("Player");
             player.GetComponent<Rigidbody>().useGravity = false;
             StartCoroutine(playInstructionAnimation());
-            GameObject.Find("Collection Name").GetComponent<Text>().text = PlayerPrefs.GetString("Collection Name");
+            
         }
 
         //For checking if screensize changed
@@ -111,11 +111,7 @@ public class Main : MonoBehaviour {
         {
             yield return StartCoroutine(retrieveTimelineAsync(superCollectionName, collectionName));
             Debug.Log("Getting Timeline");
-        }
-            
-        //timeline = ChronozoomHandler.RetrieveTimeline(superCollectionName, collectionName);
-        //yield return null;
-        
+        }       
         constructTimeline();
     }
 
@@ -235,7 +231,11 @@ public class Main : MonoBehaviour {
                 yearUI.SetActive(false);
             progressBarYearGameObjects[i] = yearUI;
         }
-        
+
+        //Set collection name ui text
+        GameObject.Find("Collection Name").GetComponent<Text>().text = PlayerPrefs.GetString("Collection Name")
+            + " ("+formatYear(game[0].stageEvent.time)+ " to "+ formatYear(game[platformsPerGames].stageEvent.time)+")";
+
     }
     
     private void setupExhibitContentItem(int plateNumber)

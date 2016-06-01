@@ -132,8 +132,6 @@ public class PlayerMovement : MonoBehaviour {
 
             }
 
-            
-
             gameCamera.transform.position = Vector3.Lerp(gameCamera.transform.position, browsePosition, Time.deltaTime * 2);
         }
     }
@@ -339,7 +337,10 @@ public class PlayerMovement : MonoBehaviour {
         if (!browseMode && !isLastLevel && PlayerPrefs.GetString("No Timer") != "true")
         {
             Text timerText = GameObject.Find("TimerText").GetComponent<Text>();
-            timerText.text = ("TIME: " + (Time.timeSinceLevelLoad).ToString("n1")) + " seconds";
+            timerText.text = ("Time: " + (Time.timeSinceLevelLoad).ToString("n1")) + " seconds";
+
+            Text scoreText = GameObject.Find("ScoreText").GetComponent<Text>();
+            scoreText.text = "Score: "+((Time.timeSinceLevelLoad) + (10f * numIncorrect)).ToString("n0");
         }
     }
 
