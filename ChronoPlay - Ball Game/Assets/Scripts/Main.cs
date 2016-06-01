@@ -161,12 +161,6 @@ public class Main : MonoBehaviour {
                     SceneManager.LoadScene("MainScene");
                 }
             }
-
-            long startYear = game[0].stageEvent.time;
-            long endYear = game[game.Count - 1].stageEvent.time;
-
-            RenderTimeline(startYear.ToString(), endYear.ToString());
-
             playButton.gameObject.SetActive(true);
         }
         else
@@ -530,7 +524,6 @@ public class Main : MonoBehaviour {
     public Exhibit getStageEventContent(int level)
     {
         Logger.LogException("CZBALL", "Main", "getStageEventContent", "A1");
-        UpdateSlider(Convert.ToString(game[level].stageEvent.time));
         Logger.LogException("CZBALL", "Main", "getStageEventContent", "A2");
         return game[level].stageEvent;
 
@@ -566,73 +559,12 @@ public class Main : MonoBehaviour {
         }
     }
 
-    private void RenderTimeline(string startDate, string endDate)
-    {
-        GameObject temp = GameObject.Find("TimelineSlider");
-        Slider timelineSlider = temp.GetComponent<Slider>();
-        timelineSlider.minValue = Convert.ToInt64(startDate);
-        timelineSlider.maxValue = Convert.ToInt64(endDate);
-        SetSliderValue(startDate);
-
-        SetStartTimeLabel(startDate);
-        SetSliderLabel(startDate);
-        SetEndTimeLabel(endDate);
-    }
-
     private String formatYear(long year)
     {
         if (year < 0)
             return ((year * -1).ToString().Length != 4) ? (year * (-1)).ToString("n0") + " BCE" : (year * -1).ToString() + " BCE";
         else
             return (year.ToString().Length != 4) ? year.ToString("n0") : year.ToString();
-    }
-
-    private void SetStartTimeLabel(string startDate)
-    {
-        GameObject temp = GameObject.Find("StartTime");
-        Text startTime = temp.GetComponent<Text>();
-        long startYear = Convert.ToInt64(startDate);
-        if (startYear < 0)
-            startTime.text = ((startYear * -1).ToString().Length != 4) ? (startYear * (-1)).ToString("n0") + " BCE" : (startYear * -1).ToString() + " BCE";
-        else
-            startTime.text = (startYear.ToString().Length != 4) ? startYear.ToString("n0") : startYear.ToString();
-
-    }
-
-    private void SetEndTimeLabel(string endDate)
-    {
-        GameObject temp = GameObject.Find("EndTime");
-        Text endTime = temp.GetComponent<Text>();
-
-        long endYear = Convert.ToInt64(endDate);
-        if (endYear < 0)
-            endTime.text = ((endYear * -1).ToString().Length != 4) ? (endYear * (-1)).ToString("n0") + " BCE" : (endYear * -1).ToString() + " BCE";
-        else
-            endTime.text = (endYear.ToString().Length != 4) ? endYear.ToString("n0") : endYear.ToString();
-    }
-
-    private void SetSliderLabel(string time)
-    {
-        GameObject temp = GameObject.Find("CurrentTime");
-        Text currentTime = temp.GetComponent<Text>();
-        long year = Convert.ToInt64(time);
-        if (year < 0)
-            currentTime.text = ((year * -1).ToString().Length != 4) ? (year * (-1)).ToString("n0") + " BCE" : (year * -1).ToString() + " BCE";
-        else
-            currentTime.text = (year.ToString().Length != 4) ? year.ToString("n0") : year.ToString();
-    }
-
-    private void SetSliderValue(string value)
-    {
-        GameObject temp = GameObject.Find("TimelineSlider");
-        Slider timelineSlider = temp.GetComponent<Slider>();
-        timelineSlider.value = Convert.ToInt64(value);
-    }
-
-    private void UpdateSlider(string value)
-    {
-        SetSliderValue(value);
-        SetSliderLabel(value);
     }
 
     public void playGame()
