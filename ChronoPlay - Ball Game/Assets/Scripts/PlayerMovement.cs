@@ -35,6 +35,8 @@ public class PlayerMovement : MonoBehaviour {
     private float myAlpha = 1.0f;
     private bool resultFade = true, sideDescriptionVisible = false;
     private Vector3 browsePosition;
+    private float idleTime;
+    private float idleTimeLimit = 120;
     
 
 
@@ -50,6 +52,7 @@ public class PlayerMovement : MonoBehaviour {
         level = 0;
         timeSince = 0;
         plateDistance = Main.plateDistance;
+        idleTime = 0;
         if(PlayerPrefs.GetString("No Timer") == "True")
         {
             GameObject background = GameObject.Find("TimerBackground");
@@ -66,6 +69,20 @@ public class PlayerMovement : MonoBehaviour {
             float moveHorizontal = Input.GetAxis("Horizontal");
             float moveVertical = Input.GetAxis("Vertical");
 
+            //Demo mode for idle gameplay
+            if (moveHorizontal == 0 && moveVertical == 0)
+            {
+                idleTime += Time.deltaTime;
+                if(idleTime > idleTimeLimit)
+                {
+                    idleTime++;
+                    Vector3 autoMovement = new Vector3(Mathf.Sin(Time.time * UnityEngine.Random.Range(1, 3))*UnityEngine.Random.Range(-1, 1), 0,
+                        Mathf.Cos(Time.time * UnityEngine.Random.Range(1, 3)) * UnityEngine.Random.Range(-1, 1));
+                    rb.AddForce(autoMovement * speed);       
+                }
+            } else
+                idleTime = 0;
+
             Vector3 movement = new Vector3(moveHorizontal, 0, moveVertical);
             rb.AddForce(movement * speed);
         }
@@ -73,12 +90,13 @@ public class PlayerMovement : MonoBehaviour {
         {
             float moveHorizontal = Input.acceleration.x;
             float moveVertical = Input.acceleration.z;
+
             Vector3 movement = new Vector3(moveHorizontal, 0, -moveVertical);
             if (movement.sqrMagnitude > 1)
                 movement.Normalize();
             rb.AddForce(movement * speed);
         }
-
+        
 
         //x axis boundary
         if (transform.position.x > 10.0f)
