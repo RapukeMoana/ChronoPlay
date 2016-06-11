@@ -29,6 +29,7 @@ public class Dashboard : MonoBehaviour
     public ScrollRect collectionScrollRect;
     public Scrollbar collectionScrollbar;
     public RawImage collectionTemplate;
+    public RawImage viewPrefab;
 
     public Canvas feedbackMenu;
     public InputField loggedBy;
@@ -46,7 +47,6 @@ public class Dashboard : MonoBehaviour
     {
         _playableCollections = RetrievePublishedCollections();
         StartCoroutine(populateCollectionScrollView());
-        //populateCollectionScrollView();
         collectionScrollbar.value = 0;
 
         if (PlayerPrefs.HasKey("Last Played Date"))
@@ -86,33 +86,84 @@ public class Dashboard : MonoBehaviour
 
     }
 
+    //IEnumerator populateCollectionScrollView()
+    //{
+    //    float xLocation = 0;
+    //    GameObject template = GameObject.Find("Collection_playableItem");
+
+    //    foreach (PlayableCollection collection in _playableCollections)
+    //    {
+    //        GameObject myTemplate = (GameObject)Instantiate(Resources.Load("CollectionItem"));
+    //        Texture2D texture = new Texture2D(1, 1);
+
+    //        Text[] textLabels = myTemplate. GetComponentsInChildren<Text>();
+    //        textLabels[0].text = collection.Title;
+    //        textLabels[1].text = SetStartTimeLabel(collection.StartDate.ToString()) + "-" + SetEndTimeLabel(collection.EndDate.ToString());
+    //        myTemplate.name = collection.Collection;
+    //        myTemplate.transform.SetParent(GameObject.Find("Content").transform, false);
+
+    //        Vector3 contentPosition = new Vector3(template.transform.position.x + xLocation, template.transform.position.y, template.transform.position.z);
+    //        myTemplate.transform.position = contentPosition;
+    //        myTemplate.transform.localScale = new Vector3(1, 1);
+    //        xLocation = xLocation + 150;
+    //        Button templateFunction = myTemplate.GetComponent<Button>();
+    //        string title = collection.Title;
+    //        templateFunction.onClick.AddListener(delegate { StartGame(); });
+
+    //        if (collection.ImageURL != null)
+    //        {
+    //            RawImage image = myTemplate.GetComponent<RawImage>();
+    //            WWW www = new WWW(Uri.EscapeUriString(collection.ImageURL));
+
+    //            yield return www;
+    //            // assign texture
+    //            try
+    //            {
+    //                // assign texture
+    //                if (www.error == null)
+    //                {
+    //                    www.LoadImageIntoTexture(texture);
+    //                }
+    //                else
+    //                {
+    //                    Logger.LogException("CZBall", "Dashboard", "populateCollectionScrollView", www.url + " not found");
+    //                }
+    //            }
+    //            catch
+    //            {
+    //                Logger.LogException("CZBall", "Dashboard", "populateCollectionScrollView", "www.LoadImageIntoTexture(texture)");
+    //            }
+    //            image.texture = texture;
+    //        }
+    //    }
+
+    //    template.SetActive(false);
+    //}
     IEnumerator populateCollectionScrollView()
     {
-        float xLocation = 0;
-        GameObject template = GameObject.Find("Collection_playableItem");
         foreach (PlayableCollection collection in _playableCollections)
         {
-            GameObject myTemplate = (GameObject)Instantiate(Resources.Load("CollectionItem"));
+            RawImage view = (RawImage)Instantiate(viewPrefab);
             Texture2D texture = new Texture2D(1, 1);
+            float xLocation = 0;
 
-            Text[] textLabels = myTemplate. GetComponentsInChildren<Text>();
-            //myTemplate.renderer = true;
+            Text[] textLabels = view.GetComponentsInChildren<Text>();
             textLabels[0].text = collection.Title;
             textLabels[1].text = SetStartTimeLabel(collection.StartDate.ToString()) + "-" + SetEndTimeLabel(collection.EndDate.ToString());
-            myTemplate.name = collection.Collection;
-            myTemplate.transform.SetParent(GameObject.Find("Content").transform);
+            view.name = collection.Collection;
+            view.transform.SetParent(GameObject.Find("Content").transform, false);
 
-            Vector3 contentPosition = new Vector3(template.transform.position.x + xLocation, template.transform.position.y, template.transform.position.z);
-            myTemplate.transform.position = contentPosition;
-            myTemplate.transform.localScale = new Vector3(1, 1);
-            xLocation = xLocation + 150;
-            Button templateFunction = myTemplate.GetComponent<Button>();
+            //Vector3 contentPosition = new Vector3(template.transform.position.x + xLocation, template.transform.position.y, template.transform.position.z);
+            //view.transform.position = contentPosition;
+            //view.transform.localScale = new Vector3(1, 1);
+            //xLocation = xLocation + 150;
+            Button templateFunction = view.GetComponent<Button>();
             string title = collection.Title;
             templateFunction.onClick.AddListener(delegate { StartGame(); });
 
             if (collection.ImageURL != null)
             {
-                RawImage image = myTemplate.GetComponent<RawImage>();
+                RawImage image = view.GetComponent<RawImage>();
                 WWW www = new WWW(Uri.EscapeUriString(collection.ImageURL));
 
                 yield return www;
@@ -135,9 +186,8 @@ public class Dashboard : MonoBehaviour
                 }
                 image.texture = texture;
             }
-        }
 
-        template.SetActive(false);
+        }
     }
 
     private string SetStartTimeLabel(string startDate)
