@@ -188,8 +188,6 @@ public class PlayerMovement : MonoBehaviour {
                     gameCanvas.alpha = 0;
                     gameCanvas.blocksRaycasts = false;
                 }
-                    
-
                 Destroy(other.gameObject);
                 numCorrect++;
 
@@ -217,8 +215,8 @@ public class PlayerMovement : MonoBehaviour {
                 break;
             case "Incorrect-Hole":
                 //Bounce ball up
-                GetComponent<Rigidbody>().AddForce(Vector3.up * 200);
-                
+                GetComponent<Rigidbody>().AddForce(Vector3.up * 250);
+                GetComponent<Rigidbody>().AddForce(Vector3.back * 200);
                 GameObject.Find("Result").GetComponent<Text>().text = "INCORRECT";
                 myAlpha = 1.0f;
                 resultFade = true;
@@ -288,10 +286,7 @@ public class PlayerMovement : MonoBehaviour {
                             incorrectYear.transform.GetChild(0).transform.localScale += new Vector3(2.5f, 0, 0);
                         }
                     }
-                }
-
-                
-                
+                } 
                 //loadingImage.SetActive(true);
                 //SceneManager.LoadScene(0);
                 break;
@@ -347,7 +342,11 @@ public class PlayerMovement : MonoBehaviour {
             if (Physics.Raycast(ray, out hit, 800f) && loadingImage.alpha == 0 && 
                 !EventSystem.current.IsPointerOverGameObject())
             {
-                showDescription(GameObject.Find(hit.collider.gameObject.name));
+                if (hit.collider.gameObject.tag == "Movement-Assist-Left" ||
+                    hit.collider.gameObject.tag == "Movement-Assist-Right") {
+                    movePlayerToHole(hit.collider.gameObject);
+                } else
+                    showDescription(GameObject.Find(hit.collider.gameObject.name));
             }
         }
 
@@ -360,6 +359,24 @@ public class PlayerMovement : MonoBehaviour {
             Text scoreText = GameObject.Find("ScoreText").GetComponent<Text>();
             scoreText.text = "Score: "+((Time.timeSinceLevelLoad) + (10f * numIncorrect)).ToString("n0");
         }
+    }
+
+    private void movePlayerToHole(GameObject gameObject)
+    {
+        if(gameObject.tag == "Movement-Assist-Left")
+        {
+            GameObject.Find("Player").transform.position = new Vector3(
+                gameObject.transform.position.x+3.5f, gameObject.transform.position.y-3.5f,
+                gameObject.transform.position.z-3.3f);
+
+        }
+        else
+        {
+            GameObject.Find("Player").transform.position = new Vector3(
+                            gameObject.transform.position.x - 3.5f, gameObject.transform.position.y - 3.5f,
+                            gameObject.transform.position.z - 3.3f);
+        }
+            
     }
 
     //Show description of selected item

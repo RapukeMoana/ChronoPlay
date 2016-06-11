@@ -434,11 +434,13 @@ public class Main : MonoBehaviour {
         GameObject itemImage = (GameObject)Instantiate(Resources.Load("ItemImage"));
         itemImage.name = id;
 
+        //Create circles to put next to image object (assist movement)
+        //GameObject movementAssistLeft = (GameObject)Instantiate(Resources.Load("MovementAssistButton"));
+        //GameObject movementAssistRight = (GameObject)Instantiate(Resources.Load("MovementAssistButton"));
+
+
         //Create sensor
         GameObject itemImageSensor = (GameObject)Instantiate(Resources.Load("ItemImageSensor"));
-
-        //itemImageSensor.name = yearFormatted;
-        //itemImageSensor.name = "sensor-"+id;
         itemImageSensor.name = yearFormatted;
 
         //Create hole on platform
@@ -467,6 +469,7 @@ public class Main : MonoBehaviour {
         //Place image on top of the current wormhole
         itemImage.transform.position = new Vector3(holeCoordinate.x, holeCoordinate.y+3, holeCoordinate.z+2);
         itemImage.GetComponent<Renderer>().material.mainTexture = texture;
+
 
         //Place description on item image
         GameObject itemImageDescription = (GameObject)Instantiate(Resources.Load("ItemDescription"));
