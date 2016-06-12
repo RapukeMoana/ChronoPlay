@@ -27,9 +27,9 @@ public class Dashboard : MonoBehaviour
     public Toggle browseModeToggle;
 
     public ScrollRect collectionScrollRect;
-    public Scrollbar collectionScrollbar;
-    public RawImage collectionTemplate;
     public RawImage viewPrefab;
+    public Text connectionErrorTxt;
+    public Button refreshButton;
 
     public Canvas feedbackMenu;
     public InputField loggedBy;
@@ -45,9 +45,7 @@ public class Dashboard : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        _playableCollections = RetrievePublishedCollections();
-        StartCoroutine(populateCollectionScrollView());
-        collectionScrollbar.value = 0;
+        TryLoadContent();
 
         if (PlayerPrefs.HasKey("Last Played Date"))
         {
@@ -86,59 +84,64 @@ public class Dashboard : MonoBehaviour
 
     }
 
-    //IEnumerator populateCollectionScrollView()
-    //{
-    //    float xLocation = 0;
-    //    GameObject template = GameObject.Find("Collection_playableItem");
+    public void TryLoadContent()
+    {
+        string HtmlText = GetHtmlFromUri("http://google.com");
+        if (HtmlText == "")
+        {
+            connectionErrorTxt.text = "You currently do not have access the internet. Please ensure you have a valid network connection and try again."; ;
+            connectionErrorTxt.gameObject.SetActive(true);
+            refreshButton.gameObject.SetActive(true);
+        }
+        else if (!HtmlText.Contains("schema.org/WebPage"))
+        {
+            //The connection has been redirected - i.e. to a login page
+            connectionErrorTxt.text = "You currently do not have access the internet. Please ensure you have a valid network connection and try again."; ;
+            connectionErrorTxt.gameObject.SetActive(true);
+            refreshButton.gameObject.SetActive(true);
+        }
+        else
+        {
+            connectionErrorTxt.gameObject.SetActive(false);
+            refreshButton.gameObject.SetActive(false);
+            _playableCollections = RetrievePublishedCollections();
+            StartCoroutine(populateCollectionScrollView());
+        }
+    }
 
-    //    foreach (PlayableCollection collection in _playableCollections)
-    //    {
-    //        GameObject myTemplate = (GameObject)Instantiate(Resources.Load("CollectionItem"));
-    //        Texture2D texture = new Texture2D(1, 1);
+    private string GetHtmlFromUri(string resource)
+    {
+        string html = string.Empty;
+        HttpWebRequest req = (HttpWebRequest)WebRequest.Create(resource);
+        try
+        {
+            using (HttpWebResponse resp = (HttpWebResponse)req.GetResponse())
+            {
+                bool isSuccess = (int)resp.StatusCode < 299 && (int)resp.StatusCode >= 200;
+                if (isSuccess)
+                {
+                    using (StreamReader reader = new StreamReader(resp.GetResponseStream()))
+                    {
+                        //We are limiting the array to 80 so we don't have
+                        //to parse the entire html document feel free to 
+                        //adjust (probably stay under 300)
+                        char[] cs = new char[80];
+                        reader.Read(cs, 0, cs.Length);
+                        foreach (char ch in cs)
+                        {
+                            html += ch;
+                        }
+                    }
+                }
+            }
+        }
+        catch
+        {
+            return "";
+        }
+        return html;
+    }
 
-    //        Text[] textLabels = myTemplate. GetComponentsInChildren<Text>();
-    //        textLabels[0].text = collection.Title;
-    //        textLabels[1].text = SetStartTimeLabel(collection.StartDate.ToString()) + "-" + SetEndTimeLabel(collection.EndDate.ToString());
-    //        myTemplate.name = collection.Collection;
-    //        myTemplate.transform.SetParent(GameObject.Find("Content").transform, false);
-
-    //        Vector3 contentPosition = new Vector3(template.transform.position.x + xLocation, template.transform.position.y, template.transform.position.z);
-    //        myTemplate.transform.position = contentPosition;
-    //        myTemplate.transform.localScale = new Vector3(1, 1);
-    //        xLocation = xLocation + 150;
-    //        Button templateFunction = myTemplate.GetComponent<Button>();
-    //        string title = collection.Title;
-    //        templateFunction.onClick.AddListener(delegate { StartGame(); });
-
-    //        if (collection.ImageURL != null)
-    //        {
-    //            RawImage image = myTemplate.GetComponent<RawImage>();
-    //            WWW www = new WWW(Uri.EscapeUriString(collection.ImageURL));
-
-    //            yield return www;
-    //            // assign texture
-    //            try
-    //            {
-    //                // assign texture
-    //                if (www.error == null)
-    //                {
-    //                    www.LoadImageIntoTexture(texture);
-    //                }
-    //                else
-    //                {
-    //                    Logger.LogException("CZBall", "Dashboard", "populateCollectionScrollView", www.url + " not found");
-    //                }
-    //            }
-    //            catch
-    //            {
-    //                Logger.LogException("CZBall", "Dashboard", "populateCollectionScrollView", "www.LoadImageIntoTexture(texture)");
-    //            }
-    //            image.texture = texture;
-    //        }
-    //    }
-
-    //    template.SetActive(false);
-    //}
     IEnumerator populateCollectionScrollView()
     {
         foreach (PlayableCollection collection in _playableCollections)
