@@ -145,18 +145,14 @@ public class Dashboard : MonoBehaviour
         {
             RawImage view = (RawImage)Instantiate(viewPrefab);
             Texture2D texture = new Texture2D(1, 1);
-            float xLocation = 0;
 
             Text[] textLabels = view.GetComponentsInChildren<Text>();
             textLabels[0].text = collection.Title;
-            textLabels[1].text = SetStartTimeLabel(collection.StartDate.ToString()) + "-" + SetEndTimeLabel(collection.EndDate.ToString());
+
+            textLabels[1].text = SetStartTimeLabel(collection.StartDate.ToString()) + "-" + validateAndSetEndTimeLabel(collection.EndDate.ToString());
             view.name = collection.Collection;
             view.transform.SetParent(GameObject.Find("Content").transform, false);
 
-            //Vector3 contentPosition = new Vector3(template.transform.position.x + xLocation, template.transform.position.y, template.transform.position.z);
-            //view.transform.position = contentPosition;
-            //view.transform.localScale = new Vector3(1, 1);
-            //xLocation = xLocation + 150;
             Button templateFunction = view.GetComponent<Button>();
             string title = collection.Title;
             templateFunction.onClick.AddListener(delegate { StartGame(); });
@@ -200,6 +196,20 @@ public class Dashboard : MonoBehaviour
             return (startYear.ToString().Length != 4) ? startYear.ToString("n0") : startYear.ToString();
 
     }
+
+    private string validateAndSetEndTimeLabel(string endDate)
+    {
+        Int64 endYear = (Int64)Math.Round(Convert.ToDouble(endDate));
+        long minus1 = (long)-1;
+        Int64 currentYear = DateTime.Now.Year;
+
+        if (endYear < 0)
+            return ((endYear * minus1).ToString().Length != 4) ? (endYear * (minus1)).ToString("n0") + " BC" : (endYear * minus1).ToString() + " BC";
+        else if (endYear > currentYear)
+            return (currentYear.ToString().Length != 4) ? currentYear.ToString("n0") : currentYear.ToString();
+        else
+            return (endYear.ToString().Length != 4) ? endYear.ToString("n0") : endYear.ToString();
+}
 
     private string SetEndTimeLabel(string endDate)
     {
