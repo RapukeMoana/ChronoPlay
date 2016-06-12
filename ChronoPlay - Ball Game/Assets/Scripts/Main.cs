@@ -109,8 +109,20 @@ public class Main : MonoBehaviour {
     {
         if (!restartSameCollection)
         {
-            yield return StartCoroutine(retrieveTimelineAsync(superCollectionName, collectionName));
-            Debug.Log("Getting Timeline");
+            string HtmlText = Connection.CheckForResponse("http://google.com");
+            if (HtmlText == "")
+            {
+                SceneManager.LoadScene(0);
+            }
+            else if (!HtmlText.Contains("schema.org/WebPage"))
+            {
+                SceneManager.LoadScene(0);
+            }
+            else
+            {
+                yield return StartCoroutine(retrieveTimelineAsync(superCollectionName, collectionName));
+                Debug.Log("Getting Timeline");
+            }
         }       
         constructTimeline();
     }
