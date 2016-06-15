@@ -90,6 +90,11 @@ public class PlayerController : IPlayer
         float moveVertical = stickPos.y;
 
         Vector3 movement = new Vector3(moveHorizontal, 0, moveVertical);
+        //If there is movement, reset idle time (for auto play)
+        if(moveHorizontal!=0 && moveVertical != 0)
+        {
+            PlayerMovement.idleTime = 0;
+        }
         _rigidbody.AddForce(movement * MoveSpeed);
 //        //float speed = distance;
 

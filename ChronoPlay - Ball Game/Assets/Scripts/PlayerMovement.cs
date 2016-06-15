@@ -24,6 +24,8 @@ public class PlayerMovement : MonoBehaviour {
     public static int numCorrect = 0, numIncorrect = 0, level = 0;
     public static float timeSince = 0;
     public static int browseLevel;
+    public static float idleTime;
+
     public GameObject Stick_L;
     public GameObject Stick_R;
     public GameObject descriptionImageFullScreenImage;
@@ -35,7 +37,8 @@ public class PlayerMovement : MonoBehaviour {
     private float myAlpha = 1.0f;
     private bool resultFade = true, sideDescriptionVisible = false;
     private Vector3 browsePosition;
-    private float idleTime;
+    
+    //Idle time limit until autoplay starts (in seconds)
     private float idleTimeLimit = 120;
     
 
@@ -75,6 +78,7 @@ public class PlayerMovement : MonoBehaviour {
                 idleTime += Time.deltaTime;
                 if(idleTime > idleTimeLimit)
                 {
+                    autoPlayOn = true;
                     idleTime++;
                     Vector3 autoMovement = new Vector3(Mathf.Sin(Time.time * UnityEngine.Random.Range(1, 3))*UnityEngine.Random.Range(-1, 1), 0,
                         Mathf.Cos(Time.time * UnityEngine.Random.Range(1, 3)) * UnityEngine.Random.Range(-1, 1));
