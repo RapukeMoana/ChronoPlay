@@ -78,7 +78,6 @@ public class PlayerMovement : MonoBehaviour {
                 idleTime += Time.deltaTime;
                 if(idleTime > idleTimeLimit)
                 {
-                    autoPlayOn = true;
                     idleTime++;
                     Vector3 autoMovement = new Vector3(Mathf.Sin(Time.time * UnityEngine.Random.Range(1, 3))*UnityEngine.Random.Range(-1, 1), 0,
                         Mathf.Cos(Time.time * UnityEngine.Random.Range(1, 3)) * UnityEngine.Random.Range(-1, 1));
