@@ -21,7 +21,7 @@ public class Timeline
     public string Height { get; set; }
     public string Regime { get; set; }
     public bool ToIsCirca { get; set; }
-    public int? aspectRatio { get; set; }
+    public float? aspectRatio { get; set; }
     public string backgroundUrl { get; set; }
     public string end { get; set; }
     public Exhibit[] exhibits { get; set; }
