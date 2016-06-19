@@ -109,22 +109,36 @@ public class Main : MonoBehaviour {
     {
         if (!restartSameCollection)
         {
-            string HtmlText = Connection.CheckForResponse("http://google.com");
-            if (HtmlText == "")
-            {
-                SceneManager.LoadScene(0);
-            }
-            else if (!HtmlText.Contains("schema.org/WebPage"))
-            {
-                SceneManager.LoadScene(0);
-            }
-            else
+            yield return StartCoroutine(checkForResponse("http://google.com"));
+        }       
+        constructTimeline();
+    }
+
+    public IEnumerator checkForResponse(string targetURL)
+    {
+        string html = string.Empty;
+        WWW www = new WWW(targetURL);
+
+        yield return www;
+
+        if (www.error != null)
+        {
+            SceneManager.LoadScene(0);
+        }
+        else
+        {
+            html = www.text.Substring(0, 80);
+            if (html.IndexOf("schema.org/WebPage") > -1)
             {
                 yield return StartCoroutine(retrieveTimelineAsync(superCollectionName, collectionName));
                 Debug.Log("Getting Timeline");
             }
-        }       
-        constructTimeline();
+            else
+            {
+                SceneManager.LoadScene(0);
+            }
+        }
+
     }
 
     IEnumerator retrieveTimelineAsync(string superCollectionName, string collectionName)

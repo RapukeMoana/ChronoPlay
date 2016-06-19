@@ -84,29 +84,42 @@ public class Dashboard : MonoBehaviour
 
     }
 
-    public void TryLoadContent()
+    public IEnumerator CheckResponse(string targetURL)
     {
-        string HtmlText = Connection.CheckForResponse("http://google.com");
-        if (HtmlText == "")
+        string html = string.Empty;
+        WWW www = new WWW(targetURL);
+
+        yield return www;
+        
+        if( www.error != null)
         {
-            connectionErrorTxt.text = "You currently do not have access the internet. Please ensure you have a valid network connection and try again."; ;
-            connectionErrorTxt.gameObject.SetActive(true);
-            refreshButton.gameObject.SetActive(true);
-        }
-        else if (!HtmlText.Contains("schema.org/WebPage"))
-        {
-            //The connection has been redirected - i.e. to a login page
             connectionErrorTxt.text = "You currently do not have access the internet. Please ensure you have a valid network connection and try again."; ;
             connectionErrorTxt.gameObject.SetActive(true);
             refreshButton.gameObject.SetActive(true);
         }
         else
         {
-            connectionErrorTxt.gameObject.SetActive(false);
-            refreshButton.gameObject.SetActive(false);
-            _playableCollections = RetrievePublishedCollections();
-            StartCoroutine(populateCollectionScrollView());
+            html = www.text.Substring(0, 80);
+            if (html.IndexOf("schema.org/WebPage") > -1)
+            {
+                connectionErrorTxt.gameObject.SetActive(false);
+                refreshButton.gameObject.SetActive(false);
+                _playableCollections = RetrievePublishedCollections();
+                StartCoroutine(populateCollectionScrollView());
+            } 
+            else
+            {
+                connectionErrorTxt.text = "You currently do not have access the internet. Please ensure you have a valid network connection and try again."; ;
+                connectionErrorTxt.gameObject.SetActive(true);
+                refreshButton.gameObject.SetActive(true);
+            }
         }
+
+    }
+
+    public void TryLoadContent()
+    {
+        StartCoroutine(CheckResponse("http://www.google.com"));
     }
 
     IEnumerator populateCollectionScrollView()
